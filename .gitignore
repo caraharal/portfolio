@@ -1,6 +1,3 @@
-# Large video files (will be hosted on video platform)
-assets/videos/
-
 # Full-size original photos (thumbnails are sufficient for web)
 assets/images/studio-portrait/
 assets/images/outdoor-portrait/
