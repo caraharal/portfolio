@@ -376,13 +376,94 @@
         <h2 class="section__title">视频作品</h2>
         <p class="section__subtitle">创意策划 · 拍摄剪辑 · 全流程制作</p>
 
-        <div class="video__grid" id="video-grid">
-          <!-- Dynamically populated by JS -->
+        <div class="video__grid">
+
+          <!-- 信息流剪辑 (9 videos) -->
+          <div class="video-card">
+            <div class="video-card__main">
+              <video src="assets/videos/info-flow/infoflow-01.mp4" muted loop playsinline controlsList="nodownload"
+                     preload="metadata" class="video-card__video"
+                     poster=""></video>
+              <div class="video-card__overlay" onclick="var v=this.parentElement.querySelector('video'); if(v.paused){v.play();this.parentElement.classList.add('is-playing')}else{v.pause();this.parentElement.classList.remove('is-playing')}">
+                <div class="video-card__play-btn">▶</div>
+              </div>
+            </div>
+            <div class="video-card__body">
+              <h3 class="video-card__title">信息流剪辑</h3>
+              <p class="video-card__count">9 个作品</p>
+              <p class="video-card__desc">高转化信息流广告素材，ROI稳定1.8+，多次获优质标记持续追投</p>
+            </div>
+          </div>
+
+          <!-- 美妆口播 (1 video) -->
+          <div class="video-card">
+            <div class="video-card__main video-card__main--single">
+              <video src="assets/videos/beauty/beauty-talk.mp4" muted loop playsinline controlsList="nodownload"
+                     preload="metadata" class="video-card__video"></video>
+              <div class="video-card__overlay" onclick="var v=this.parentElement.querySelector('video'); if(v.paused){v.play();this.parentElement.classList.add('is-playing')}else{v.pause();this.parentElement.classList.remove('is-playing')}">
+                <div class="video-card__play-btn">▶</div>
+              </div>
+            </div>
+            <div class="video-card__body">
+              <h3 class="video-card__title">美妆口播</h3>
+              <p class="video-card__count">1 个作品</p>
+              <p class="video-card__desc">美妆赛道好物安利，前3秒抓眼球 + 痛点共鸣式脚本，平均点赞3K+</p>
+            </div>
+          </div>
+
+          <!-- AI工具生成 (5 videos) -->
+          <div class="video-card">
+            <div class="video-card__main">
+              <video src="assets/videos/ai-generated/ai.mp4" muted loop playsinline controlsList="nodownload"
+                     preload="metadata" class="video-card__video"></video>
+              <div class="video-card__overlay" onclick="var v=this.parentElement.querySelector('video'); if(v.paused){v.play();this.parentElement.classList.add('is-playing')}else{v.pause();this.parentElement.classList.remove('is-playing')}">
+                <div class="video-card__play-btn">▶</div>
+              </div>
+            </div>
+            <div class="video-card__body">
+              <h3 class="video-card__title">AI 工具生成</h3>
+              <p class="video-card__count">5 个作品</p>
+              <p class="video-card__desc">即梦、可灵、Suno等AI工具全流程创作，含极氪汽车宣传片、瓷器AI等</p>
+            </div>
+          </div>
+
+          <!-- 剧情片 (1 video) -->
+          <div class="video-card">
+            <div class="video-card__main video-card__main--single">
+              <video src="assets/videos/drama/the-reach.mp4" muted loop playsinline controlsList="nodownload"
+                     preload="metadata" class="video-card__video"></video>
+              <div class="video-card__overlay" onclick="var v=this.parentElement.querySelector('video'); if(v.paused){v.play();this.parentElement.classList.add('is-playing')}else{v.pause();this.parentElement.classList.remove('is-playing')}">
+                <div class="video-card__play-btn">▶</div>
+              </div>
+            </div>
+            <div class="video-card__body">
+              <h3 class="video-card__title">剧情片</h3>
+              <p class="video-card__count">1 个作品</p>
+              <p class="video-card__desc">《触不可及》剧情短片，具备剧本创作、镜头设计与叙事能力</p>
+            </div>
+          </div>
+
+          <!-- 作品集 (1 video) -->
+          <div class="video-card">
+            <div class="video-card__main video-card__main--single">
+              <video src="assets/videos/documentary/showreel.mp4" muted loop playsinline controlsList="nodownload"
+                     preload="metadata" class="video-card__video"></video>
+              <div class="video-card__overlay" onclick="var v=this.parentElement.querySelector('video'); if(v.paused){v.play();this.parentElement.classList.add('is-playing')}else{v.pause();this.parentElement.classList.remove('is-playing')}">
+                <div class="video-card__play-btn">▶</div>
+              </div>
+            </div>
+            <div class="video-card__body">
+              <h3 class="video-card__title">作品集</h3>
+              <p class="video-card__count">1 个作品</p>
+              <p class="video-card__desc">个人精选作品合集，涵盖摄影、视频、创意项目的综合展示</p>
+            </div>
+          </div>
+
         </div>
       </div>
     </section>
 
-    <!-- Video Gallery Data -->
+
     <script>
             window.__VIDEO_DATA = [
         {
