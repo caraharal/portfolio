@@ -262,23 +262,38 @@
       var mainVideo = main.querySelector('.video-card__video');
       var overlay = main.querySelector('.video-card__overlay');
 
-      // Click overlay to play/pause
-      if (overlay) {
-        overlay.addEventListener('click', function () {
-          if (mainVideo.paused) {
-            mainVideo.play();
-            main.classList.add('is-playing');
+      // Click anywhere on the main player area to play/pause
+      main.addEventListener('click', function (e) {
+        // Don't trigger when clicking arrows
+        if (e.target.closest('.video-card__arrow')) return;
+
+        if (mainVideo.paused) {
+          var promise = mainVideo.play();
+          if (promise && promise.catch) {
+            promise.then(function () {
+              main.classList.add('is-playing');
+            }).catch(function (err) {
+              console.log('Play failed:', err);
+              // Try with load first
+              mainVideo.load();
+              mainVideo.play().then(function () {
+                main.classList.add('is-playing');
+              }).catch(function () {});
+            });
           } else {
-            mainVideo.pause();
-            main.classList.remove('is-playing');
+            main.classList.add('is-playing');
           }
-        });
-      }
+        } else {
+          mainVideo.pause();
+          main.classList.remove('is-playing');
+        }
+      });
 
       // Thumbnail clicks to switch videos
       var thumbs = card.querySelectorAll('.video-card__thumb');
       thumbs.forEach(function (thumb) {
-        thumb.addEventListener('click', function () {
+        thumb.addEventListener('click', function (e) {
+          e.stopPropagation();
           var newSrc = thumb.getAttribute('data-src');
           var newIndex = parseInt(thumb.getAttribute('data-index'));
 
@@ -286,12 +301,17 @@
           var wasPlaying = !mainVideo.paused;
           mainVideo.src = newSrc;
           mainVideo.load();
-          if (wasPlaying) {
-            mainVideo.play();
-            main.classList.add('is-playing');
-          } else {
-            main.classList.remove('is-playing');
-          }
+          main.classList.remove('is-playing');
+
+          // Try to play after loading
+          mainVideo.addEventListener('loadeddata', function onLoaded() {
+            mainVideo.removeEventListener('loadeddata', onLoaded);
+            if (wasPlaying) {
+              mainVideo.play().then(function () {
+                main.classList.add('is-playing');
+              }).catch(function () {});
+            }
+          });
 
           // Update active thumbnail
           thumbs.forEach(function (t) { t.classList.remove('video-card__thumb--active'); });
