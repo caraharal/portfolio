@@ -378,15 +378,27 @@
 
         <div class="video__grid">
 
-          <!-- 信息流剪辑 (9 videos) -->
+          <!-- ====== 信息流剪辑 ====== -->
           <div class="video-card">
-            <div class="video-card__main">
-              <video src="assets/videos/info-flow/infoflow-01.mp4" muted loop playsinline controlsList="nodownload"
-                     preload="metadata" class="video-card__video"
-                     poster=""></video>
-              <div class="video-card__overlay" onclick="var v=this.parentElement.querySelector('video'); if(v.paused){v.play();this.parentElement.classList.add('is-playing')}else{v.pause();this.parentElement.classList.remove('is-playing')}">
+            <div class="video-card__main" id="player-info-flow">
+              <video src="assets/videos/info-flow/infoflow-01.mp4" muted loop playsinline
+                     preload="metadata" class="video-card__video"></video>
+              <div class="video-card__overlay" onclick="toggleVideo(this)">
                 <div class="video-card__play-btn">▶</div>
               </div>
+              <button class="video-card__arrow video-card__arrow--prev" onclick="switchVideo('info-flow',-1,event)">◀</button>
+              <button class="video-card__arrow video-card__arrow--next" onclick="switchVideo('info-flow',1,event)">▶</button>
+            </div>
+            <div class="video-card__strip" id="strip-info-flow">
+              <div class="video-card__thumb video-card__thumb--active" data-idx="0" data-src="assets/videos/info-flow/infoflow-01.mp4" onclick="changeVideo('info-flow',0,this)"><video src="assets/videos/info-flow/infoflow-01.mp4" muted preload="metadata"></video><span class="video-card__thumb-index">1</span></div>
+              <div class="video-card__thumb" data-idx="1" data-src="assets/videos/info-flow/infoflow-02.mp4" onclick="changeVideo('info-flow',1,this)"><video src="assets/videos/info-flow/infoflow-02.mp4" muted preload="metadata"></video><span class="video-card__thumb-index">2</span></div>
+              <div class="video-card__thumb" data-idx="2" data-src="assets/videos/info-flow/infoflow-03.mp4" onclick="changeVideo('info-flow',2,this)"><video src="assets/videos/info-flow/infoflow-03.mp4" muted preload="metadata"></video><span class="video-card__thumb-index">3</span></div>
+              <div class="video-card__thumb" data-idx="3" data-src="assets/videos/info-flow/infoflow-04.mp4" onclick="changeVideo('info-flow',3,this)"><video src="assets/videos/info-flow/infoflow-04.mp4" muted preload="metadata"></video><span class="video-card__thumb-index">4</span></div>
+              <div class="video-card__thumb" data-idx="4" data-src="assets/videos/info-flow/infoflow-05.mp4" onclick="changeVideo('info-flow',4,this)"><video src="assets/videos/info-flow/infoflow-05.mp4" muted preload="metadata"></video><span class="video-card__thumb-index">5</span></div>
+              <div class="video-card__thumb" data-idx="5" data-src="assets/videos/info-flow/infoflow-06.mp4" onclick="changeVideo('info-flow',5,this)"><video src="assets/videos/info-flow/infoflow-06.mp4" muted preload="metadata"></video><span class="video-card__thumb-index">6</span></div>
+              <div class="video-card__thumb" data-idx="6" data-src="assets/videos/info-flow/infoflow-ai-01.mp4" onclick="changeVideo('info-flow',6,this)"><video src="assets/videos/info-flow/infoflow-ai-01.mp4" muted preload="metadata"></video><span class="video-card__thumb-index">7</span></div>
+              <div class="video-card__thumb" data-idx="7" data-src="assets/videos/info-flow/infoflow-ai-02.mp4" onclick="changeVideo('info-flow',7,this)"><video src="assets/videos/info-flow/infoflow-ai-02.mp4" muted preload="metadata"></video><span class="video-card__thumb-index">8</span></div>
+              <div class="video-card__thumb" data-idx="8" data-src="assets/videos/info-flow/infoflow-ai-03.mp4" onclick="changeVideo('info-flow',8,this)"><video src="assets/videos/info-flow/infoflow-ai-03.mp4" muted preload="metadata"></video><span class="video-card__thumb-index">9</span></div>
             </div>
             <div class="video-card__body">
               <h3 class="video-card__title">信息流剪辑</h3>
@@ -395,12 +407,12 @@
             </div>
           </div>
 
-          <!-- 美妆口播 (1 video) -->
+          <!-- ====== 美妆口播 ====== -->
           <div class="video-card">
-            <div class="video-card__main video-card__main--single">
-              <video src="assets/videos/beauty/beauty-talk.mp4" muted loop playsinline controlsList="nodownload"
+            <div class="video-card__main video-card__main--single" id="player-beauty">
+              <video src="assets/videos/beauty/beauty-talk.mp4" muted loop playsinline
                      preload="metadata" class="video-card__video"></video>
-              <div class="video-card__overlay" onclick="var v=this.parentElement.querySelector('video'); if(v.paused){v.play();this.parentElement.classList.add('is-playing')}else{v.pause();this.parentElement.classList.remove('is-playing')}">
+              <div class="video-card__overlay" onclick="toggleVideo(this)">
                 <div class="video-card__play-btn">▶</div>
               </div>
             </div>
@@ -411,14 +423,23 @@
             </div>
           </div>
 
-          <!-- AI工具生成 (5 videos) -->
+          <!-- ====== AI工具生成 ====== -->
           <div class="video-card">
-            <div class="video-card__main">
-              <video src="assets/videos/ai-generated/ai.mp4" muted loop playsinline controlsList="nodownload"
+            <div class="video-card__main" id="player-ai-generated">
+              <video src="assets/videos/ai-generated/ai.mp4" muted loop playsinline
                      preload="metadata" class="video-card__video"></video>
-              <div class="video-card__overlay" onclick="var v=this.parentElement.querySelector('video'); if(v.paused){v.play();this.parentElement.classList.add('is-playing')}else{v.pause();this.parentElement.classList.remove('is-playing')}">
+              <div class="video-card__overlay" onclick="toggleVideo(this)">
                 <div class="video-card__play-btn">▶</div>
               </div>
+              <button class="video-card__arrow video-card__arrow--prev" onclick="switchVideo('ai-generated',-1,event)">◀</button>
+              <button class="video-card__arrow video-card__arrow--next" onclick="switchVideo('ai-generated',1,event)">▶</button>
+            </div>
+            <div class="video-card__strip" id="strip-ai-generated">
+              <div class="video-card__thumb video-card__thumb--active" data-idx="0" data-src="assets/videos/ai-generated/ai.mp4" onclick="changeVideo('ai-generated',0,this)"><video src="assets/videos/ai-generated/ai.mp4" muted preload="metadata"></video><span class="video-card__thumb-index">1</span></div>
+              <div class="video-card__thumb" data-idx="1" data-src="assets/videos/ai-generated/ai2.mp4" onclick="changeVideo('ai-generated',1,this)"><video src="assets/videos/ai-generated/ai2.mp4" muted preload="metadata"></video><span class="video-card__thumb-index">2</span></div>
+              <div class="video-card__thumb" data-idx="2" data-src="assets/videos/ai-generated/ai3.mp4" onclick="changeVideo('ai-generated',2,this)"><video src="assets/videos/ai-generated/ai3.mp4" muted preload="metadata"></video><span class="video-card__thumb-index">3</span></div>
+              <div class="video-card__thumb" data-idx="3" data-src="assets/videos/ai-generated/zeekr-ai.mp4" onclick="changeVideo('ai-generated',3,this)"><video src="assets/videos/ai-generated/zeekr-ai.mp4" muted preload="metadata"></video><span class="video-card__thumb-index">4</span></div>
+              <div class="video-card__thumb" data-idx="4" data-src="assets/videos/ai-generated/porcelain-ai.mp4" onclick="changeVideo('ai-generated',4,this)"><video src="assets/videos/ai-generated/porcelain-ai.mp4" muted preload="metadata"></video><span class="video-card__thumb-index">5</span></div>
             </div>
             <div class="video-card__body">
               <h3 class="video-card__title">AI 工具生成</h3>
@@ -427,12 +448,12 @@
             </div>
           </div>
 
-          <!-- 剧情片 (1 video) -->
+          <!-- ====== 剧情片 ====== -->
           <div class="video-card">
-            <div class="video-card__main video-card__main--single">
-              <video src="assets/videos/drama/the-reach.mp4" muted loop playsinline controlsList="nodownload"
+            <div class="video-card__main video-card__main--single" id="player-drama">
+              <video src="assets/videos/drama/the-reach.mp4" muted loop playsinline
                      preload="metadata" class="video-card__video"></video>
-              <div class="video-card__overlay" onclick="var v=this.parentElement.querySelector('video'); if(v.paused){v.play();this.parentElement.classList.add('is-playing')}else{v.pause();this.parentElement.classList.remove('is-playing')}">
+              <div class="video-card__overlay" onclick="toggleVideo(this)">
                 <div class="video-card__play-btn">▶</div>
               </div>
             </div>
@@ -443,12 +464,12 @@
             </div>
           </div>
 
-          <!-- 作品集 (1 video) -->
+          <!-- ====== 作品集 ====== -->
           <div class="video-card">
-            <div class="video-card__main video-card__main--single">
-              <video src="assets/videos/documentary/showreel.mp4" muted loop playsinline controlsList="nodownload"
+            <div class="video-card__main video-card__main--single" id="player-documentary">
+              <video src="assets/videos/documentary/showreel.mp4" muted loop playsinline
                      preload="metadata" class="video-card__video"></video>
-              <div class="video-card__overlay" onclick="var v=this.parentElement.querySelector('video'); if(v.paused){v.play();this.parentElement.classList.add('is-playing')}else{v.pause();this.parentElement.classList.remove('is-playing')}">
+              <div class="video-card__overlay" onclick="toggleVideo(this)">
                 <div class="video-card__play-btn">▶</div>
               </div>
             </div>
@@ -463,65 +484,48 @@
       </div>
     </section>
 
-
+    <!-- Inline video control functions -->
     <script>
-            window.__VIDEO_DATA = [
-        {
-          category: 'info-flow',
-          title: '信息流剪辑',
-          desc: '高转化信息流广告素材，ROI稳定1.8+，多次获优质标记持续追投',
-          videos: [
-            'assets/videos/info-flow/infoflow-01.mp4',
-            'assets/videos/info-flow/infoflow-02.mp4',
-            'assets/videos/info-flow/infoflow-03.mp4',
-            'assets/videos/info-flow/infoflow-04.mp4',
-            'assets/videos/info-flow/infoflow-05.mp4',
-            'assets/videos/info-flow/infoflow-06.mp4',
-            'assets/videos/info-flow/infoflow-ai-01.mp4',
-            'assets/videos/info-flow/infoflow-ai-02.mp4',
-            'assets/videos/info-flow/infoflow-ai-03.mp4'
-          ]
-        },
-        {
-          category: 'beauty',
-          title: '美妆口播',
-          desc: '美妆赛道好物安利，前3秒抓眼球 + 痛点共鸣式脚本，平均点赞3K+',
-          videos: [
-            'assets/videos/beauty/beauty-talk.mp4'
-          ]
-        },
-        {
-          category: 'ai-generated',
-          title: 'AI 工具生成',
-          desc: '即梦、可灵、Suno等AI工具全流程创作，含极氪汽车宣传片、瓷器AI等',
-          videos: [
-            'assets/videos/ai-generated/ai.mp4',
-            'assets/videos/ai-generated/ai2.mp4',
-            'assets/videos/ai-generated/ai3.mp4',
-            'assets/videos/ai-generated/zeekr-ai.mp4',
-            'assets/videos/ai-generated/porcelain-ai.mp4'
-          ]
-        },
-        {
-          category: 'drama',
-          title: '剧情片',
-          desc: '《触不可及》剧情短片，具备剧本创作、镜头设计与叙事能力',
-          videos: [
-            'assets/videos/drama/the-reach.mp4'
-          ]
-        },
-        {
-          category: 'documentary',
-          title: '作品集',
-          desc: '个人精选作品合集，涵盖摄影、视频、创意项目的综合展示',
-          videos: [
-            'assets/videos/documentary/showreel.mp4'
-          ]
+      function toggleVideo(overlay) {
+        var main = overlay.parentElement;
+        var video = main.querySelector('video');
+        if (video.paused) {
+          video.play().then(function(){ main.classList.add('is-playing'); }).catch(function(e){ console.log(e); });
+        } else {
+          video.pause();
+          main.classList.remove('is-playing');
         }
-      ];
+      }
+
+      function changeVideo(cat, idx, thumb) {
+        var player = document.getElementById('player-' + cat);
+        var video = player.querySelector('video');
+        var wasPlaying = !video.paused;
+        video.src = thumb.getAttribute('data-src');
+        video.load();
+        player.classList.remove('is-playing');
+        if (wasPlaying) {
+          video.play().then(function(){ player.classList.add('is-playing'); }).catch(function(){});
+        }
+        // Update active thumbnail
+        var strip = document.getElementById('strip-' + cat);
+        strip.querySelectorAll('.video-card__thumb').forEach(function(t){ t.classList.remove('video-card__thumb--active'); });
+        thumb.classList.add('video-card__thumb--active');
+        thumb.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+      }
+
+      function switchVideo(cat, dir, evt) {
+        evt.stopPropagation();
+        var strip = document.getElementById('strip-' + cat);
+        var thumbs = strip.querySelectorAll('.video-card__thumb');
+        var active = strip.querySelector('.video-card__thumb--active');
+        var curIdx = active ? parseInt(active.getAttribute('data-idx')) : 0;
+        var newIdx = (curIdx + dir + thumbs.length) % thumbs.length;
+        thumbs[newIdx].click();
+      }
     </script>
 
-    <!-- SKILLS -->
+
     <section class="skills section" id="skills">
       <div class="container">
         <h2 class="section__title">专业技能</h2>
