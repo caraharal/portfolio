@@ -381,7 +381,7 @@
           <!-- ====== 信息流剪辑 ====== -->
           <div class="video-card">
             <div class="video-card__main" id="player-info-flow">
-              <video src="assets/videos/info-flow/infoflow-01.mp4" muted loop playsinline
+              <video src="assets/videos/info-flow/infoflow-01.mp4" muted loop playsinline controls
                      preload="metadata" class="video-card__video"></video>
               <div class="video-card__overlay" onclick="toggleVideo(this)">
                 <div class="video-card__play-btn">▶</div>
@@ -410,7 +410,7 @@
           <!-- ====== 美妆口播 ====== -->
           <div class="video-card">
             <div class="video-card__main video-card__main--single" id="player-beauty">
-              <video src="assets/videos/beauty/beauty-talk.mp4" muted loop playsinline
+              <video src="assets/videos/beauty/beauty-talk.mp4" muted loop playsinline controls
                      preload="metadata" class="video-card__video"></video>
               <div class="video-card__overlay" onclick="toggleVideo(this)">
                 <div class="video-card__play-btn">▶</div>
@@ -426,7 +426,7 @@
           <!-- ====== AI工具生成 ====== -->
           <div class="video-card">
             <div class="video-card__main" id="player-ai-generated">
-              <video src="assets/videos/ai-generated/ai.mp4" muted loop playsinline
+              <video src="assets/videos/ai-generated/ai.mp4" muted loop playsinline controls
                      preload="metadata" class="video-card__video"></video>
               <div class="video-card__overlay" onclick="toggleVideo(this)">
                 <div class="video-card__play-btn">▶</div>
@@ -451,7 +451,7 @@
           <!-- ====== 剧情片 ====== -->
           <div class="video-card">
             <div class="video-card__main video-card__main--single" id="player-drama">
-              <video src="assets/videos/drama/the-reach.mp4" muted loop playsinline
+              <video src="assets/videos/drama/the-reach.mp4" muted loop playsinline controls
                      preload="metadata" class="video-card__video"></video>
               <div class="video-card__overlay" onclick="toggleVideo(this)">
                 <div class="video-card__play-btn">▶</div>
@@ -467,7 +467,7 @@
           <!-- ====== 作品集 ====== -->
           <div class="video-card">
             <div class="video-card__main video-card__main--single" id="player-documentary">
-              <video src="assets/videos/documentary/showreel.mp4" muted loop playsinline
+              <video src="assets/videos/documentary/showreel.mp4" muted loop playsinline controls
                      preload="metadata" class="video-card__video"></video>
               <div class="video-card__overlay" onclick="toggleVideo(this)">
                 <div class="video-card__play-btn">▶</div>
@@ -490,12 +490,22 @@
         var main = overlay.parentElement;
         var video = main.querySelector('video');
         if (video.paused) {
+          // Try playing with sound first
           video.muted = false;
-          video.play().then(function(){ main.classList.add('is-playing'); }).catch(function(e){
-            // If unmuted play fails, try muted
-            video.muted = true;
-            video.play().then(function(){ main.classList.add('is-playing'); }).catch(function(){});
-          });
+          var promise = video.play();
+          if (promise) {
+            promise.then(function(){
+              main.classList.add('is-playing');
+            }).catch(function(){
+              // Fallback: play muted
+              video.muted = true;
+              video.play().then(function(){
+                main.classList.add('is-playing');
+              }).catch(function(){});
+            });
+          } else {
+            main.classList.add('is-playing');
+          }
         } else {
           video.pause();
           main.classList.remove('is-playing');
