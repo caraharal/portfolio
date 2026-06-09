@@ -381,8 +381,8 @@
           <!-- ====== 信息流剪辑 ====== -->
           <div class="video-card">
             <div class="video-card__main" id="player-info-flow">
-              <video src="assets/videos/info-flow/infoflow-01.mp4" loop playsinline
-                     preload="auto" class="video-card__video"></video>
+              <video src="assets/videos/info-flow/infoflow-01.mp4" muted loop playsinline
+                     preload="metadata" class="video-card__video"></video>
               <div class="video-card__overlay" onclick="toggleVideo(this)">
                 <div class="video-card__play-btn">▶</div>
               </div>
@@ -390,15 +390,15 @@
               <button class="video-card__arrow video-card__arrow--next" onclick="switchVideo('info-flow',1,event)">▶</button>
             </div>
             <div class="video-card__strip" id="strip-info-flow">
-              <div class="video-card__thumb video-card__thumb--active" data-idx="0" data-src="assets/videos/info-flow/infoflow-01.mp4" onclick="changeVideo('info-flow',0,this)"><video src="assets/videos/info-flow/infoflow-01.mp4" muted muted preload="metadata"></video><span class="video-card__thumb-index">1</span></div>
-              <div class="video-card__thumb" data-idx="1" data-src="assets/videos/info-flow/infoflow-02.mp4" onclick="changeVideo('info-flow',1,this)"><video src="assets/videos/info-flow/infoflow-02.mp4" muted muted preload="metadata"></video><span class="video-card__thumb-index">2</span></div>
-              <div class="video-card__thumb" data-idx="2" data-src="assets/videos/info-flow/infoflow-03.mp4" onclick="changeVideo('info-flow',2,this)"><video src="assets/videos/info-flow/infoflow-03.mp4" muted muted preload="metadata"></video><span class="video-card__thumb-index">3</span></div>
-              <div class="video-card__thumb" data-idx="3" data-src="assets/videos/info-flow/infoflow-04.mp4" onclick="changeVideo('info-flow',3,this)"><video src="assets/videos/info-flow/infoflow-04.mp4" muted muted preload="metadata"></video><span class="video-card__thumb-index">4</span></div>
-              <div class="video-card__thumb" data-idx="4" data-src="assets/videos/info-flow/infoflow-05.mp4" onclick="changeVideo('info-flow',4,this)"><video src="assets/videos/info-flow/infoflow-05.mp4" muted muted preload="metadata"></video><span class="video-card__thumb-index">5</span></div>
-              <div class="video-card__thumb" data-idx="5" data-src="assets/videos/info-flow/infoflow-06.mp4" onclick="changeVideo('info-flow',5,this)"><video src="assets/videos/info-flow/infoflow-06.mp4" muted muted preload="metadata"></video><span class="video-card__thumb-index">6</span></div>
-              <div class="video-card__thumb" data-idx="6" data-src="assets/videos/info-flow/infoflow-ai-01.mp4" onclick="changeVideo('info-flow',6,this)"><video src="assets/videos/info-flow/infoflow-ai-01.mp4" muted muted preload="metadata"></video><span class="video-card__thumb-index">7</span></div>
-              <div class="video-card__thumb" data-idx="7" data-src="assets/videos/info-flow/infoflow-ai-02.mp4" onclick="changeVideo('info-flow',7,this)"><video src="assets/videos/info-flow/infoflow-ai-02.mp4" muted muted preload="metadata"></video><span class="video-card__thumb-index">8</span></div>
-              <div class="video-card__thumb" data-idx="8" data-src="assets/videos/info-flow/infoflow-ai-03.mp4" onclick="changeVideo('info-flow',8,this)"><video src="assets/videos/info-flow/infoflow-ai-03.mp4" muted muted preload="metadata"></video><span class="video-card__thumb-index">9</span></div>
+              <div class="video-card__thumb video-card__thumb--active" data-idx="0" data-src="assets/videos/info-flow/infoflow-01.mp4" onclick="changeVideo('info-flow',0,this)"><video src="assets/videos/info-flow/infoflow-01.mp4" muted preload="metadata"></video><span class="video-card__thumb-index">1</span></div>
+              <div class="video-card__thumb" data-idx="1" data-src="assets/videos/info-flow/infoflow-02.mp4" onclick="changeVideo('info-flow',1,this)"><video src="assets/videos/info-flow/infoflow-02.mp4" muted preload="metadata"></video><span class="video-card__thumb-index">2</span></div>
+              <div class="video-card__thumb" data-idx="2" data-src="assets/videos/info-flow/infoflow-03.mp4" onclick="changeVideo('info-flow',2,this)"><video src="assets/videos/info-flow/infoflow-03.mp4" muted preload="metadata"></video><span class="video-card__thumb-index">3</span></div>
+              <div class="video-card__thumb" data-idx="3" data-src="assets/videos/info-flow/infoflow-04.mp4" onclick="changeVideo('info-flow',3,this)"><video src="assets/videos/info-flow/infoflow-04.mp4" muted preload="metadata"></video><span class="video-card__thumb-index">4</span></div>
+              <div class="video-card__thumb" data-idx="4" data-src="assets/videos/info-flow/infoflow-05.mp4" onclick="changeVideo('info-flow',4,this)"><video src="assets/videos/info-flow/infoflow-05.mp4" muted preload="metadata"></video><span class="video-card__thumb-index">5</span></div>
+              <div class="video-card__thumb" data-idx="5" data-src="assets/videos/info-flow/infoflow-06.mp4" onclick="changeVideo('info-flow',5,this)"><video src="assets/videos/info-flow/infoflow-06.mp4" muted preload="metadata"></video><span class="video-card__thumb-index">6</span></div>
+              <div class="video-card__thumb" data-idx="6" data-src="assets/videos/info-flow/infoflow-ai-01.mp4" onclick="changeVideo('info-flow',6,this)"><video src="assets/videos/info-flow/infoflow-ai-01.mp4" muted preload="metadata"></video><span class="video-card__thumb-index">7</span></div>
+              <div class="video-card__thumb" data-idx="7" data-src="assets/videos/info-flow/infoflow-ai-02.mp4" onclick="changeVideo('info-flow',7,this)"><video src="assets/videos/info-flow/infoflow-ai-02.mp4" muted preload="metadata"></video><span class="video-card__thumb-index">8</span></div>
+              <div class="video-card__thumb" data-idx="8" data-src="assets/videos/info-flow/infoflow-ai-03.mp4" onclick="changeVideo('info-flow',8,this)"><video src="assets/videos/info-flow/infoflow-ai-03.mp4" muted preload="metadata"></video><span class="video-card__thumb-index">9</span></div>
             </div>
             <div class="video-card__body">
               <h3 class="video-card__title">信息流剪辑</h3>
@@ -410,8 +410,8 @@
           <!-- ====== 美妆口播 ====== -->
           <div class="video-card">
             <div class="video-card__main video-card__main--single" id="player-beauty">
-              <video src="assets/videos/beauty/beauty-talk.mp4" loop playsinline
-                     preload="auto" class="video-card__video"></video>
+              <video src="assets/videos/beauty/beauty-talk.mp4" muted loop playsinline
+                     preload="metadata" class="video-card__video"></video>
               <div class="video-card__overlay" onclick="toggleVideo(this)">
                 <div class="video-card__play-btn">▶</div>
               </div>
@@ -426,8 +426,8 @@
           <!-- ====== AI工具生成 ====== -->
           <div class="video-card">
             <div class="video-card__main" id="player-ai-generated">
-              <video src="assets/videos/ai-generated/ai.mp4" loop playsinline
-                     preload="auto" class="video-card__video"></video>
+              <video src="assets/videos/ai-generated/ai.mp4" muted loop playsinline
+                     preload="metadata" class="video-card__video"></video>
               <div class="video-card__overlay" onclick="toggleVideo(this)">
                 <div class="video-card__play-btn">▶</div>
               </div>
@@ -435,11 +435,11 @@
               <button class="video-card__arrow video-card__arrow--next" onclick="switchVideo('ai-generated',1,event)">▶</button>
             </div>
             <div class="video-card__strip" id="strip-ai-generated">
-              <div class="video-card__thumb video-card__thumb--active" data-idx="0" data-src="assets/videos/ai-generated/ai.mp4" onclick="changeVideo('ai-generated',0,this)"><video src="assets/videos/ai-generated/ai.mp4" muted muted preload="metadata"></video><span class="video-card__thumb-index">1</span></div>
-              <div class="video-card__thumb" data-idx="1" data-src="assets/videos/ai-generated/ai2.mp4" onclick="changeVideo('ai-generated',1,this)"><video src="assets/videos/ai-generated/ai2.mp4" muted muted preload="metadata"></video><span class="video-card__thumb-index">2</span></div>
-              <div class="video-card__thumb" data-idx="2" data-src="assets/videos/ai-generated/ai3.mp4" onclick="changeVideo('ai-generated',2,this)"><video src="assets/videos/ai-generated/ai3.mp4" muted muted preload="metadata"></video><span class="video-card__thumb-index">3</span></div>
-              <div class="video-card__thumb" data-idx="3" data-src="assets/videos/ai-generated/zeekr-ai.mp4" onclick="changeVideo('ai-generated',3,this)"><video src="assets/videos/ai-generated/zeekr-ai.mp4" muted muted preload="metadata"></video><span class="video-card__thumb-index">4</span></div>
-              <div class="video-card__thumb" data-idx="4" data-src="assets/videos/ai-generated/porcelain-ai.mp4" onclick="changeVideo('ai-generated',4,this)"><video src="assets/videos/ai-generated/porcelain-ai.mp4" muted muted preload="metadata"></video><span class="video-card__thumb-index">5</span></div>
+              <div class="video-card__thumb video-card__thumb--active" data-idx="0" data-src="assets/videos/ai-generated/ai.mp4" onclick="changeVideo('ai-generated',0,this)"><video src="assets/videos/ai-generated/ai.mp4" muted preload="metadata"></video><span class="video-card__thumb-index">1</span></div>
+              <div class="video-card__thumb" data-idx="1" data-src="assets/videos/ai-generated/ai2.mp4" onclick="changeVideo('ai-generated',1,this)"><video src="assets/videos/ai-generated/ai2.mp4" muted preload="metadata"></video><span class="video-card__thumb-index">2</span></div>
+              <div class="video-card__thumb" data-idx="2" data-src="assets/videos/ai-generated/ai3.mp4" onclick="changeVideo('ai-generated',2,this)"><video src="assets/videos/ai-generated/ai3.mp4" muted preload="metadata"></video><span class="video-card__thumb-index">3</span></div>
+              <div class="video-card__thumb" data-idx="3" data-src="assets/videos/ai-generated/zeekr-ai.mp4" onclick="changeVideo('ai-generated',3,this)"><video src="assets/videos/ai-generated/zeekr-ai.mp4" muted preload="metadata"></video><span class="video-card__thumb-index">4</span></div>
+              <div class="video-card__thumb" data-idx="4" data-src="assets/videos/ai-generated/porcelain-ai.mp4" onclick="changeVideo('ai-generated',4,this)"><video src="assets/videos/ai-generated/porcelain-ai.mp4" muted preload="metadata"></video><span class="video-card__thumb-index">5</span></div>
             </div>
             <div class="video-card__body">
               <h3 class="video-card__title">AI 工具生成</h3>
@@ -451,8 +451,8 @@
           <!-- ====== 剧情片 ====== -->
           <div class="video-card">
             <div class="video-card__main video-card__main--single" id="player-drama">
-              <video src="assets/videos/drama/the-reach.mp4" loop playsinline
-                     preload="auto" class="video-card__video"></video>
+              <video src="assets/videos/drama/the-reach.mp4" muted loop playsinline
+                     preload="metadata" class="video-card__video"></video>
               <div class="video-card__overlay" onclick="toggleVideo(this)">
                 <div class="video-card__play-btn">▶</div>
               </div>
@@ -467,8 +467,8 @@
           <!-- ====== 作品集 ====== -->
           <div class="video-card">
             <div class="video-card__main video-card__main--single" id="player-documentary">
-              <video src="assets/videos/documentary/showreel.mp4" loop playsinline
-                     preload="auto" class="video-card__video"></video>
+              <video src="assets/videos/documentary/showreel.mp4" muted loop playsinline
+                     preload="metadata" class="video-card__video"></video>
               <div class="video-card__overlay" onclick="toggleVideo(this)">
                 <div class="video-card__play-btn">▶</div>
               </div>
@@ -490,7 +490,12 @@
         var main = overlay.parentElement;
         var video = main.querySelector('video');
         if (video.paused) {
-          video.play().then(function(){ main.classList.add('is-playing'); }).catch(function(e){ console.log(e); });
+          video.muted = false;
+          video.play().then(function(){ main.classList.add('is-playing'); }).catch(function(e){
+            // If unmuted play fails, try muted
+            video.muted = true;
+            video.play().then(function(){ main.classList.add('is-playing'); }).catch(function(){});
+          });
         } else {
           video.pause();
           main.classList.remove('is-playing');
