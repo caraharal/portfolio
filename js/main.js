@@ -198,6 +198,65 @@
   renderGallery('studio-portrait');
 
   // =========================================================================
+  // 5b. Vibe Coding — Tab Switching & Screenshot Lightbox
+  // =========================================================================
+  var vcTabNav = document.getElementById('vc-tabs-nav');
+  var vcTabContent = document.getElementById('vc-tabs-content');
+
+  if (vcTabNav) {
+    vcTabNav.querySelectorAll('.vc-tab').forEach(function (tab) {
+      tab.addEventListener('click', function () {
+        var target = this.getAttribute('data-tab');
+        vcTabNav.querySelectorAll('.vc-tab').forEach(function (t) { t.classList.remove('active'); });
+        this.classList.add('active');
+        vcTabContent.querySelectorAll('.vc-tab-panel').forEach(function (p) { p.classList.remove('active'); });
+        var panel = vcTabContent.querySelector('[data-tab="' + target + '"]');
+        if (panel) panel.classList.add('active');
+      });
+    });
+  }
+
+  // Screenshot lightbox
+  var screenshotLightbox = document.createElement('div');
+  screenshotLightbox.className = 'vc-screenshot-lightbox';
+  screenshotLightbox.innerHTML = '<button class="vc-screenshot-close">&times;</button><img src="" alt="screenshot">';
+  document.body.appendChild(screenshotLightbox);
+
+  var ssImg = screenshotLightbox.querySelector('img');
+  var ssClose = screenshotLightbox.querySelector('.vc-screenshot-close');
+
+  document.addEventListener('click', function (e) {
+    var trigger = e.target.closest('.vc-step-screenshot');
+    if (trigger) {
+      var src = trigger.getAttribute('data-screenshot');
+      if (src) {
+        ssImg.src = src;
+        screenshotLightbox.classList.add('active');
+        document.body.style.overflow = 'hidden';
+      }
+    }
+  });
+
+  ssClose.addEventListener('click', function () {
+    screenshotLightbox.classList.remove('active');
+    document.body.style.overflow = '';
+  });
+
+  screenshotLightbox.addEventListener('click', function (e) {
+    if (e.target === screenshotLightbox) {
+      screenshotLightbox.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+  });
+
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && screenshotLightbox.classList.contains('active')) {
+      screenshotLightbox.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+  });
+
+  // =========================================================================
   // =========================================================================
   // 6. Lightbox
   // =========================================================================
@@ -236,6 +295,17 @@
   }
 
   function showPrev() {
+    // AI gallery mode
+    if (lightbox._aiGallery && lightbox._aiGallery.length) {
+      var items = lightbox._aiGallery;
+      lightbox._aiIndex = (lightbox._aiIndex - 1 + items.length) % items.length;
+      var item = items[lightbox._aiIndex];
+      var fn = typeof item === 'string' ? item : item.file;
+      var cap = typeof item === 'string' ? '' : (item.caption || '');
+      lightboxImg.src = 'assets/images/ai-generated/' + fn;
+      lightboxCaption.textContent = cap || '';
+      return;
+    }
     var images = galleryData[currentCat];
     if (!images) return;
     currentIndex = (currentIndex - 1 + images.length) % images.length;
@@ -243,6 +313,17 @@
   }
 
   function showNext() {
+    // AI gallery mode
+    if (lightbox._aiGallery && lightbox._aiGallery.length) {
+      var items = lightbox._aiGallery;
+      lightbox._aiIndex = (lightbox._aiIndex + 1) % items.length;
+      var item = items[lightbox._aiIndex];
+      var fn = typeof item === 'string' ? item : item.file;
+      var cap = typeof item === 'string' ? '' : (item.caption || '');
+      lightboxImg.src = 'assets/images/ai-generated/' + fn;
+      lightboxCaption.textContent = cap || '';
+      return;
+    }
     var images = galleryData[currentCat];
     if (!images) return;
     currentIndex = (currentIndex + 1) % images.length;

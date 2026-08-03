@@ -1,0 +1,929 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>管理后台 — 慢帧时光 film</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/style.css">
+
+  <style>
+    /* ================================================================
+       管理后台专属样式
+       ================================================================ */
+
+    /* ---- Tab 切换栏 ---- */
+    .admin-tabs {
+      display: flex;
+      border-bottom: 2px solid var(--border-line);
+      margin: 0 var(--space-md);
+    }
+    .admin-tab {
+      flex: 1;
+      padding: var(--space-sm) 0;
+      text-align: center;
+      font-family: var(--font-serif);
+      font-size: 0.95rem;
+      color: var(--accent-tag);
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -2px;
+      transition: all 0.2s;
+      background: none;
+      border-top: none;
+      border-left: none;
+      border-right: none;
+    }
+    .admin-tab.active {
+      color: var(--text-title);
+      border-bottom-color: var(--text-title);
+    }
+
+    /* ---- Tab 内容区 ---- */
+    .admin-tab-content {
+      display: none;
+      padding: var(--space-md);
+    }
+    .admin-tab-content.active {
+      display: block;
+    }
+
+    /* ---- 相机管理列表 ---- */
+    .admin-camera-item {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+      background: var(--bg-card);
+      border-radius: var(--radius-md);
+      padding: var(--space-sm);
+      margin-bottom: var(--space-sm);
+    }
+    .admin-camera-thumb {
+      width: 60px;
+      height: 60px;
+      border-radius: var(--radius-sm);
+      object-fit: cover;
+      background: var(--border-line);
+      flex-shrink: 0;
+    }
+    .admin-camera-info {
+      flex: 1;
+      min-width: 0;
+    }
+    .admin-camera-info .name {
+      font-family: var(--font-serif);
+      font-size: 0.95rem;
+      color: var(--text-title);
+      font-weight: 600;
+    }
+    .admin-camera-info .meta {
+      font-size: 0.78rem;
+      color: var(--accent-tag);
+      margin-top: 2px;
+    }
+    .admin-camera-actions {
+      display: flex;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+
+    /* 小按钮 */
+    .btn-sm {
+      padding: 6px 12px;
+      font-size: 0.8rem;
+      border-radius: var(--radius-sm);
+      border: none;
+      cursor: pointer;
+      font-family: var(--font-sans);
+      transition: opacity 0.2s;
+    }
+    .btn-sm:active { opacity: 0.7; }
+    .btn-edit { background: var(--border-line); color: var(--text-title); }
+    .btn-danger { background: #e8d0cc; color: var(--accent-price); }
+
+    /* ---- 表单 ---- */
+    .admin-form {
+      background: var(--bg-card);
+      border-radius: var(--radius-lg);
+      padding: var(--space-md);
+      margin-top: var(--space-md);
+    }
+    .admin-form h3 {
+      font-family: var(--font-serif);
+      font-size: 1.1rem;
+      color: var(--text-title);
+      margin-bottom: var(--space-md);
+    }
+    .form-group {
+      margin-bottom: var(--space-md);
+    }
+    .form-group label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-title);
+      margin-bottom: 4px;
+    }
+    .form-group .hint {
+      font-size: 0.75rem;
+      color: var(--accent-tag);
+      font-weight: 400;
+    }
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1.5px solid var(--border-line);
+      border-radius: var(--radius-sm);
+      font-size: 0.9rem;
+      font-family: var(--font-sans);
+      color: var(--text-title);
+      background: #fff;
+      transition: border-color 0.2s;
+      -webkit-appearance: none;
+    }
+    .form-group input:focus,
+    .form-group textarea:focus,
+    .form-group select:focus {
+      outline: none;
+      border-color: var(--text-title);
+    }
+    .form-group textarea {
+      min-height: 80px;
+      resize: vertical;
+    }
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-sm);
+    }
+
+    /* 图片上传区 */
+    .image-upload-area {
+      border: 2px dashed var(--border-line);
+      border-radius: var(--radius-md);
+      padding: var(--space-lg);
+      text-align: center;
+      cursor: pointer;
+      transition: border-color 0.2s;
+    }
+    .image-upload-area:hover {
+      border-color: var(--accent-tag);
+    }
+    .image-upload-area .upload-icon {
+      font-size: 2rem;
+      margin-bottom: var(--space-xs);
+    }
+    .image-upload-area p {
+      font-size: 0.85rem;
+      color: var(--accent-tag);
+    }
+    .image-upload-area input[type="file"] {
+      display: none;
+    }
+
+    /* 图片预览网格 */
+    .image-previews {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      margin-top: var(--space-sm);
+    }
+    .image-preview-item {
+      position: relative;
+      aspect-ratio: 1;
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+      background: var(--border-line);
+    }
+    .image-preview-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .image-preview-item .remove-img {
+      position: absolute;
+      top: 2px;
+      right: 2px;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: rgba(0,0,0,0.6);
+      color: #fff;
+      border: none;
+      font-size: 14px;
+      line-height: 22px;
+      text-align: center;
+      cursor: pointer;
+      padding: 0;
+    }
+
+    /* 表单按钮行 */
+    .form-actions {
+      display: flex;
+      gap: var(--space-sm);
+      margin-top: var(--space-md);
+    }
+    .form-actions .btn {
+      flex: 1;
+    }
+    .btn-cancel {
+      background: transparent;
+      color: var(--text-body);
+      border: 1.5px solid var(--border-line);
+    }
+
+    /* 工具栏 */
+    .admin-toolbar {
+      display: flex;
+      gap: var(--space-sm);
+      margin-bottom: var(--space-md);
+    }
+    .admin-toolbar .btn-sm {
+      padding: 8px 16px;
+    }
+    .btn-outline {
+      background: transparent;
+      border: 1.5px solid var(--border-line);
+      color: var(--text-title);
+    }
+
+    /* 空列表 */
+    .admin-empty {
+      text-align: center;
+      padding: var(--space-xl);
+      color: var(--accent-tag);
+      font-family: var(--font-serif);
+    }
+
+    /* 危险区域 */
+    .danger-zone {
+      margin-top: var(--space-xl);
+      padding: var(--space-md);
+      border: 1.5px solid #e8d0cc;
+      border-radius: var(--radius-md);
+      background: #fdf7f5;
+    }
+    .danger-zone h3 {
+      color: var(--accent-price);
+      font-family: var(--font-serif);
+      font-size: 1rem;
+      margin-bottom: var(--space-xs);
+    }
+    .danger-zone p {
+      font-size: 0.8rem;
+      color: var(--text-body);
+      margin-bottom: var(--space-sm);
+    }
+
+    /* Toast 调整（后台页面 toast 层级） */
+    .toast {
+      z-index: 10001;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ==============================
+       Header
+       ============================== -->
+  <header class="site-header">
+    <div class="site-logo">
+      <span class="logo-icon">⚙️</span>管理后台
+    </div>
+    <div class="site-subtitle">慢帧时光 film</div>
+    <hr class="header-divider">
+  </header>
+
+  <!-- ==============================
+       Tab 切换
+       ============================== -->
+  <nav class="admin-tabs">
+    <button class="admin-tab active" data-tab="cameras">📷 相机管理</button>
+    <button class="admin-tab" data-tab="settings">⚙️ 网站设置</button>
+  </nav>
+
+  <!-- ==============================
+       Tab 1: 相机管理
+       ============================== -->
+  <div class="admin-tab-content active" id="tab-cameras">
+    <!-- 工具栏 -->
+    <div class="admin-toolbar">
+      <button class="btn btn-wechat" id="btn-add-camera" style="flex:1;">＋ 添加新相机</button>
+    </div>
+    <div class="admin-toolbar">
+      <button class="btn-sm btn-outline" id="btn-export">📥 导出数据备份</button>
+      <button class="btn-sm btn-outline" id="btn-import">📤 导入数据</button>
+      <input type="file" id="import-file" accept=".json" style="display:none;">
+    </div>
+
+    <!-- 相机列表 -->
+    <div id="admin-camera-list">
+      <div class="admin-empty">加载中...</div>
+    </div>
+
+    <!-- 添加/编辑表单（默认隐藏） -->
+    <div class="admin-form" id="camera-form" style="display:none;">
+      <h3 id="form-title">添加新相机</h3>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>ID <span class="hint">（英文+连字符，唯一标识）</span></label>
+          <input type="text" id="cam-id" placeholder="例如：contax-t2" required>
+        </div>
+        <div class="form-group">
+          <label>相机名称 *</label>
+          <input type="text" id="cam-name" placeholder="例如：Contax T2" required>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>品牌</label>
+          <input type="text" id="cam-brand" placeholder="例如：Contax">
+        </div>
+        <div class="form-group">
+          <label>型号</label>
+          <input type="text" id="cam-model" placeholder="例如：T2">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>价格（元）*</label>
+          <input type="number" id="cam-price" placeholder="3800" required>
+        </div>
+        <div class="form-group">
+          <label>成色</label>
+          <select id="cam-condition">
+            <option value="全新">全新</option>
+            <option value="99成新">99成新</option>
+            <option value="95成新" selected>95成新</option>
+            <option value="9成新">9成新</option>
+            <option value="85成新">85成新</option>
+            <option value="8成新">8成新</option>
+            <option value="7成新">7成新</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- 图片上传 -->
+      <div class="form-group">
+        <label>📸 相机图片 <span class="hint">（可多选，直接上传）</span></label>
+        <div class="image-upload-area" id="image-upload-area">
+          <div class="upload-icon">🖼️</div>
+          <p>点击或拖拽上传图片</p>
+          <input type="file" id="image-input" accept="image/*" multiple>
+        </div>
+        <div class="image-previews" id="image-previews"></div>
+      </div>
+
+      <!-- 视频 -->
+      <div class="form-group">
+        <label>🎬 视频文件路径 <span class="hint">（视频放 videos/ 文件夹，这里写文件名）</span></label>
+        <input type="text" id="cam-video" placeholder="例如：videos/contax-t2.mp4（可留空）">
+      </div>
+
+      <!-- 附件 -->
+      <div class="form-group">
+        <label>📦 附件清单 <span class="hint">（一行一个）</span></label>
+        <textarea id="cam-accessories" placeholder="原装镜头盖&#10;原装皮套&#10;原装肩带"></textarea>
+      </div>
+
+      <!-- 描述 -->
+      <div class="form-group">
+        <label>📝 详细描述</label>
+        <textarea id="cam-description" placeholder="写一段机器的详细介绍..."></textarea>
+      </div>
+
+      <div class="form-actions">
+        <button class="btn btn-wechat" id="btn-save-camera">💾 保存</button>
+        <button class="btn btn-cancel" id="btn-cancel-form">取消</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==============================
+       Tab 2: 网站设置
+       ============================== -->
+  <div class="admin-tab-content" id="tab-settings">
+    <div class="admin-form" style="margin-top:0;">
+      <h3>🌐 全局设置</h3>
+
+      <div class="form-group">
+        <label>微信号</label>
+        <input type="text" id="cfg-wechat" placeholder="你的微信号">
+      </div>
+
+      <div class="form-group">
+        <label>闲鱼链接</label>
+        <input type="text" id="cfg-xianyu" placeholder="闲鱼主页链接">
+      </div>
+
+      <div class="form-group">
+        <label>网站名称</label>
+        <input type="text" id="cfg-sitename" placeholder="慢帧时光">
+      </div>
+
+      <div class="form-group">
+        <label>副标题</label>
+        <input type="text" id="cfg-subtitle" placeholder="film camera market">
+      </div>
+
+      <div class="form-actions">
+        <button class="btn btn-wechat" id="btn-save-config">💾 保存设置</button>
+      </div>
+    </div>
+
+    <!-- 危险区域 -->
+    <div class="danger-zone">
+      <h3>⚠️ 危险操作</h3>
+      <p>清除所有相机数据和设置，恢复为默认状态。此操作不可撤销！建议先导出备份。</p>
+      <button class="btn-sm btn-danger" id="btn-clear-all">🗑 清除所有数据</button>
+    </div>
+  </div>
+
+  <!-- ==============================
+       Footer
+       ============================== -->
+  <footer class="site-footer">
+    <a href="index.html" style="color:var(--accent-tag);">← 返回网站</a>
+  </footer>
+
+  <!-- ==============================
+       JavaScript
+       ============================== -->
+  <script src="js/cameras.js"></script>
+  <script>
+  /**
+   * ============================================================
+   * 管理后台逻辑
+   * ============================================================
+   */
+
+  var STORAGE_KEY_CAMERAS = 'film_cameras';
+  var STORAGE_KEY_CONFIG  = 'film_config';
+
+  // ---- 当前编辑状态 ----
+  var editingId = null;        // null = 添加模式，string = 编辑模式
+  var imageDataUrls = [];      // 当前表单中的图片（base64）
+
+  /* ================================================================
+     数据读写
+     ================================================================ */
+
+  function getCameras() {
+    var data = localStorage.getItem(STORAGE_KEY_CAMERAS);
+    if (data) {
+      try { return JSON.parse(data); } catch(e) {}
+    }
+    // 首次使用：把 cameras.js 的默认数据存入 localStorage
+    saveCameras(CAMERAS);
+    return CAMERAS.slice();
+  }
+
+  function saveCameras(cameras) {
+    localStorage.setItem(STORAGE_KEY_CAMERAS, JSON.stringify(cameras));
+  }
+
+  function getConfig() {
+    var data = localStorage.getItem(STORAGE_KEY_CONFIG);
+    if (data) {
+      try { return JSON.parse(data); } catch(e) {}
+    }
+    return {
+      wechatId: 'caraharal0213',
+      xianyuLink: 'https://m.tb.cn/h.R9xYB8c?tk=kRw7gdBVeTV',
+      siteName: '慢帧时光',
+      siteSubtitle: 'film camera market'
+    };
+  }
+
+  function saveConfig(config) {
+    localStorage.setItem(STORAGE_KEY_CONFIG, JSON.stringify(config));
+  }
+
+  /* ================================================================
+     Tab 切换
+     ================================================================ */
+
+  var tabs = document.querySelectorAll('.admin-tab');
+  var contents = document.querySelectorAll('.admin-tab-content');
+
+  for (var i = 0; i < tabs.length; i++) {
+    tabs[i].addEventListener('click', function () {
+      var target = this.getAttribute('data-tab');
+      for (var j = 0; j < tabs.length; j++) {
+        tabs[j].classList.remove('active');
+        contents[j].classList.remove('active');
+      }
+      this.classList.add('active');
+      document.getElementById('tab-' + target).classList.add('active');
+    });
+  }
+
+  /* ================================================================
+     相机列表渲染
+     ================================================================ */
+
+  function renderCameraList() {
+    var container = document.getElementById('admin-camera-list');
+    var cameras = getCameras();
+
+    if (cameras.length === 0) {
+      container.innerHTML = '<div class="admin-empty">📷<br>还没有添加相机</div>';
+      return;
+    }
+
+    var html = '';
+    for (var i = 0; i < cameras.length; i++) {
+      var cam = cameras[i];
+      var thumb = (cam.images && cam.images.length > 0)
+        ? cam.images[0]
+        : 'images/placeholder.svg';
+
+      html +=
+        '<div class="admin-camera-item">' +
+          '<img class="admin-camera-thumb" src="' + thumb + '" alt="" ' +
+            'onerror="this.src=\'images/placeholder.svg\'">' +
+          '<div class="admin-camera-info">' +
+            '<div class="name">' + cam.name + '</div>' +
+            '<div class="meta">' + cam.brand + ' ' + cam.model +
+              ' · ' + cam.condition + ' · ¥' + cam.price.toLocaleString() + '</div>' +
+          '</div>' +
+          '<div class="admin-camera-actions">' +
+            '<button class="btn-sm btn-edit" data-edit="' + cam.id + '">✏️ 编辑</button>' +
+            '<button class="btn-sm btn-danger" data-delete="' + cam.id + '">🗑</button>' +
+          '</div>' +
+        '</div>';
+    }
+    container.innerHTML = html;
+
+    // 绑定编辑按钮
+    var editBtns = container.querySelectorAll('[data-edit]');
+    for (var e = 0; e < editBtns.length; e++) {
+      editBtns[e].addEventListener('click', function () {
+        editCamera(this.getAttribute('data-edit'));
+      });
+    }
+
+    // 绑定删除按钮
+    var delBtns = container.querySelectorAll('[data-delete]');
+    for (var d = 0; d < delBtns.length; d++) {
+      delBtns[d].addEventListener('click', function () {
+        deleteCamera(this.getAttribute('data-delete'));
+      });
+    }
+  }
+
+  /* ================================================================
+     表单操作
+     ================================================================ */
+
+  // 显示表单（添加模式）
+  document.getElementById('btn-add-camera').addEventListener('click', function () {
+    editingId = null;
+    imageDataUrls = [];
+    document.getElementById('form-title').textContent = '➕ 添加新相机';
+    clearForm();
+    document.getElementById('camera-form').style.display = 'block';
+    document.getElementById('cam-id').focus();
+    window.scrollTo({ top: document.getElementById('camera-form').offsetTop - 20, behavior: 'smooth' });
+  });
+
+  // 隐藏表单
+  document.getElementById('btn-cancel-form').addEventListener('click', function () {
+    document.getElementById('camera-form').style.display = 'none';
+    editingId = null;
+    imageDataUrls = [];
+  });
+
+  // 编辑相机
+  function editCamera(id) {
+    var cameras = getCameras();
+    var cam = null;
+    for (var i = 0; i < cameras.length; i++) {
+      if (cameras[i].id === id) { cam = cameras[i]; break; }
+    }
+    if (!cam) return;
+
+    editingId = id;
+    imageDataUrls = (cam.images && cam.images.slice()) || [];
+
+    document.getElementById('form-title').textContent = '✏️ 编辑：' + cam.name;
+    document.getElementById('cam-id').value = cam.id;
+    document.getElementById('cam-id').readOnly = true; // 编辑时 ID 不可改
+    document.getElementById('cam-name').value = cam.name;
+    document.getElementById('cam-brand').value = cam.brand || '';
+    document.getElementById('cam-model').value = cam.model || '';
+    document.getElementById('cam-price').value = cam.price;
+    document.getElementById('cam-condition').value = cam.condition;
+    document.getElementById('cam-video').value = cam.video || '';
+    document.getElementById('cam-accessories').value = (cam.accessories || []).join('\n');
+    document.getElementById('cam-description').value = cam.description || '';
+
+    renderImagePreviews();
+    document.getElementById('camera-form').style.display = 'block';
+    window.scrollTo({ top: document.getElementById('camera-form').offsetTop - 20, behavior: 'smooth' });
+  }
+
+  // 清除表单
+  function clearForm() {
+    document.getElementById('cam-id').readOnly = false;
+    document.getElementById('cam-id').value = '';
+    document.getElementById('cam-name').value = '';
+    document.getElementById('cam-brand').value = '';
+    document.getElementById('cam-model').value = '';
+    document.getElementById('cam-price').value = '';
+    document.getElementById('cam-condition').value = '95成新';
+    document.getElementById('cam-video').value = '';
+    document.getElementById('cam-accessories').value = '';
+    document.getElementById('cam-description').value = '';
+    document.getElementById('image-previews').innerHTML = '';
+    imageDataUrls = [];
+  }
+
+  // 保存相机
+  document.getElementById('btn-save-camera').addEventListener('click', function () {
+    var id = document.getElementById('cam-id').value.trim();
+    var name = document.getElementById('cam-name').value.trim();
+    var price = parseInt(document.getElementById('cam-price').value, 10);
+
+    // 验证
+    if (!id) { showToast('⚠ 请输入 ID'); return; }
+    if (!name) { showToast('⚠ 请输入相机名称'); return; }
+    if (!price || isNaN(price)) { showToast('⚠ 请输入有效价格'); return; }
+
+    var cameras = getCameras();
+
+    // 添加模式：检查 ID 不重复
+    if (!editingId) {
+      for (var i = 0; i < cameras.length; i++) {
+        if (cameras[i].id === id) {
+          showToast('⚠ ID "' + id + '" 已存在，请换一个');
+          return;
+        }
+      }
+    }
+
+    var cameraData = {
+      id: id,
+      name: name,
+      brand: document.getElementById('cam-brand').value.trim(),
+      model: document.getElementById('cam-model').value.trim(),
+      price: price,
+      condition: document.getElementById('cam-condition').value,
+      images: imageDataUrls.slice(),
+      video: document.getElementById('cam-video').value.trim(),
+      accessories: document.getElementById('cam-accessories').value
+        .split('\n')
+        .map(function(s) { return s.trim(); })
+        .filter(function(s) { return s.length > 0; }),
+      description: document.getElementById('cam-description').value.trim()
+    };
+
+    if (editingId) {
+      // 编辑模式：替换
+      for (var j = 0; j < cameras.length; j++) {
+        if (cameras[j].id === editingId) {
+          cameras[j] = cameraData;
+          break;
+        }
+      }
+      showToast('✅ 已更新：「' + name + '」');
+    } else {
+      // 添加模式
+      cameras.push(cameraData);
+      showToast('✅ 已添加：「' + name + '」');
+    }
+
+    saveCameras(cameras);
+    editingId = null;
+    imageDataUrls = [];
+    document.getElementById('camera-form').style.display = 'none';
+    renderCameraList();
+  });
+
+  // 删除相机
+  function deleteCamera(id) {
+    var cameras = getCameras();
+    var cam = null;
+    for (var i = 0; i < cameras.length; i++) {
+      if (cameras[i].id === id) { cam = cameras[i]; break; }
+    }
+    if (!cam) return;
+
+    if (!confirm('确定要删除「' + cam.name + '」吗？此操作不可恢复！')) return;
+
+    var filtered = [];
+    for (var j = 0; j < cameras.length; j++) {
+      if (cameras[j].id !== id) filtered.push(cameras[j]);
+    }
+    saveCameras(filtered);
+    showToast('🗑 已删除：「' + cam.name + '」');
+    renderCameraList();
+  }
+
+  /* ================================================================
+     图片上传处理
+     ================================================================ */
+
+  var imageInput = document.getElementById('image-input');
+  var uploadArea = document.getElementById('image-upload-area');
+
+  // 点击上传区域
+  uploadArea.addEventListener('click', function () {
+    imageInput.click();
+  });
+
+  // 文件选择
+  imageInput.addEventListener('change', function () {
+    handleFiles(this.files);
+    this.value = ''; // 清空以便重新选择相同文件
+  });
+
+  // 拖拽支持
+  uploadArea.addEventListener('dragover', function (e) {
+    e.preventDefault();
+    this.style.borderColor = 'var(--text-title)';
+  });
+  uploadArea.addEventListener('dragleave', function () {
+    this.style.borderColor = 'var(--border-line)';
+  });
+  uploadArea.addEventListener('drop', function (e) {
+    e.preventDefault();
+    this.style.borderColor = 'var(--border-line)';
+    handleFiles(e.dataTransfer.files);
+  });
+
+  function handleFiles(files) {
+    for (var i = 0; i < files.length; i++) {
+      (function (file) {
+        if (!file.type.match(/image\//)) return;
+
+        var reader = new FileReader();
+        reader.onload = function (e) {
+          imageDataUrls.push(e.target.result);
+          renderImagePreviews();
+        };
+        reader.readAsDataURL(file);
+      })(files[i]);
+    }
+  }
+
+  function renderImagePreviews() {
+    var container = document.getElementById('image-previews');
+    var html = '';
+    for (var i = 0; i < imageDataUrls.length; i++) {
+      html +=
+        '<div class="image-preview-item">' +
+          '<img src="' + imageDataUrls[i] + '" alt="">' +
+          '<button class="remove-img" data-remove="' + i + '">×</button>' +
+        '</div>';
+    }
+    container.innerHTML = html;
+
+    // 绑定删除按钮
+    var removeBtns = container.querySelectorAll('[data-remove]');
+    for (var r = 0; r < removeBtns.length; r++) {
+      removeBtns[r].addEventListener('click', function (e) {
+        e.stopPropagation();
+        var idx = parseInt(this.getAttribute('data-remove'), 10);
+        imageDataUrls.splice(idx, 1);
+        renderImagePreviews();
+      });
+    }
+  }
+
+  /* ================================================================
+     导出 / 导入
+     ================================================================ */
+
+  // 导出
+  document.getElementById('btn-export').addEventListener('click', function () {
+    var data = {
+      cameras: getCameras(),
+      config: getConfig(),
+      exportedAt: new Date().toISOString()
+    };
+    var blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url;
+    a.download = 'film-camera-backup-' + new Date().toISOString().slice(0, 10) + '.json';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    showToast('📥 备份文件已下载');
+  });
+
+  // 导入
+  document.getElementById('btn-import').addEventListener('click', function () {
+    document.getElementById('import-file').click();
+  });
+
+  document.getElementById('import-file').addEventListener('change', function () {
+    var file = this.files[0];
+    if (!file) return;
+    this.value = '';
+
+    var reader = new FileReader();
+    reader.onload = function (e) {
+      try {
+        var data = JSON.parse(e.target.result);
+        if (!data.cameras || !Array.isArray(data.cameras)) {
+          showToast('⚠ 文件格式不正确（缺少 cameras 数据）');
+          return;
+        }
+        if (!confirm(
+          '即将导入 ' + data.cameras.length + ' 台相机数据' +
+          (data.config ? '和网站设置' : '') +
+          '。\n\n⚠ 这会覆盖当前所有数据！确定继续？'
+        )) return;
+
+        saveCameras(data.cameras);
+        if (data.config) saveConfig(data.config);
+        showToast('✅ 导入成功！');
+        renderCameraList();
+        loadConfigToForm();
+      } catch (err) {
+        showToast('⚠ 文件解析失败，请检查文件格式');
+      }
+    };
+    reader.readAsText(file);
+  });
+
+  /* ================================================================
+     网站设置
+     ================================================================ */
+
+  function loadConfigToForm() {
+    var cfg = getConfig();
+    document.getElementById('cfg-wechat').value = cfg.wechatId || '';
+    document.getElementById('cfg-xianyu').value = cfg.xianyuLink || '';
+    document.getElementById('cfg-sitename').value = cfg.siteName || '';
+    document.getElementById('cfg-subtitle').value = cfg.siteSubtitle || '';
+  }
+
+  document.getElementById('btn-save-config').addEventListener('click', function () {
+    var config = {
+      wechatId: document.getElementById('cfg-wechat').value.trim(),
+      xianyuLink: document.getElementById('cfg-xianyu').value.trim(),
+      siteName: document.getElementById('cfg-sitename').value.trim(),
+      siteSubtitle: document.getElementById('cfg-subtitle').value.trim()
+    };
+    saveConfig(config);
+    showToast('✅ 设置已保存');
+  });
+
+  // 清除所有数据
+  document.getElementById('btn-clear-all').addEventListener('click', function () {
+    if (!confirm('⚠️ 确定清除所有数据？\n\n这会删除所有相机数据和设置，恢复为默认状态。\n建议先点击「导出数据备份」！')) return;
+    if (!confirm('再次确认：真的要清除吗？')) return;
+
+    localStorage.removeItem(STORAGE_KEY_CAMERAS);
+    localStorage.removeItem(STORAGE_KEY_CONFIG);
+    showToast('🗑 所有数据已清除');
+    renderCameraList();
+    loadConfigToForm();
+  });
+
+  /* ================================================================
+     Toast 提示
+     ================================================================ */
+
+  function showToast(message, duration) {
+    duration = duration || 2000;
+    var toast = document.getElementById('toast');
+    if (!toast) {
+      toast = document.createElement('div');
+      toast.id = 'toast';
+      toast.className = 'toast';
+      document.body.appendChild(toast);
+    }
+    toast.textContent = message;
+    toast.classList.add('show');
+    clearTimeout(toast._timeout);
+    toast._timeout = setTimeout(function () {
+      toast.classList.remove('show');
+    }, duration);
+  }
+
+  /* ================================================================
+     初始化
+     ================================================================ */
+
+  (function init() {
+    renderCameraList();
+    loadConfigToForm();
+  })();
+  </script>
+</body>
+</html>

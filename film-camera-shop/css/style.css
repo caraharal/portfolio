@@ -1,0 +1,687 @@
+/**
+ * ============================================================
+ * 慢帧时光 film — 全局样式
+ * 复古胶片感 · 移动端优先 · 暖色调
+ * ============================================================
+ */
+
+/* ================================================================
+   1. CSS 变量 & 设计令牌
+   ================================================================ */
+:root {
+  /* 主色调 */
+  --bg-cream:     #F5F0E8;   /* 页面背景 — 米白旧纸 */
+  --bg-card:      #EDE4D6;   /* 卡片背景 — 浅黄褐 */
+  --text-title:   #5C3D2E;   /* 标题 — 深咖 */
+  --text-body:    #6B5A4E;   /* 正文 — 中褐 */
+  --accent-price: #A0523D;   /* 价格强调 — 暗红/铁锈红 */
+  --accent-tag:   #C4A882;   /* 成色标签 — 棕褐 */
+  --border-line:  #D4C5B2;   /* 分隔线 — 浅棕 */
+  --btn-primary:  #5C3D2E;   /* 主按钮 — 深咖 */
+  --btn-text:     #F5F0E8;   /* 按钮文字 — 米白 */
+
+  /* 间距 */
+  --space-xs:  8px;
+  --space-sm:  12px;
+  --space-md:  16px;
+  --space-lg:  24px;
+  --space-xl:  32px;
+
+  /* 圆角 */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+
+  /* 字体 */
+  --font-serif: 'Noto Serif SC', 'Songti SC', 'SimSun', serif;
+  --font-sans:  -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Helvetica Neue', sans-serif;
+}
+
+/* ================================================================
+   2. 基础重置
+   ================================================================ */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  -webkit-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--bg-cream);
+  color: var(--text-body);
+  line-height: 1.6;
+  min-height: 100vh;
+  /* 页面最大宽度（移动端撑满，大屏居中） */
+  max-width: 480px;
+  margin: 0 auto;
+  /* 噪点纹理叠层 */
+  position: relative;
+}
+
+/* ================================================================
+   3. 噪点/颗粒感纹理（全页叠层）
+   ================================================================ */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  /* SVG feTurbulence 生成的胶片颗粒噪点 */
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200"><filter id="noise"><feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/></filter><rect width="200" height="200" filter="url(%23noise)" opacity="0.5"/></svg>');
+  opacity: 0.04;
+}
+
+/* ================================================================
+   4. 排版
+   ================================================================ */
+h1, h2, h3, h4 {
+  font-family: var(--font-serif);
+  color: var(--text-title);
+  font-weight: 600;
+}
+
+a {
+  color: var(--accent-price);
+  text-decoration: none;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+/* 图片加载失败时的占位样式 */
+img:-moz-broken,
+img:-moz-user-disabled {
+  opacity: 0;
+}
+img::before {
+  /* 占位：暖色背景 */
+  display: block;
+  content: '';
+  background: var(--bg-card);
+  min-height: 200px;
+}
+
+/* ================================================================
+   5. 首页 — Header
+   ================================================================ */
+.site-header {
+  text-align: center;
+  padding: var(--space-xl) var(--space-md) var(--space-lg);
+  position: relative;
+}
+
+.site-logo {
+  font-family: var(--font-serif);
+  font-size: 2rem;
+  color: var(--text-title);
+  letter-spacing: 0.08em;
+  margin-bottom: var(--space-xs);
+}
+
+.site-logo .logo-icon {
+  display: inline-block;
+  font-size: 2.2rem;
+  margin-right: 4px;
+  vertical-align: -3px;
+}
+
+.site-subtitle {
+  font-family: var(--font-serif);
+  font-size: 0.85rem;
+  color: var(--accent-tag);
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  margin-bottom: var(--space-sm);
+}
+
+.header-divider {
+  display: block;
+  width: 60px;
+  height: 2px;
+  background: var(--border-line);
+  margin: var(--space-sm) auto;
+  border: none;
+}
+
+/* ================================================================
+   6. 首页 — 相机卡片列表
+   ================================================================ */
+.camera-list {
+  padding: 0 var(--space-md) var(--space-xl);
+}
+
+/* 无相机时的提示 */
+.empty-state {
+  text-align: center;
+  padding: var(--space-xl);
+  color: var(--accent-tag);
+  font-family: var(--font-serif);
+}
+
+/* ---- 单张卡片 ---- */
+.camera-card {
+  display: block;
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  margin-bottom: var(--space-md);
+  /* 冲印照片纸阴影 */
+  box-shadow:
+    0 2px 4px  rgba(92, 61, 46, 0.08),
+    0 6px 16px rgba(92, 61, 46, 0.06);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  cursor: pointer;
+}
+
+.camera-card:hover {
+  transform: translateY(-3px);
+  box-shadow:
+    0 4px 8px  rgba(92, 61, 46, 0.12),
+    0 10px 24px rgba(92, 61, 46, 0.10);
+}
+
+.camera-card:active {
+  transform: translateY(-1px);
+}
+
+.card-image-wrap {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  background: var(--border-line);
+  position: relative;
+}
+
+.card-image-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.camera-card:hover .card-image-wrap img {
+  transform: scale(1.03);
+}
+
+.card-body {
+  padding: var(--space-md);
+}
+
+.card-name {
+  font-family: var(--font-serif);
+  font-size: 1.2rem;
+  color: var(--text-title);
+  margin-bottom: 4px;
+}
+
+.card-model {
+  font-size: 0.85rem;
+  color: var(--accent-tag);
+  margin-bottom: var(--space-sm);
+}
+
+.card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* 成色标签 */
+.condition-badge {
+  display: inline-block;
+  background: var(--accent-tag);
+  color: #fff;
+  font-size: 0.75rem;
+  padding: 3px 10px;
+  border-radius: 20px;
+  letter-spacing: 0.04em;
+}
+
+/* 价格 */
+.card-price {
+  font-family: var(--font-serif);
+  font-size: 1.35rem;
+  color: var(--accent-price);
+  font-weight: 700;
+}
+
+.card-price .price-unit {
+  font-size: 0.8rem;
+  font-weight: 400;
+}
+
+/* ================================================================
+   7. 首页 — 底部声明
+   ================================================================ */
+.site-footer {
+  text-align: center;
+  padding: var(--space-lg) var(--space-md);
+  font-size: 0.8rem;
+  color: var(--accent-tag);
+  letter-spacing: 0.06em;
+}
+
+/* ================================================================
+   8. 详情页 — 顶部导航
+   ================================================================ */
+.detail-header {
+  display: flex;
+  align-items: center;
+  padding: var(--space-md);
+  gap: var(--space-sm);
+  position: sticky;
+  top: 0;
+  background: var(--bg-cream);
+  z-index: 100;
+  border-bottom: 1px solid var(--border-line);
+}
+
+.back-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--bg-card);
+  color: var(--text-title);
+  font-size: 1.2rem;
+  text-decoration: none;
+  flex-shrink: 0;
+  transition: background 0.2s;
+}
+
+.back-btn:hover {
+  background: var(--border-line);
+}
+
+.detail-header-title {
+  font-family: var(--font-serif);
+  font-size: 1rem;
+  color: var(--text-title);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ================================================================
+   9. 详情页 — 图片轮播
+   ================================================================ */
+.carousel {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  background: var(--bg-card);
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.carousel-track {
+  display: flex;
+  height: 100%;
+  transition: transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  will-change: transform;
+}
+
+.carousel-slide {
+  flex: 0 0 100%;
+  height: 100%;
+}
+
+.carousel-slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* 底部圆点指示器 */
+.carousel-dots {
+  position: absolute;
+  bottom: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 8px;
+  z-index: 10;
+}
+
+.carousel-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.5);
+  transition: all 0.3s ease;
+}
+
+.carousel-dot.active {
+  background: #fff;
+  width: 20px;
+  border-radius: 4px;
+}
+
+/* 左右箭头（桌面端辅助，移动端靠滑动） */
+.carousel-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.7);
+  border: none;
+  color: var(--text-title);
+  font-size: 1rem;
+  cursor: pointer;
+  z-index: 10;
+  display: none; /* 移动端默认隐藏 */
+  align-items: center;
+  justify-content: center;
+}
+
+@media (min-width: 769px) {
+  .carousel-arrow {
+    display: flex;
+  }
+}
+
+.carousel-arrow.prev { left: 8px; }
+.carousel-arrow.next { right: 8px; }
+
+/* ================================================================
+   10. 详情页 — 视频区
+   ================================================================ */
+.video-section {
+  padding: var(--space-md);
+}
+
+.video-section h3 {
+  font-family: var(--font-serif);
+  font-size: 1rem;
+  color: var(--text-title);
+  margin-bottom: var(--space-sm);
+}
+
+.video-section video {
+  width: 100%;
+  border-radius: var(--radius-md);
+  background: #000;
+  outline: none;
+}
+
+/* 无视频时隐藏 */
+.video-section.empty {
+  display: none;
+}
+
+/* ================================================================
+   11. 详情页 — 机器信息
+   ================================================================ */
+.info-section {
+  padding: 0 var(--space-md);
+}
+
+.info-name {
+  font-family: var(--font-serif);
+  font-size: 1.5rem;
+  color: var(--text-title);
+  margin-bottom: var(--space-xs);
+}
+
+.info-meta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-md);
+  flex-wrap: wrap;
+}
+
+.info-meta .condition-badge {
+  font-size: 0.8rem;
+  padding: 4px 12px;
+}
+
+.info-meta .meta-divider {
+  color: var(--border-line);
+}
+
+.info-meta span {
+  font-size: 0.85rem;
+  color: var(--accent-tag);
+}
+
+/* ---- 附件清单 ---- */
+.accessories-section {
+  padding: var(--space-md);
+}
+
+.accessories-section h3 {
+  font-family: var(--font-serif);
+  font-size: 1rem;
+  color: var(--text-title);
+  margin-bottom: var(--space-sm);
+  padding-bottom: var(--space-xs);
+  border-bottom: 1px solid var(--border-line);
+}
+
+.accessories-list {
+  list-style: none;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-xs);
+}
+
+.accessories-list li {
+  font-size: 0.9rem;
+  color: var(--text-body);
+  padding: var(--space-xs) 0;
+}
+
+.accessories-list li::before {
+  content: '✓ ';
+  color: var(--accent-price);
+  font-weight: bold;
+}
+
+/* ---- 详细描述 ---- */
+.description-section {
+  padding: 0 var(--space-md) var(--space-md);
+}
+
+.description-section h3 {
+  font-family: var(--font-serif);
+  font-size: 1rem;
+  color: var(--text-title);
+  margin-bottom: var(--space-sm);
+  padding-bottom: var(--space-xs);
+  border-bottom: 1px solid var(--border-line);
+}
+
+.description-section p {
+  font-size: 0.92rem;
+  color: var(--text-body);
+  line-height: 1.8;
+  text-align: justify;
+}
+
+/* ================================================================
+   12. 详情页 — 价格大号展示
+   ================================================================ */
+.price-section {
+  text-align: center;
+  padding: var(--space-lg) var(--space-md) var(--space-md);
+}
+
+.price-tag {
+  font-family: var(--font-serif);
+  font-size: 2.4rem;
+  font-weight: 700;
+  color: var(--accent-price);
+  letter-spacing: 0.02em;
+}
+
+.price-tag .currency {
+  font-size: 1.2rem;
+  font-weight: 400;
+}
+
+/* ================================================================
+   13. 详情页 — 操作按钮
+   ================================================================ */
+.action-section {
+  padding: 0 var(--space-md) var(--space-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.btn {
+  display: block;
+  width: 100%;
+  padding: 14px;
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: 1.05rem;
+  font-family: var(--font-serif);
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  text-align: center;
+  transition: opacity 0.2s, transform 0.15s;
+}
+
+.btn:active {
+  transform: scale(0.98);
+}
+
+/* 微信咨询 — 主按钮 */
+.btn-wechat {
+  background: var(--btn-primary);
+  color: var(--btn-text);
+}
+
+.btn-wechat:hover {
+  opacity: 0.9;
+}
+
+/* 查看样片 — 次按钮 */
+.btn-xianyu {
+  background: transparent;
+  color: var(--btn-primary);
+  border: 1.5px solid var(--btn-primary);
+}
+
+.btn-xianyu:hover {
+  background: var(--bg-card);
+}
+
+/* ================================================================
+   14. Toast 提示
+   ================================================================ */
+.toast {
+  position: fixed;
+  bottom: 100px;
+  left: 50%;
+  transform: translateX(-50%) translateY(120px);
+  background: var(--text-title);
+  color: var(--bg-cream);
+  padding: 12px 24px;
+  border-radius: 24px;
+  font-size: 0.9rem;
+  font-family: var(--font-sans);
+  white-space: nowrap;
+  opacity: 0;
+  transition: transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+              opacity 0.3s ease;
+  z-index: 10001;
+  pointer-events: none;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+}
+
+.toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* ================================================================
+   15. 错误页面
+   ================================================================ */
+.error-state {
+  text-align: center;
+  padding: 80px var(--space-md);
+}
+
+.error-state .error-icon {
+  font-size: 4rem;
+  margin-bottom: var(--space-md);
+}
+
+.error-state h2 {
+  font-family: var(--font-serif);
+  color: var(--text-title);
+  margin-bottom: var(--space-sm);
+}
+
+.error-state p {
+  color: var(--accent-tag);
+  margin-bottom: var(--space-lg);
+}
+
+.error-state .btn {
+  display: inline-block;
+  width: auto;
+  padding: 12px 32px;
+}
+
+/* ================================================================
+   16. 响应式微调
+   ================================================================ */
+
+/* 超小屏 (< 360px) */
+@media (max-width: 359px) {
+  .site-logo { font-size: 1.6rem; }
+  .card-name { font-size: 1.05rem; }
+  .card-price { font-size: 1.15rem; }
+  .price-tag { font-size: 2rem; }
+}
+
+/* 平板及以上 (>= 768px) */
+@media (min-width: 768px) {
+  body {
+    /* 大屏上加一点页面边框阴影 */
+    box-shadow: 0 0 60px rgba(92, 61, 46, 0.1);
+  }
+
+  .camera-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-md);
+  }
+
+  .camera-card {
+    margin-bottom: 0;
+  }
+
+  .accessories-list {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+
+  .action-section {
+    flex-direction: row;
+  }
+
+  .btn {
+    flex: 1;
+  }
+}
