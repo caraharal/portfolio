@@ -663,49 +663,68 @@
           </div>
         </div>
 
-        <!-- 制作方法论 -->
-        <div class="vc-process">
-          <h3 class="vc-section-subtitle">制作方法论</h3>
-          <div class="vc-process-steps">
-            <div class="vc-step">
-              <div class="vc-step-num">1</div>
-              <div class="vc-step-content">
-                <h4>需求定义</h4>
-                <p>自然语言描述需求 → AI 理解并提方案 → 确认信息架构与页面结构</p>
-                <div class="vc-step-screenshot" data-screenshot="assets/images/vibe-coding/step1-requirement.jpg">
-                  <span>📎 Claude 对话截图</span>
-                </div>
-              </div>
+        <!-- 产品决策日志 -->
+        <div class="vc-decisions">
+          <h3 class="vc-section-subtitle">产品决策日志</h3>
+          <p class="vc-decisions-intro">以下是开发过程中遇到的真问题，以及基于用户反馈做出的产品决策。每一个决策背后，都是一次「理解用户 → 设计方案 → 验证迭代」的闭环。</p>
+
+          <div class="vc-decision-card">
+            <div class="vc-decision-badge vc-decision-badge--pain">问题</div>
+            <div class="vc-decision-body">
+              <p class="vc-decision-problem">新手买家面对满屏相机型号不知所措，不知道从何挑起，导致浏览深度低、询单率不高。</p>
             </div>
-            <div class="vc-step">
-              <div class="vc-step-num">2</div>
-              <div class="vc-step-content">
-                <h4>AI 协作开发</h4>
-                <p>分模块迭代 → 浏览器实时预览 → 发现问题即时反馈修正</p>
-                <div class="vc-step-screenshot" data-screenshot="assets/images/vibe-coding/step2-coding.jpg">
-                  <span>📎 Claude 对话截图</span>
-                </div>
-              </div>
+            <div class="vc-decision-badge vc-decision-badge--fix">方案</div>
+            <div class="vc-decision-body">
+              <p class="vc-decision-solution">增加 AI 导购助手模块——用户只需回答几个简单问题（预算、拍摄题材、经验水平），AI 直接推荐最匹配的机型并给出理由，降低决策门槛，促进成交。</p>
             </div>
-            <div class="vc-step">
-              <div class="vc-step-num">3</div>
-              <div class="vc-step-content">
-                <h4>用户测试</h4>
-                <p>找真实用户（摄影师/胶片爱好者）试用 → 收集反馈 → 整理优化清单</p>
-                <div class="vc-step-screenshot" data-screenshot="assets/images/vibe-coding/step3-testing.jpg">
-                  <span>📎 测试反馈截图</span>
-                </div>
-              </div>
+            <div class="vc-decision-badge vc-decision-badge--why">洞察</div>
+            <div class="vc-decision-body">
+              <p class="vc-decision-insight">在真实的二手相机交易观察中发现：新手买家最大的障碍不是「价格」，而是「不知道哪台适合自己」。传统电商用筛选栏解决这个问题，但对小白用户来说筛选栏本身就是认知负担。用对话式 AI 导购替代被动筛选，是把「用户找商品」变成「商品匹配用户」。</p>
             </div>
-            <div class="vc-step">
-              <div class="vc-step-num">4</div>
-              <div class="vc-step-content">
-                <h4>迭代优化</h4>
-                <p>按优先级排序需求 → AI 辅助修改 → 验证 → 上线新版本</p>
-                <div class="vc-step-screenshot" data-screenshot="assets/images/vibe-coding/step4-iteration.jpg">
-                  <span>📎 Claude 对话截图</span>
-                </div>
-              </div>
+          </div>
+
+          <div class="vc-decision-card">
+            <div class="vc-decision-badge vc-decision-badge--pain">问题</div>
+            <div class="vc-decision-body">
+              <p class="vc-decision-problem">第一版商品卡片信息密度过高——品牌、型号、价格、成色、快门数、镜头规格全堆在一张小卡片上，用户反馈「信息太多，不知道先看什么」。</p>
+            </div>
+            <div class="vc-decision-badge vc-decision-badge--fix">方案</div>
+            <div class="vc-decision-body">
+              <p class="vc-decision-solution">卡片从「文字优先」改为「影像优先」——大幅增加商品图片面积，卡片仅保留品牌+型号+成色标签三行关键信息，详细参数改为点击展开。同时针对二手相机交易的特殊性，将成色信息（快门状态、镜头镀膜、测光功能、皮腔漏光）拆解为勾选清单式展示，而非一段模糊描述。</p>
+            </div>
+            <div class="vc-decision-badge vc-decision-badge--why">洞察</div>
+            <div class="vc-decision-body">
+              <p class="vc-decision-insight">买二手相机的人第一眼看的是实物照片而非参数表——他们需要通过照片判断成色。这与买全新数码产品完全不同。同时，二手交易中买家最大的焦虑是「实物与描述不符」，清单式成色展示让卖家有明确的责任边界，让买家有逐项确认的安全感。</p>
+            </div>
+          </div>
+
+          <div class="vc-decision-card">
+            <div class="vc-decision-badge vc-decision-badge--pain">问题</div>
+            <div class="vc-decision-body">
+              <p class="vc-decision-problem">商品列表页缺少有效的导航结构，用户只能被动滚动浏览，找不到想要的机型就离开了。</p>
+            </div>
+            <div class="vc-decision-badge vc-decision-badge--fix">方案</div>
+            <div class="vc-decision-body">
+              <p class="vc-decision-solution">在页面顶部设置品牌筛选栏（佳能 / 尼康 / 宾得 / 美能达 / 奥林巴斯等）作为一级导航，同时保留价格区间和成色等级作为二级筛选。默认展示精选热销机型，而非按入库时间排序。</p>
+            </div>
+            <div class="vc-decision-badge vc-decision-badge--why">洞察</div>
+            <div class="vc-decision-body">
+              <p class="vc-decision-insight">胶片相机买家与普通电商用户的行为路径完全不同——他们的第一个筛选维度永远是品牌而非价格。一个想买佳能 AE-1 的用户不会因为尼康 FM2 便宜 200 块就换目标。因此品牌筛选不应该藏在侧边栏，而应该是页面最显眼的导航入口。这本质上和 DJI 用户按产品线（Mavic / Air / Mini）而非按价格选无人机是同一个逻辑。</p>
+            </div>
+          </div>
+
+          <div class="vc-decision-card">
+            <div class="vc-decision-badge vc-decision-badge--pain">问题</div>
+            <div class="vc-decision-body">
+              <p class="vc-decision-problem">移动端浏览体验差——卡片太小看不清相机细节，筛选栏占满半个屏幕，用户反馈「手机上看这个站很累」。</p>
+            </div>
+            <div class="vc-decision-badge vc-decision-badge--fix">方案</div>
+            <div class="vc-decision-body">
+              <p class="vc-decision-solution">移动端采用单列大卡片布局 + 底部固定筛选按钮（点击弹出抽屉式面板），而非顶部占用空间的横向滚动筛选条。商品图片支持双指缩放查看细节。下单流程精简为三步：填写联系方式 → 确认订单 → 提交，每步只收集必要信息。</p>
+            </div>
+            <div class="vc-decision-badge vc-decision-badge--why">洞察</div>
+            <div class="vc-decision-body">
+              <p class="vc-decision-insight">通过浏览器开发者工具分析发现超过 60% 的访问来自移动端——胶片摄影在社交媒体（小红书/微博）上火了之后，大量用户是通过手机分享链接进来的。如果移动端体验不好，意味着流失了大多数潜在买家。这个决策的优先级因此从「有时间再做」提升到「上线前必须解决」。</p>
             </div>
           </div>
         </div>
