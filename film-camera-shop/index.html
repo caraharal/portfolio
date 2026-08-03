@@ -49,5 +49,29 @@
   <script src="js/cameras.js"></script>
   <!-- 2. 公共逻辑（渲染、轮播、复制等） -->
   <script src="js/main.js"></script>
+
+  <!-- ==============================
+       AI 导购助手 — 帮你选相机
+       ============================== -->
+  <!-- 浮动触发按钮 -->
+  <button class="ai-guide-fab" id="ai-guide-fab" aria-label="AI导购">
+    <span class="ai-fab-icon">🤖</span>
+    <span class="ai-fab-text">AI 帮你选</span>
+  </button>
+
+  <!-- 对话弹窗 -->
+  <div class="ai-guide-modal" id="ai-guide-modal" aria-hidden="true">
+    <div class="ai-guide-overlay"></div>
+    <div class="ai-guide-dialog">
+      <div class="ai-guide-header">
+        <span class="ai-guide-header-icon">🤖</span>
+        <span>AI 导购助手</span>
+        <button class="ai-guide-close" id="ai-guide-close" aria-label="关闭">&times;</button>
+      </div>
+      <div class="ai-guide-chat" id="ai-guide-chat">
+        <!-- 对话内容由 JS 动态生成 -->
+      </div>
+    </div>
+  </div>
 </body>
 </html>
