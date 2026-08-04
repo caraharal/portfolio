@@ -97,6 +97,9 @@ function getCameraById(id) {
   return null;
 }
 
+// 暴露到全局（AI 导购需要用到）
+window.getCameraById = getCameraById;
+
 /* ================================================================
    首页逻辑
    ================================================================ */
@@ -663,11 +666,12 @@ var AI_QUESTIONS = [
 function initAiGuide() {
   var fab = document.getElementById('ai-guide-fab');
   var modal = document.getElementById('ai-guide-modal');
-  var closeBtn = document.getElementById('ai-guide-close');
   var chat = document.getElementById('ai-guide-chat');
-  var overlay = modal.querySelector('.ai-guide-overlay');
 
   if (!fab || !modal || !chat) return;
+
+  var closeBtn = document.getElementById('ai-guide-close');
+  var overlay = modal.querySelector('.ai-guide-overlay');
 
   var currentStep = 0;
   var answers = {};
@@ -779,6 +783,6 @@ function initAiGuide() {
 
   // 事件绑定
   fab.addEventListener('click', openModal);
-  closeBtn.addEventListener('click', closeModal);
-  overlay.addEventListener('click', closeModal);
+  if (closeBtn) closeBtn.addEventListener('click', closeModal);
+  if (overlay) overlay.addEventListener('click', closeModal);
 }
