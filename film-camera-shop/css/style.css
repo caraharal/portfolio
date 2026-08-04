@@ -192,6 +192,23 @@ img::before {
     0 10px 24px rgba(92, 61, 46, 0.10);
 }
 
+/* 库存状态标签 */
+.card-status-tag {
+  position: absolute; top: 10px; left: 10px; z-index: 2;
+}
+.status-badge {
+  display: inline-block;
+  padding: 4px 10px; border-radius: 12px;
+  font-size: 0.75rem; font-weight: 700;
+  font-family: var(--font-sans); letter-spacing: 0.04em;
+}
+.status-badge--sold { background: #e0e0e0; color: #888; }
+.status-badge--restocking { background: #fef3c7; color: #b45309; }
+
+/* 售罄卡片降透明度 */
+.camera-card--sold { opacity: 0.55; }
+.camera-card--sold:hover { opacity: 0.8; }
+
 .camera-card:active {
   transform: translateY(-1px);
 }

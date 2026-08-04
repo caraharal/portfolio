@@ -32,6 +32,7 @@ var CAMERAS = [
     model: 'T2',
     price: 3800,
     condition: '9成新',
+    status: 'available',
     // 📍 把图片放进 images/ 文件夹，然后改下面的文件名
     images: [
       'images/placeholder.svg',
@@ -58,6 +59,7 @@ var CAMERAS = [
     model: 'X-700',
     price: 680,
     condition: '8成新',
+    status: 'available',
     images: [
       'images/placeholder.svg',
       'images/placeholder.svg'
@@ -78,6 +80,7 @@ var CAMERAS = [
     model: 'µ[mju:]-II',
     price: 1200,
     condition: '95成新',
+    status: 'available',
     images: [
       'images/placeholder.svg',
       'images/placeholder.svg',

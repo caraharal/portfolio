@@ -135,10 +135,19 @@ function renderCameraList(filterBrand) {
       : 'images/placeholder.svg';
 
     html +=
-      '<a class="camera-card" href="detail.html?id=' + encodeURIComponent(cam.id) + '">' +
+      var statusLabel = '';
+      if (cam.status === 'sold') {
+        statusLabel = '<span class="status-badge status-badge--sold">售罄</span>';
+      } else if (cam.status === 'restocking') {
+        statusLabel = '<span class="status-badge status-badge--restocking">补货中</span>';
+      }
+
+      html +=
+      '<a class="camera-card' + (cam.status === 'sold' ? ' camera-card--sold' : '') + '" href="detail.html?id=' + encodeURIComponent(cam.id) + '">' +
         '<div class="card-image-wrap">' +
           '<img src="' + cover + '" alt="' + cam.name + '" loading="lazy" ' +
             'onerror="this.src=\'images/placeholder.svg\'">' +
+          (statusLabel ? '<div class="card-status-tag">' + statusLabel + '</div>' : '') +
         '</div>' +
         '<div class="card-body">' +
           '<h2 class="card-name">' + cam.name + '</h2>' +
@@ -648,13 +657,31 @@ var AI_RULES = [
 ];
 
 function matchAiRule(answers) {
+  // 优先：完全匹配 + 有货
   for (var i = 0; i < AI_RULES.length; i++) {
     var rule = AI_RULES[i];
-    if (rule.match.q1 === answers.q1 && rule.match.q2 === answers.q2 && rule.match.q3 === answers.q3) return rule;
+    if (rule.match.q1 === answers.q1 && rule.match.q2 === answers.q2 && rule.match.q3 === answers.q3) {
+      var cam = window.getCameraById(rule.recommend);
+      if (cam && cam.status !== 'sold') return rule;
+    }
   }
+  // 其次：完全匹配 + 补货中
+  for (var k = 0; k < AI_RULES.length; k++) {
+    var r2 = AI_RULES[k];
+    if (r2.match.q1 === answers.q1 && r2.match.q2 === answers.q2 && r2.match.q3 === answers.q3) return r2;
+  }
+  // 然后：部分匹配 + 有货
   for (var j = 0; j < AI_RULES.length; j++) {
     var r = AI_RULES[j];
-    if (r.match.q1 === answers.q1 && r.match.q2 === answers.q2) return r;
+    if (r.match.q1 === answers.q1 && r.match.q2 === answers.q2) {
+      var c = window.getCameraById(r.recommend);
+      if (c && c.status !== 'sold') return r;
+    }
+  }
+  // 最后：部分匹配 + 补货中
+  for (var m = 0; m < AI_RULES.length; m++) {
+    var r3 = AI_RULES[m];
+    if (r3.match.q1 === answers.q1 && r3.match.q2 === answers.q2) return r3;
   }
   return AI_RULES[0];
 }

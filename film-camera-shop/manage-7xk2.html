@@ -373,6 +373,17 @@
         </div>
       </div>
 
+      <div class="form-row">
+        <div class="form-group">
+          <label>库存状态</label>
+          <select id="cam-status">
+            <option value="available" selected>🟢 有货</option>
+            <option value="restocking">🟡 补货中</option>
+            <option value="sold">🔴 售罄</option>
+          </select>
+        </div>
+      </div>
+
       <!-- 图片上传 -->
       <div class="form-group">
         <label>📸 相机图片 <span class="hint">（可多选，直接上传）</span></label>
@@ -624,6 +635,7 @@
     document.getElementById('cam-model').value = cam.model || '';
     document.getElementById('cam-price').value = cam.price;
     document.getElementById('cam-condition').value = cam.condition;
+    document.getElementById('cam-status').value = cam.status || 'available';
     document.getElementById('cam-video').value = cam.video || '';
     document.getElementById('cam-accessories').value = (cam.accessories || []).join('\n');
     document.getElementById('cam-description').value = cam.description || '';
@@ -642,6 +654,7 @@
     document.getElementById('cam-model').value = '';
     document.getElementById('cam-price').value = '';
     document.getElementById('cam-condition').value = '95成新';
+    document.getElementById('cam-status').value = 'available';
     document.getElementById('cam-video').value = '';
     document.getElementById('cam-accessories').value = '';
     document.getElementById('cam-description').value = '';
@@ -679,6 +692,7 @@
       model: document.getElementById('cam-model').value.trim(),
       price: price,
       condition: document.getElementById('cam-condition').value,
+      status: document.getElementById('cam-status').value,
       images: imageDataUrls.slice(),
       video: document.getElementById('cam-video').value.trim(),
       accessories: document.getElementById('cam-accessories').value
