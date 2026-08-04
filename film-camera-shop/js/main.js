@@ -636,31 +636,47 @@ function bindActions(cam) {
  */
 
 var AI_RULES = [
-  { match: { q1: '3000+', q2: 'experienced', q3: 'street' },    recommend: 'contax-t2', reason: 'Contax T2 钛金属机身、蔡司镜头，街拍利器，口袋里的徕卡' },
-  { match: { q1: '3000+', q2: 'experienced', q3: 'landscape' }, recommend: 'contax-t2', reason: '蔡司 38mm f/2.8 成像锐利，风光出片质感极佳' },
-  { match: { q1: '3000+', q2: 'beginner', q3: 'portrait' },    recommend: 'contax-t2', reason: '自动对焦 + 光圈优先，新手也能拍出氛围感人像' },
-  { match: { q1: '3000+', q2: 'beginner', q3: 'street' },      recommend: 'contax-t2', reason: '傻瓜式操作 + 顶级画质，入门即巅峰' },
-  { match: { q1: '1500-3000', q2: 'experienced', q3: 'street' },    recommend: 'contax-t2', reason: '街拍摄影师的梦中情机，钛金质感无可替代' },
-  { match: { q1: '1500-3000', q2: 'experienced', q3: 'landscape' }, recommend: 'contax-t2', reason: '蔡司镜头的色彩和锐度，风光片不用修' },
-  { match: { q1: '1500-3000', q2: 'beginner', q3: 'street' },   recommend: 'olympus-mju-ii', reason: '口袋大小、滑盖即拍，新手街拍最友好的入门机' },
-  { match: { q1: '1500-3000', q2: 'beginner', q3: 'beginner' }, recommend: 'olympus-mju-ii', reason: '生活防水、自动曝光、小巧到塞进口袋，最适合日常记录' },
-  { match: { q1: '500-1500', q2: 'beginner', q3: 'street' },    recommend: 'olympus-mju-ii', reason: '性价比最高的口袋机，35mm f/2.8 镜头出片率极高' },
-  { match: { q1: '500-1500', q2: 'beginner', q3: 'portrait' },  recommend: 'olympus-mju-ii', reason: '操作零门槛，专注构图就行，拍人像自然柔和' },
-  { match: { q1: '1500-3000', q2: 'experienced', q3: 'portrait' }, recommend: 'olympus-mju-ii', reason: '轻便到可以随身带，随时捕捉自然表情' },
-  { match: { q1: '500以下', q2: 'beginner', q3: 'beginner' },   recommend: 'minolta-x700', reason: '胶片入门性价比之王，P 档全自动对新手上手非常友好' },
-  { match: { q1: '500以下', q2: 'beginner', q3: 'portrait' },   recommend: 'minolta-x700', reason: '丰富的 MD 卡口镜头群，玩人像从 50mm f/1.7 开始，成本极低' },
-  { match: { q1: '500以下', q2: 'beginner', q3: 'street' },     recommend: 'minolta-x700', reason: '机身轻便、快门清脆，街头抓拍不心疼，入门首选' },
-  { match: { q1: '500-1500', q2: 'beginner', q3: 'beginner' },  recommend: 'minolta-x700', reason: '预算内能买到的最完整的胶片入门套装，机身+镜头+配件全有' },
-  { match: { q1: '500-1500', q2: 'beginner', q3: 'landscape' }, recommend: 'minolta-x700', reason: '光圈优先模式拍风光得心应手，MD 广角镜头便宜大碗' },
-  { match: { q1: '500以下', q2: 'experienced', q3: 'landscape' }, recommend: 'minolta-x700', reason: '手动控制 + 丰富镜头群，风光创作不受限' },
-  { match: { q1: '500-1500', q2: 'experienced', q3: 'beginner' }, recommend: 'minolta-x700', reason: '有基础但预算有限？X-700 手动创作空间大，性价比无可匹敌' }
+  // ===== Minolta X-700 — 胶片单反 | 标配 50mm 定焦 | ¥680 =====
+  // 600-1000 预算
+  { match: { q1: '600-1000', q2: 'slr', q3: 'prime', q4: 'portrait' },  recommend: 'minolta-x700', reason: '50mm f/1.7 定焦拍人像虚化自然，MD 卡口镜头群丰富，性价比超高' },
+  { match: { q1: '600-1000', q2: 'slr', q3: 'prime', q4: 'beginner' },  recommend: 'minolta-x700', reason: 'P 档全自动 + 50mm 定焦，入门胶片的黄金组合，操作简单出片效果好' },
+  { match: { q1: '600-1000', q2: 'slr', q3: 'prime', q4: 'street' },    recommend: 'minolta-x700', reason: '机身轻便、快门清脆，50mm 定焦街拍不心疼，入门首选单反' },
+  { match: { q1: '600-1000', q2: 'slr', q3: 'prime', q4: 'landscape' }, recommend: 'minolta-x700', reason: '光圈优先 + 可换广角镜头拍风光，MD 卡口镜头群便宜大碗' },
+  { match: { q1: '600-1000', q2: 'slr', q3: 'any', q4: 'portrait' },    recommend: 'minolta-x700', reason: '50mm 定焦套机拍人像效果出众，后续可自由升级镜头' },
+  { match: { q1: '600-1000', q2: 'slr', q3: 'any', q4: 'beginner' },    recommend: 'minolta-x700', reason: '最全能的入门胶片单反，自动+手动双模式，学习创作两不误' },
+  { match: { q1: '600-1000', q2: 'slr', q3: 'any', q4: 'street' },      recommend: 'minolta-x700', reason: '轻量单反机身 + 定焦镜头，街头抓拍响应快、不引人注目' },
+  // 300-600 预算
+  { match: { q1: '300-600', q2: 'slr', q3: 'prime', q4: 'beginner' },   recommend: 'minolta-x700', reason: '这个价位能买到的最完整的胶片入门套装，P 档自动曝光新手友好' },
+  { match: { q1: '300-600', q2: 'slr', q3: 'prime', q4: 'portrait' },   recommend: 'minolta-x700', reason: '50mm 大光圈定焦 + 胶片色彩，拍人像比手机有质感太多' },
+  { match: { q1: '300-600', q2: 'slr', q3: 'any', q4: 'beginner' },     recommend: 'minolta-x700', reason: '胶片入门性价比之王，300+ 就能拥有一台功能完整的经典单反' },
+  { match: { q1: '300-600', q2: 'slr', q3: 'any', q4: 'portrait' },     recommend: 'minolta-x700', reason: '预算友好 + 人像利器，剩下的钱还能多买几卷胶卷' },
+
+  // ===== Olympus µ-II — 傻瓜机 | 35mm 定焦 | ¥1200 =====
+  { match: { q1: '600-1000', q2: 'ps', q3: 'prime', q4: 'street' },    recommend: 'olympus-mju-ii', reason: '口袋大小、滑盖即拍，35mm 定焦街拍神器，随身带着随手拍' },
+  { match: { q1: '600-1000', q2: 'ps', q3: 'prime', q4: 'beginner' },  recommend: 'olympus-mju-ii', reason: '全自动傻瓜机中的经典，生活防水、自动曝光，零学习成本' },
+  { match: { q1: '600-1000', q2: 'ps', q3: 'any', q4: 'street' },      recommend: 'olympus-mju-ii', reason: '35mm f/2.8 镜头出片率极高，滑盖开机即拍，不错过任何瞬间' },
+  { match: { q1: '600-1000', q2: 'ps', q3: 'any', q4: 'beginner' },    recommend: 'olympus-mju-ii', reason: '不想研究参数？这台完全不用动脑，开机按下快门就是好照片' },
+
+  // ===== Contax T2 — 傻瓜机 | 38mm 定焦 | ¥3800 =====
+  { match: { q1: '600-1000', q2: 'ps', q3: 'prime', q4: 'portrait' },  recommend: 'contax-t2', reason: '蔡司 Sonnar 38mm f/2.8 镜头出片锐利，拍人像氛围感一绝' },
+  { match: { q1: '600-1000', q2: 'ps', q3: 'prime', q4: 'landscape' }, recommend: 'contax-t2', reason: '钛金属机身 + 蔡司镜头，风光片不用修，直出色彩就够迷人' },
+  { match: { q1: '600-1000', q2: 'ps', q3: 'any', q4: 'portrait' },    recommend: 'contax-t2', reason: '口袋里的徕卡，自动对焦精准，拍人像省心出片率高' },
+
+  // ===== 兜底规则（覆盖更多组合，至少有一条匹配） =====
+  { match: { q1: '300-600', q2: 'ps', q3: 'any', q4: 'beginner' },     recommend: 'minolta-x700', reason: '这个预算傻瓜机选择不多，推荐一台操作友好、可换镜头的胶片单反入门' },
+  { match: { q1: '300-600', q2: 'ps', q3: 'any', q4: 'street' },       recommend: 'minolta-x700', reason: '傻瓜机预算偏紧？这台单反轻便不输口袋机，街拍利器' },
+  { match: { q1: '100-300', q2: 'slr', q3: 'any', q4: 'beginner' },    recommend: 'minolta-x700', reason: '百元预算入胶片单反的门，性价比天花板，P 档上手零压力' },
+  { match: { q1: '100-300', q2: 'slr', q3: 'any', q4: 'portrait' },    recommend: 'minolta-x700', reason: '百元价位难得的 50mm 大光圈人像机，拍出来的胶片质感手机做不到' },
+  { match: { q1: '100以下', q2: 'slr', q3: 'any', q4: 'beginner' },    recommend: 'minolta-x700', reason: '超低预算想玩胶片单反？这台是你能找到的最完整的入门套装' },
+  { match: { q1: '100以下', q2: 'ps', q3: 'any', q4: 'beginner' },     recommend: 'minolta-x700', reason: '百元内傻瓜机选择极少，建议稍加预算上一台入门单反，性价比高很多' }
 ];
 
 function matchAiRule(answers) {
-  // 优先：完全匹配 + 有货
+  // 优先：4 维完全匹配 + 有货
   for (var i = 0; i < AI_RULES.length; i++) {
     var rule = AI_RULES[i];
-    if (rule.match.q1 === answers.q1 && rule.match.q2 === answers.q2 && rule.match.q3 === answers.q3) {
+    if (rule.match.q1 === answers.q1 && rule.match.q2 === answers.q2 &&
+        rule.match.q3 === answers.q3 && rule.match.q4 === answers.q4) {
       var cam = window.getCameraById(rule.recommend);
       if (cam && cam.status !== 'sold') return rule;
     }
@@ -668,39 +684,54 @@ function matchAiRule(answers) {
   // 其次：完全匹配 + 补货中
   for (var k = 0; k < AI_RULES.length; k++) {
     var r2 = AI_RULES[k];
-    if (r2.match.q1 === answers.q1 && r2.match.q2 === answers.q2 && r2.match.q3 === answers.q3) return r2;
+    if (r2.match.q1 === answers.q1 && r2.match.q2 === answers.q2 &&
+        r2.match.q3 === answers.q3 && r2.match.q4 === answers.q4) return r2;
   }
-  // 然后：部分匹配 + 有货
+  // 然后：q1+q2+q3 匹配 + 有货
   for (var j = 0; j < AI_RULES.length; j++) {
     var r = AI_RULES[j];
-    if (r.match.q1 === answers.q1 && r.match.q2 === answers.q2) {
+    if (r.match.q1 === answers.q1 && r.match.q2 === answers.q2 && r.match.q3 === answers.q3) {
       var c = window.getCameraById(r.recommend);
       if (c && c.status !== 'sold') return r;
     }
   }
-  // 最后：部分匹配 + 补货中
+  // 再然后：q1+q2 匹配 + 有货
   for (var m = 0; m < AI_RULES.length; m++) {
     var r3 = AI_RULES[m];
-    if (r3.match.q1 === answers.q1 && r3.match.q2 === answers.q2) return r3;
+    if (r3.match.q1 === answers.q1 && r3.match.q2 === answers.q2) {
+      var c2 = window.getCameraById(r3.recommend);
+      if (c2 && c2.status !== 'sold') return r3;
+    }
+  }
+  // 最后兜底：返回第一条有货的规则
+  for (var n = 0; n < AI_RULES.length; n++) {
+    var r4 = AI_RULES[n];
+    var c3 = window.getCameraById(r4.recommend);
+    if (c3 && c3.status !== 'sold') return r4;
   }
   return AI_RULES[0];
 }
 
 var AI_QUESTIONS = [
   { id: 'q1', text: '嗨！想找一台合适的胶片相机？<br><br>先告诉我你的<span style="color:#5C3D2E;font-weight:700;">预算范围</span>吧～', options: [
-    { label: '💰 500 元以下',    value: '500以下' },
-    { label: '💰 500 - 1500 元', value: '500-1500' },
-    { label: '💰 1500 - 3000 元', value: '1500-3000' },
-    { label: '💰 3000 元以上',    value: '3000+' }
+    { label: '💰 100 元以下',      value: '100以下' },
+    { label: '💰 100 - 300 元',    value: '100-300' },
+    { label: '💰 300 - 600 元',    value: '300-600' },
+    { label: '💰 600 - 1000 元',   value: '600-1000' }
   ]},
-  { id: 'q2', text: '收到！那你之前的<span style="color:#5C3D2E;font-weight:700;">拍摄经验</span>是？', options: [
-    { label: '🌱 纯新手，没用过胶片',           value: 'beginner' },
-    { label: '📱 用过数码相机/手机认真拍过',     value: 'experienced' }
+  { id: 'q2', text: '了解！你想要什么<span style="color:#5C3D2E;font-weight:700;">类型的相机</span>？', options: [
+    { label: '📷 傻瓜机 — 口袋大小、自动对焦、操作简单',       value: 'ps' },
+    { label: '📸 胶片单反 — 可换镜头、手动操控、创作空间大',    value: 'slr' }
   ]},
-  { id: 'q3', text: '明白了～你主要想拍<span style="color:#5C3D2E;font-weight:700;">什么题材</span>？', options: [
-    { label: '👤 人像',      value: 'portrait' },
-    { label: '🚶 街拍/日常', value: 'street' },
-    { label: '🏔 风光/旅行', value: 'landscape' },
+  { id: 'q3', text: '对<span style="color:#5C3D2E;font-weight:700;">焦段</span>有偏好吗？', options: [
+    { label: '🔍 定焦 — 固定焦距、画质更好、轻便',   value: 'prime' },
+    { label: '🔎 变焦 — 可调焦距、灵活方便',          value: 'zoom' },
+    { label: '🤷 不太了解，帮我推荐就行',              value: 'any' }
+  ]},
+  { id: 'q4', text: '你主要想拍<span style="color:#5C3D2E;font-weight:700;">什么题材</span>？', options: [
+    { label: '👤 人像',            value: 'portrait' },
+    { label: '🚶 街拍 / 日常记录',  value: 'street' },
+    { label: '🏔 风光 / 旅行',      value: 'landscape' },
     { label: '📖 入门练习，什么都拍', value: 'beginner' }
   ]}
 ];
