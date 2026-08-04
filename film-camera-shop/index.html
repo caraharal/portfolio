@@ -6,7 +6,6 @@
   <meta name="description" content="慢帧时光 — 胶片相机集市，精选二手胶片相机">
   <title>慢帧时光 film — 胶片相机集市</title>
 
-  <!-- Google Fonts: Noto Serif SC（思源宋体，复古感） -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&display=swap" rel="stylesheet">
@@ -15,9 +14,7 @@
 </head>
 <body>
 
-  <!-- ==============================
-       Header — Logo & 网站标题
-       ============================== -->
+  <!-- Header -->
   <header class="site-header">
     <div class="site-logo">
       <span class="logo-icon">📷</span><span id="site-logo">慢帧时光</span>
@@ -26,40 +23,60 @@
     <hr class="header-divider">
   </header>
 
-  <!-- ==============================
-       相机卡片列表（JS 动态渲染）
-       ============================== -->
-  <main class="camera-list" id="camera-list">
-    <!-- 加载中占位 -->
-    <div class="empty-state">📷 加载中...</div>
-  </main>
+  <!-- 主体：左右分栏（桌面端） -->
+  <div class="main-layout" id="main-layout">
 
-  <!-- ==============================
-       Footer — 底部声明
-       ============================== -->
+    <!-- 左侧面板：AI 导购助手 -->
+    <aside class="ai-panel" id="ai-panel">
+      <div class="ai-panel-header">
+        <span>🤖 AI 帮你选</span>
+      </div>
+      <div class="ai-panel-chat" id="ai-panel-chat">
+        <!-- 初始欢迎消息 -->
+        <div class="ai-panel-welcome">
+          <p>不知道选哪台？</p>
+          <p>告诉我你的预算和需求，<br>帮你找到最合适的胶片相机。</p>
+          <button class="ai-start-btn" id="ai-start-btn">开始推荐 →</button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- 右侧：相机列表 + 筛选栏 -->
+    <div class="camera-area">
+
+      <!-- 品牌筛选栏 -->
+      <div class="brand-filter-bar" id="brand-filter-bar">
+        <button class="brand-filter-btn active" data-brand="all">全部</button>
+        <button class="brand-filter-btn" data-brand="Canon">佳能</button>
+        <button class="brand-filter-btn" data-brand="Nikon">尼康</button>
+        <button class="brand-filter-btn" data-brand="Pentax">宾得</button>
+        <button class="brand-filter-btn" data-brand="Minolta">美能达</button>
+        <button class="brand-filter-btn" data-brand="Olympus">奥林巴斯</button>
+        <button class="brand-filter-btn" data-brand="Contax">康泰时</button>
+        <button class="brand-filter-btn" data-brand="Ricoh">理光</button>
+        <button class="brand-filter-btn" data-brand="Fujifilm">富士</button>
+      </div>
+
+      <!-- 相机卡片区域 -->
+      <main class="camera-list" id="camera-list">
+        <div class="empty-state">📷 加载中...</div>
+      </main>
+
+    </div>
+  </div>
+
+  <!-- Footer -->
   <footer class="site-footer">
     ⚠ 支持验机 · 不满意可退 · 诚信交易
     <br><a href="admin.html" style="color:var(--accent-tag);font-size:0.75rem;opacity:0.6;">⚙️ 管理</a>
   </footer>
 
-  <!-- ==============================
-       JavaScript
-       ============================== -->
-  <!-- 1. 相机数据（你先改这个文件） -->
-  <script src="js/cameras.js"></script>
-  <!-- 2. 公共逻辑（渲染、轮播、复制等） -->
-  <script src="js/main.js"></script>
-
-  <!-- ==============================
-       AI 导购助手 — 帮你选相机
-       ============================== -->
-  <!-- 浮动触发按钮 -->
+  <!-- 移动端：AI 导购浮动按钮 + 弹窗（保留，桌面端隐藏） -->
   <button class="ai-guide-fab" id="ai-guide-fab" aria-label="AI导购">
     <span class="ai-fab-icon">🤖</span>
     <span class="ai-fab-text">AI 帮你选</span>
   </button>
 
-  <!-- 对话弹窗 -->
   <div class="ai-guide-modal" id="ai-guide-modal" aria-hidden="true">
     <div class="ai-guide-overlay"></div>
     <div class="ai-guide-dialog">
@@ -68,10 +85,12 @@
         <span>AI 导购助手</span>
         <button class="ai-guide-close" id="ai-guide-close" aria-label="关闭">&times;</button>
       </div>
-      <div class="ai-guide-chat" id="ai-guide-chat">
-        <!-- 对话内容由 JS 动态生成 -->
-      </div>
+      <div class="ai-guide-chat" id="ai-guide-chat"></div>
     </div>
   </div>
+
+  <!-- JS -->
+  <script src="js/cameras.js"></script>
+  <script src="js/main.js"></script>
 </body>
 </html>

@@ -107,7 +107,7 @@ window.getCameraById = getCameraById;
 /**
  * 渲染相机卡片列表
  */
-function renderCameraList() {
+function renderCameraList(filterBrand) {
   var container = document.getElementById('camera-list');
   if (!container) return;
 
@@ -117,10 +117,19 @@ function renderCameraList() {
     return;
   }
 
+  var filtered = CAMERAS;
+  if (filterBrand && filterBrand !== 'all') {
+    filtered = CAMERAS.filter(function (c) { return c.brand === filterBrand; });
+  }
+
+  if (filtered.length === 0) {
+    container.innerHTML = '<div class="empty-state">📷<br>该品牌暂无在售相机</div>';
+    return;
+  }
+
   var html = '';
-  for (var i = 0; i < CAMERAS.length; i++) {
-    var cam = CAMERAS[i];
-    // 封面图用第一张，没有的话用占位图
+  for (var i = 0; i < filtered.length; i++) {
+    var cam = filtered[i];
     var cover = (cam.images && cam.images.length > 0)
       ? cam.images[0]
       : 'images/placeholder.svg';
@@ -145,12 +154,31 @@ function renderCameraList() {
   }
   container.innerHTML = html;
 
-  // 给当前页面的站点标题赋值
+  // 站点标题
   var logo = document.getElementById('site-logo');
   if (logo) logo.textContent = SITE_CONFIG.siteName;
-
   var subtitle = document.getElementById('site-subtitle');
   if (subtitle) subtitle.textContent = SITE_CONFIG.siteSubtitle;
+}
+
+/**
+ * 初始化品牌筛选栏
+ */
+function initBrandFilter() {
+  var bar = document.getElementById('brand-filter-bar');
+  if (!bar) return;
+
+  bar.addEventListener('click', function (e) {
+    var btn = e.target.closest('.brand-filter-btn');
+    if (!btn) return;
+
+    // 切换 active 状态
+    bar.querySelectorAll('.brand-filter-btn').forEach(function (b) { b.classList.remove('active'); });
+    btn.classList.add('active');
+
+    // 按品牌筛选
+    renderCameraList(btn.getAttribute('data-brand'));
+  });
 }
 
 /* ================================================================
@@ -572,6 +600,7 @@ function bindActions(cam) {
   } else {
     // 首页（默认）
     renderCameraList();
+    initBrandFilter();
     initAiGuide();
   }
 })();
@@ -592,23 +621,23 @@ function bindActions(cam) {
  *   - 目前只有 3 台样机，规则覆盖了常见组合
  *   - 添加新相机后在这里增加匹配规则即可
  */
+/**
+ * AI 导购 — 桌面左侧面板 + 移动端弹窗双模式
+ * 纯前端决策树，零 API 消耗
+ */
+
 var AI_RULES = [
-  // Contax T2 — 有基础 / 预算充足 / 街拍或风光
   { match: { q1: '3000+', q2: 'experienced', q3: 'street' },    recommend: 'contax-t2', reason: 'Contax T2 钛金属机身、蔡司镜头，街拍利器，口袋里的徕卡' },
   { match: { q1: '3000+', q2: 'experienced', q3: 'landscape' }, recommend: 'contax-t2', reason: '蔡司 38mm f/2.8 成像锐利，风光出片质感极佳' },
   { match: { q1: '3000+', q2: 'beginner', q3: 'portrait' },    recommend: 'contax-t2', reason: '自动对焦 + 光圈优先，新手也能拍出氛围感人像' },
   { match: { q1: '3000+', q2: 'beginner', q3: 'street' },      recommend: 'contax-t2', reason: '傻瓜式操作 + 顶级画质，入门即巅峰' },
   { match: { q1: '1500-3000', q2: 'experienced', q3: 'street' },    recommend: 'contax-t2', reason: '街拍摄影师的梦中情机，钛金质感无可替代' },
   { match: { q1: '1500-3000', q2: 'experienced', q3: 'landscape' }, recommend: 'contax-t2', reason: '蔡司镜头的色彩和锐度，风光片不用修' },
-
-  // Olympus µ-II — 新手 / 中等预算 / 街拍或入门
   { match: { q1: '1500-3000', q2: 'beginner', q3: 'street' },   recommend: 'olympus-mju-ii', reason: '口袋大小、滑盖即拍，新手街拍最友好的入门机' },
   { match: { q1: '1500-3000', q2: 'beginner', q3: 'beginner' }, recommend: 'olympus-mju-ii', reason: '生活防水、自动曝光、小巧到塞进口袋，最适合日常记录' },
   { match: { q1: '500-1500', q2: 'beginner', q3: 'street' },    recommend: 'olympus-mju-ii', reason: '性价比最高的口袋机，35mm f/2.8 镜头出片率极高' },
   { match: { q1: '500-1500', q2: 'beginner', q3: 'portrait' },  recommend: 'olympus-mju-ii', reason: '操作零门槛，专注构图就行，拍人像自然柔和' },
   { match: { q1: '1500-3000', q2: 'experienced', q3: 'portrait' }, recommend: 'olympus-mju-ii', reason: '轻便到可以随身带，随时捕捉自然表情' },
-
-  // Minolta X-700 — 入门练习 / 预算有限 / 有基础想玩手动
   { match: { q1: '500以下', q2: 'beginner', q3: 'beginner' },   recommend: 'minolta-x700', reason: '胶片入门性价比之王，P 档全自动对新手上手非常友好' },
   { match: { q1: '500以下', q2: 'beginner', q3: 'portrait' },   recommend: 'minolta-x700', reason: '丰富的 MD 卡口镜头群，玩人像从 50mm f/1.7 开始，成本极低' },
   { match: { q1: '500以下', q2: 'beginner', q3: 'street' },     recommend: 'minolta-x700', reason: '机身轻便、快门清脆，街头抓拍不心疼，入门首选' },
@@ -618,29 +647,18 @@ var AI_RULES = [
   { match: { q1: '500-1500', q2: 'experienced', q3: 'beginner' }, recommend: 'minolta-x700', reason: '有基础但预算有限？X-700 手动创作空间大，性价比无可匹敌' }
 ];
 
-/**
- * 根据用户答案匹配推荐结果
- */
 function matchAiRule(answers) {
   for (var i = 0; i < AI_RULES.length; i++) {
     var rule = AI_RULES[i];
-    if (rule.match.q1 === answers.q1 &&
-        rule.match.q2 === answers.q2 &&
-        rule.match.q3 === answers.q3) {
-      return rule;
-    }
+    if (rule.match.q1 === answers.q1 && rule.match.q2 === answers.q2 && rule.match.q3 === answers.q3) return rule;
   }
-  // 兜底：返回第一条能匹配 q1+q2 的规则
   for (var j = 0; j < AI_RULES.length; j++) {
     var r = AI_RULES[j];
     if (r.match.q1 === answers.q1 && r.match.q2 === answers.q2) return r;
   }
-  return AI_RULES[0]; // 最终兜底
+  return AI_RULES[0];
 }
 
-/**
- * 对话步骤定义
- */
 var AI_QUESTIONS = [
   { id: 'q1', text: '嗨！想找一台合适的胶片相机？<br><br>先告诉我你的<span style="color:#5C3D2E;font-weight:700;">预算范围</span>吧～', options: [
     { label: '💰 500 元以下',    value: '500以下' },
@@ -660,129 +678,100 @@ var AI_QUESTIONS = [
   ]}
 ];
 
-/**
- * 初始化 AI 导购
- */
+// 共享状态
+var _aiState = { step: 0, answers: {} };
+
+function _aiStartChat(chat) {
+  _aiState = { step: 0, answers: {} };
+  while (chat.firstChild) chat.removeChild(chat.firstChild);
+  _aiShowQuestion(chat, 0);
+}
+
+function _aiShowQuestion(chat, stepIndex) {
+  if (stepIndex >= AI_QUESTIONS.length) { _aiShowResult(chat); return; }
+  _aiState.step = stepIndex;
+  var q = AI_QUESTIONS[stepIndex];
+
+  var bubble = document.createElement('div');
+  bubble.className = 'ai-bubble ai-bubble--ai';
+  bubble.innerHTML = q.text;
+  chat.appendChild(bubble);
+
+  var opts = document.createElement('div');
+  opts.className = 'ai-options';
+  q.options.forEach(function (opt) {
+    var btn = document.createElement('button');
+    btn.className = 'ai-option-btn';
+    btn.textContent = opt.label;
+    btn.addEventListener('click', function () {
+      var ub = document.createElement('div');
+      ub.className = 'ai-bubble ai-bubble--user';
+      ub.textContent = opt.label.replace(/^.[\s]*/, '');
+      chat.appendChild(ub);
+      opts.remove();
+      _aiState.answers[q.id] = opt.value;
+      setTimeout(function () { _aiShowQuestion(chat, stepIndex + 1); }, 400);
+    });
+    opts.appendChild(btn);
+  });
+  chat.appendChild(opts);
+  chat.scrollTop = chat.scrollHeight;
+}
+
+function _aiShowResult(chat) {
+  var rule = matchAiRule(_aiState.answers);
+  var cam = window.getCameraById ? window.getCameraById(rule.recommend) : null;
+  if (!cam) {
+    var eb = document.createElement('div');
+    eb.className = 'ai-bubble ai-bubble--ai';
+    eb.textContent = '抱歉，暂时没有完全匹配的机型，请重新试试～';
+    chat.appendChild(eb); return;
+  }
+  var am = document.createElement('div');
+  am.className = 'ai-bubble ai-bubble--ai';
+  am.innerHTML = '根据你的需求，我推荐这台 👇';
+  chat.appendChild(am);
+
+  var rc = document.createElement('div');
+  rc.className = 'ai-result';
+  rc.innerHTML = '<div class="ai-result-title">' + cam.name + '</div>' +
+    '<div class="ai-result-reason">' + rule.reason + '</div>' +
+    '<a class="ai-result-link" href="detail.html?id=' + encodeURIComponent(cam.id) + '">查看详情 →</a>';
+  chat.appendChild(rc);
+
+  var rb = document.createElement('button');
+  rb.className = 'ai-restart';
+  rb.textContent = '🔄 重新选择';
+  rb.addEventListener('click', function () { _aiStartChat(chat); });
+  chat.appendChild(rb);
+  chat.scrollTop = chat.scrollHeight;
+}
+
 function initAiGuide() {
+  // 桌面端：左侧面板
+  var panelChat = document.getElementById('ai-panel-chat');
+  var startBtn = document.getElementById('ai-start-btn');
+  if (panelChat && startBtn) {
+    startBtn.addEventListener('click', function () { _aiStartChat(panelChat); });
+  }
+
+  // 移动端：FAB + 弹窗
   var fab = document.getElementById('ai-guide-fab');
   var modal = document.getElementById('ai-guide-modal');
-  var chat = document.getElementById('ai-guide-chat');
-
-  if (!fab || !modal || !chat) return;
-
-  var closeBtn = document.getElementById('ai-guide-close');
-  var overlay = modal.querySelector('.ai-guide-overlay');
-
-  var currentStep = 0;
-  var answers = {};
-
-  function openModal() {
-    currentStep = 0;
-    answers = {};
-    chat.innerHTML = '';
-    modal.classList.add('active');
-    modal.setAttribute('aria-hidden', 'false');
-    document.body.style.overflow = 'hidden';
-    showQuestion(0);
-  }
-
-  function closeModal() {
-    modal.classList.remove('active');
-    modal.setAttribute('aria-hidden', 'true');
-    document.body.style.overflow = '';
-  }
-
-  function showQuestion(stepIndex) {
-    if (stepIndex >= AI_QUESTIONS.length) {
-      showResult();
-      return;
-    }
-
-    currentStep = stepIndex;
-    var q = AI_QUESTIONS[stepIndex];
-
-    // AI 消息
-    var bubble = document.createElement('div');
-    bubble.className = 'ai-bubble ai-bubble--ai';
-    bubble.innerHTML = q.text;
-    chat.appendChild(bubble);
-
-    // 选项按钮
-    var optionsDiv = document.createElement('div');
-    optionsDiv.className = 'ai-options';
-    q.options.forEach(function (opt) {
-      var btn = document.createElement('button');
-      btn.className = 'ai-option-btn';
-      btn.textContent = opt.label;
-      btn.addEventListener('click', function () {
-        // 用户选择回显
-        var userBubble = document.createElement('div');
-        userBubble.className = 'ai-bubble ai-bubble--user';
-        userBubble.textContent = opt.label.replace(/^.\s*/, '');
-        chat.appendChild(userBubble);
-
-        // 移除选项按钮
-        optionsDiv.remove();
-
-        // 记录答案
-        answers[q.id] = opt.value;
-        // 下一步
-        setTimeout(function () { showQuestion(stepIndex + 1); }, 400);
-      });
-      optionsDiv.appendChild(btn);
+  var modalChat = document.getElementById('ai-guide-chat');
+  if (fab && modal && modalChat) {
+    var closeBtn = document.getElementById('ai-guide-close');
+    var overlay = modal.querySelector('.ai-guide-overlay');
+    fab.addEventListener('click', function () {
+      modal.classList.add('active'); modal.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+      _aiStartChat(modalChat);
     });
-    chat.appendChild(optionsDiv);
-
-    // 滚动到底部
-    chat.scrollTop = chat.scrollHeight;
+    var closeFn = function () {
+      modal.classList.remove('active'); modal.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+    };
+    if (closeBtn) closeBtn.addEventListener('click', closeFn);
+    if (overlay) overlay.addEventListener('click', closeFn);
   }
-
-  function showResult() {
-    var rule = matchAiRule(answers);
-    var cam = getCameraById(rule.recommend);
-
-    if (!cam) {
-      // 找不到相机数据时的兜底
-      var errBubble = document.createElement('div');
-      errBubble.className = 'ai-bubble ai-bubble--ai';
-      errBubble.textContent = '抱歉，暂时没有完全匹配的机型。请点击右下角按钮重新开始～';
-      chat.appendChild(errBubble);
-      chat.scrollTop = chat.scrollHeight;
-      return;
-    }
-
-    // AI 推荐消息
-    var aiMsg = document.createElement('div');
-    aiMsg.className = 'ai-bubble ai-bubble--ai';
-    aiMsg.innerHTML = '根据你的需求，我推荐这台 👇';
-    chat.appendChild(aiMsg);
-
-    // 结果卡片
-    var resultCard = document.createElement('div');
-    resultCard.className = 'ai-result';
-    resultCard.innerHTML =
-      '<div class="ai-result-title">' + cam.name + '</div>' +
-      '<div class="ai-result-reason">' + rule.reason + '</div>' +
-      '<a class="ai-result-link" href="detail.html?id=' + encodeURIComponent(cam.id) + '">查看详情 →</a>';
-    chat.appendChild(resultCard);
-
-    // 重新开始
-    var restartBtn = document.createElement('button');
-    restartBtn.className = 'ai-restart';
-    restartBtn.textContent = '🔄 重新选择';
-    restartBtn.addEventListener('click', function () {
-      chat.innerHTML = '';
-      currentStep = 0;
-      answers = {};
-      showQuestion(0);
-    });
-    chat.appendChild(restartBtn);
-
-    chat.scrollTop = chat.scrollHeight;
-  }
-
-  // 事件绑定
-  fab.addEventListener('click', openModal);
-  if (closeBtn) closeBtn.addEventListener('click', closeModal);
-  if (overlay) overlay.addEventListener('click', closeModal);
 }
