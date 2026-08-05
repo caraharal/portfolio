@@ -513,6 +513,7 @@
   var editingId = null;        // null = 添加模式，string = 编辑模式
   var imageDataUrls = [];      // 当前表单中的图片（base64）
   var videoDataUrl = '';       // 当前表单中的视频（base64）
+  var imagesPending = 0;       // 正在压缩中的图片数量
 
   /* ================================================================
      数据读写
@@ -713,12 +714,18 @@
     document.getElementById('cam-description').value = '';
     document.getElementById('image-previews').innerHTML = '';
     imageDataUrls = [];
+    imagesPending = 0;
     videoDataUrl = '';
     hideVideoPreview();
   }
 
   // 保存相机
   document.getElementById('btn-save-camera').addEventListener('click', function () {
+    // 检查是否有图片还在压缩中
+    if (imagesPending > 0) {
+      showToast('⏳ 图片还在压缩中，请稍候再点保存...', 2000);
+      return;
+    }
     var id = document.getElementById('cam-id').value.trim();
     var name = document.getElementById('cam-name').value.trim();
     var price = parseInt(document.getElementById('cam-price').value, 10);
@@ -772,9 +779,10 @@
       showToast('✅ 已添加：「' + name + '」');
     }
 
-    if (!saveCameras(cameras)) return; // 保存失败则终止
+    if (!saveCameras(cameras)) return;
     editingId = null;
     imageDataUrls = [];
+    imagesPending = 0;
     document.getElementById('camera-form').style.display = 'none';
     renderCameraList();
   });
@@ -832,14 +840,15 @@
   });
 
   function handleFiles(files) {
-    var MAX_WIDTH = 800; // 最大宽度，超过就等比缩小
+    var MAX_WIDTH = 800;
     for (var i = 0; i < files.length; i++) {
       (function (file) {
         if (!file.type.match(/image\//)) return;
+        imagesPending++;
+        showToast('🔄 正在压缩图片...', 1500);
 
         var reader = new FileReader();
         reader.onload = function (e) {
-          // 通过 canvas 压缩图片
           var img = new Image();
           img.onload = function () {
             var w = img.width, h = img.height;
@@ -848,18 +857,18 @@
             canvas.width = w; canvas.height = h;
             var ctx = canvas.getContext('2d');
             ctx.drawImage(img, 0, 0, w, h);
-            // JPEG 质量 0.75，大幅减小 base64 体积
             var compressed = canvas.toDataURL('image/jpeg', 0.75);
             imageDataUrls.push(compressed);
             renderImagePreviews();
-            var origKb = (file.size / 1024).toFixed(0);
-            var newKb = (compressed.length / 1024).toFixed(0);
-            if (origKb !== newKb) {
-              showToast('📷 已自动压缩：' + origKb + 'KB → ' + newKb + 'KB', 2000);
+            imagesPending--;
+            if (imagesPending === 0) {
+              showToast('✅ 图片处理完成，可以保存了', 2000);
             }
           };
+          img.onerror = function () { imagesPending--; };
           img.src = e.target.result;
         };
+        reader.onerror = function () { imagesPending--; };
         reader.readAsDataURL(file);
       })(files[i]);
     }
