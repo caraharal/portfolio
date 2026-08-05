@@ -529,7 +529,22 @@
   }
 
   function saveCameras(cameras) {
-    localStorage.setItem(STORAGE_KEY_CAMERAS, JSON.stringify(cameras));
+    try {
+      var json = JSON.stringify(cameras);
+      localStorage.setItem(STORAGE_KEY_CAMERAS, json);
+      var kb = (json.length / 1024).toFixed(0);
+      if (kb > 4000) {
+        showToast('⚠ 数据已保存（' + kb + 'KB），接近存储上限，建议压缩图片', 3000);
+      }
+      return true;
+    } catch(e) {
+      if (e.name === 'QuotaExceededError' || e.toString().indexOf('quota') !== -1) {
+        showToast('❌ 存储空间不足！图片/视频过大。请：1) 压缩图片到 500KB 以下 2) 视频改用文件路径而非上传', 5000);
+      } else {
+        showToast('❌ 保存失败：' + e.message, 3000);
+      }
+      return false;
+    }
   }
 
   function getConfig() {
@@ -757,7 +772,7 @@
       showToast('✅ 已添加：「' + name + '」');
     }
 
-    saveCameras(cameras);
+    if (!saveCameras(cameras)) return; // 保存失败则终止
     editingId = null;
     imageDataUrls = [];
     document.getElementById('camera-form').style.display = 'none';
@@ -817,14 +832,33 @@
   });
 
   function handleFiles(files) {
+    var MAX_WIDTH = 800; // 最大宽度，超过就等比缩小
     for (var i = 0; i < files.length; i++) {
       (function (file) {
         if (!file.type.match(/image\//)) return;
 
         var reader = new FileReader();
         reader.onload = function (e) {
-          imageDataUrls.push(e.target.result);
-          renderImagePreviews();
+          // 通过 canvas 压缩图片
+          var img = new Image();
+          img.onload = function () {
+            var w = img.width, h = img.height;
+            if (w > MAX_WIDTH) { h = Math.round(h * MAX_WIDTH / w); w = MAX_WIDTH; }
+            var canvas = document.createElement('canvas');
+            canvas.width = w; canvas.height = h;
+            var ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0, w, h);
+            // JPEG 质量 0.75，大幅减小 base64 体积
+            var compressed = canvas.toDataURL('image/jpeg', 0.75);
+            imageDataUrls.push(compressed);
+            renderImagePreviews();
+            var origKb = (file.size / 1024).toFixed(0);
+            var newKb = (compressed.length / 1024).toFixed(0);
+            if (origKb !== newKb) {
+              showToast('📷 已自动压缩：' + origKb + 'KB → ' + newKb + 'KB', 2000);
+            }
+          };
+          img.src = e.target.result;
         };
         reader.readAsDataURL(file);
       })(files[i]);
