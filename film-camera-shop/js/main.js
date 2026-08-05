@@ -134,7 +134,6 @@ function renderCameraList(filterBrand) {
       ? cam.images[0]
       : 'images/placeholder.svg';
 
-    html +=
       var statusLabel = '';
       if (cam.status === 'sold') {
         statusLabel = '<span class="status-badge status-badge--sold">售罄</span>';
