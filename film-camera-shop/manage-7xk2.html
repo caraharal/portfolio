@@ -189,6 +189,25 @@
     }
 
     /* 图片预览网格 */
+    /* 视频上传区域 */
+    .video-upload-area {
+      border: 2px dashed var(--border-line);
+      border-radius: var(--radius-sm);
+      padding: var(--space-md);
+      text-align: center;
+      cursor: pointer;
+      transition: border-color 0.2s;
+      background: var(--bg-card);
+      position: relative;
+    }
+    .video-upload-area:hover { border-color: var(--text-title); }
+    .video-upload-area .upload-icon { font-size: 2.2rem; margin-bottom: 4px; }
+    .video-upload-area p { font-size: 0.85rem; color: var(--accent-tag); margin: 0; }
+    .video-upload-area input[type="file"] {
+      position: absolute; inset: 0; opacity: 0; cursor: pointer;
+    }
+    .video-preview-wrap { text-align: center; margin-top: var(--space-xs); }
+
     .image-previews {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
@@ -395,10 +414,19 @@
         <div class="image-previews" id="image-previews"></div>
       </div>
 
-      <!-- 视频 -->
+      <!-- 视频上传 -->
       <div class="form-group">
-        <label>🎬 视频文件路径 <span class="hint">（视频放 videos/ 文件夹，这里写文件名）</span></label>
-        <input type="text" id="cam-video" placeholder="例如：videos/contax-t2.mp4（可留空）">
+        <label>🎬 相机视频 <span class="hint">（直接上传，自动压缩；大文件可填路径）</span></label>
+        <div class="video-upload-area" id="video-upload-area">
+          <div class="upload-icon">🎬</div>
+          <p>点击上传视频（建议 30 秒以内）</p>
+          <input type="file" id="video-input" accept="video/*">
+        </div>
+        <div class="video-preview-wrap" id="video-preview-wrap" style="display:none;">
+          <video id="video-preview" controls style="max-width:100%;max-height:200px;border-radius:var(--radius-sm);"></video>
+          <button type="button" class="btn btn-cancel btn--sm" id="btn-remove-video" style="margin-top:8px;">🗑 移除视频</button>
+        </div>
+        <input type="text" id="cam-video" placeholder="或者手动填写视频文件路径（上传的视频优先使用）" style="margin-top:8px;font-size:0.85rem;">
       </div>
 
       <!-- 附件 -->
@@ -484,6 +512,7 @@
   // ---- 当前编辑状态 ----
   var editingId = null;        // null = 添加模式，string = 编辑模式
   var imageDataUrls = [];      // 当前表单中的图片（base64）
+  var videoDataUrl = '';       // 当前表单中的视频（base64）
 
   /* ================================================================
      数据读写
@@ -636,7 +665,16 @@
     document.getElementById('cam-price').value = cam.price;
     document.getElementById('cam-condition').value = cam.condition;
     document.getElementById('cam-status').value = cam.status || 'available';
-    document.getElementById('cam-video').value = cam.video || '';
+    // 视频：base64 数据 URL 还是文件路径？
+    if (cam.video && cam.video.startsWith('data:')) {
+      videoDataUrl = cam.video;
+      document.getElementById('cam-video').value = '';
+      showVideoPreview(cam.video);
+    } else {
+      videoDataUrl = '';
+      document.getElementById('cam-video').value = cam.video || '';
+      hideVideoPreview();
+    }
     document.getElementById('cam-accessories').value = (cam.accessories || []).join('\n');
     document.getElementById('cam-description').value = cam.description || '';
 
@@ -660,6 +698,8 @@
     document.getElementById('cam-description').value = '';
     document.getElementById('image-previews').innerHTML = '';
     imageDataUrls = [];
+    videoDataUrl = '';
+    hideVideoPreview();
   }
 
   // 保存相机
@@ -694,7 +734,7 @@
       condition: document.getElementById('cam-condition').value,
       status: document.getElementById('cam-status').value,
       images: imageDataUrls.slice(),
-      video: document.getElementById('cam-video').value.trim(),
+      video: videoDataUrl || document.getElementById('cam-video').value.trim(),
       accessories: document.getElementById('cam-accessories').value
         .split('\n')
         .map(function(s) { return s.trim(); })
@@ -813,6 +853,72 @@
         renderImagePreviews();
       });
     }
+  }
+
+  /* ================================================================
+     视频上传
+     ================================================================ */
+  var videoInput = document.getElementById('video-input');
+  var videoUploadArea = document.getElementById('video-upload-area');
+
+  function showVideoPreview(src) {
+    var wrap = document.getElementById('video-preview-wrap');
+    var video = document.getElementById('video-preview');
+    video.src = src;
+    wrap.style.display = 'block';
+    if (videoUploadArea) videoUploadArea.style.display = 'none';
+  }
+
+  function hideVideoPreview() {
+    var wrap = document.getElementById('video-preview-wrap');
+    var video = document.getElementById('video-preview');
+    video.src = '';
+    wrap.style.display = 'none';
+    if (videoUploadArea) videoUploadArea.style.display = 'block';
+  }
+
+  if (videoUploadArea && videoInput) {
+    videoUploadArea.addEventListener('click', function () {
+      videoInput.click();
+    });
+
+    videoInput.addEventListener('change', function () {
+      var file = this.files[0];
+      if (!file) return;
+
+      // 大小限制：30MB
+      if (file.size > 30 * 1024 * 1024) {
+        showToast('⚠ 视频过大（超过 30MB），建议压缩后上传或填写文件路径');
+        this.value = '';
+        return;
+      }
+
+      // 提示正在处理
+      showToast('🎬 正在处理视频...', 3000);
+
+      var reader = new FileReader();
+      reader.onload = function (e) {
+        videoDataUrl = e.target.result;
+        showVideoPreview(videoDataUrl);
+        var sizeMB = (file.size / 1024 / 1024).toFixed(1);
+        showToast('✅ 视频已上传（' + sizeMB + 'MB）');
+      };
+      reader.onerror = function () {
+        showToast('⚠ 视频读取失败，请重试');
+      };
+      reader.readAsDataURL(file);
+      this.value = '';
+    });
+  }
+
+  // 移除视频
+  var removeVideoBtn = document.getElementById('btn-remove-video');
+  if (removeVideoBtn) {
+    removeVideoBtn.addEventListener('click', function () {
+      videoDataUrl = '';
+      hideVideoPreview();
+      document.getElementById('cam-video').value = '';
+    });
   }
 
   /* ================================================================
