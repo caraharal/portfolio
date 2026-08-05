@@ -91,5 +91,27 @@
   <!-- JS -->
   <script src="js/cameras.js"></script>
   <script src="js/main.js"></script>
+  <!-- 兜底：确保 DOM 就绪后渲染 -->
+  <script>
+    (function check() {
+      if (typeof CAMERAS !== 'undefined' && document.getElementById('camera-list')) {
+        // 尝试从 localStorage 加载
+        try {
+          var s = localStorage.getItem('film_cameras');
+          if (s) { var p = JSON.parse(s); if (Array.isArray(p) && p.length > 0) { CAMERAS = p; } }
+        } catch(e) {}
+        // 如果 main.js 的 render 没跑成功，这里兜底
+        var el = document.getElementById('camera-list');
+        if (el && el.textContent.indexOf('加载中') !== -1) {
+          var h = '';
+          for (var i = 0; i < CAMERAS.length; i++) {
+            var c = CAMERAS[i], cover = (c.images && c.images[0]) || 'images/placeholder.svg';
+            h += '<a class="camera-card" href="detail.html?id='+c.id+'"><div class="card-image-wrap"><img src="'+cover+'" alt="'+c.name+'" onerror="this.src=\'images/placeholder.svg\'"></div><div class="card-body"><h2 class="card-name">'+c.name+'</h2><div class="card-model">'+c.brand+' '+c.model+'</div><div class="card-footer"><span class="condition-badge">'+c.condition+'</span><span class="card-price"><span class="price-unit">¥</span>'+c.price.toLocaleString()+'</span></div></div></a>';
+          }
+          el.innerHTML = h || '<div class="empty-state">📷<br>暂无在售相机</div>';
+        }
+      }
+    })();
+  </script>
 </body>
 </html>
