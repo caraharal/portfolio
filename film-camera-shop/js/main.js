@@ -577,26 +577,33 @@ function bindActions(cam) {
 
 (function init() {
   // 🔄 从 localStorage 加载数据（管理后台写入的），没有则用默认数据
-  var storedCameras = localStorage.getItem('film_cameras');
-  if (storedCameras) {
-    try {
-      CAMERAS = JSON.parse(storedCameras);
-    } catch(e) {
-      console.warn('读取相机缓存失败，使用默认数据');
+  try {
+    var storedCameras = localStorage.getItem('film_cameras');
+    if (storedCameras) {
+      try {
+        var parsed = JSON.parse(storedCameras);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          CAMERAS = parsed;
+        }
+      } catch(e) {
+        console.warn('读取相机缓存失败，使用默认数据', e);
+      }
     }
-  }
 
-  var storedConfig = localStorage.getItem('film_config');
-  if (storedConfig) {
-    try {
-      var cfg = JSON.parse(storedConfig);
-      SITE_CONFIG.wechatId = cfg.wechatId || SITE_CONFIG.wechatId;
-      SITE_CONFIG.xianyuLink = cfg.xianyuLink || SITE_CONFIG.xianyuLink;
-      SITE_CONFIG.siteName = cfg.siteName || SITE_CONFIG.siteName;
-      SITE_CONFIG.siteSubtitle = cfg.siteSubtitle || SITE_CONFIG.siteSubtitle;
-    } catch(e) {
-      console.warn('读取配置缓存失败，使用默认配置');
+    var storedConfig = localStorage.getItem('film_config');
+    if (storedConfig) {
+      try {
+        var cfg = JSON.parse(storedConfig);
+        SITE_CONFIG.wechatId = cfg.wechatId || SITE_CONFIG.wechatId;
+        SITE_CONFIG.xianyuLink = cfg.xianyuLink || SITE_CONFIG.xianyuLink;
+        SITE_CONFIG.siteName = cfg.siteName || SITE_CONFIG.siteName;
+        SITE_CONFIG.siteSubtitle = cfg.siteSubtitle || SITE_CONFIG.siteSubtitle;
+      } catch(e) {
+        console.warn('读取配置缓存失败，使用默认配置', e);
+      }
     }
+  } catch(e) {
+    console.error('localStorage读取失败', e);
   }
 
   // 判断当前页面
@@ -607,9 +614,16 @@ function bindActions(cam) {
     renderDetail();
   } else {
     // 首页（默认）
-    renderCameraList();
-    initBrandFilter();
-    initAiGuide();
+    try {
+      renderCameraList();
+      initBrandFilter();
+      initAiGuide();
+    } catch(e) {
+      var container = document.getElementById('camera-list');
+      if (container) {
+        container.innerHTML = '<div class="empty-state" style="color:#c00;">⚠️ 页面出错：' + e.message + '<br><small>' + e.stack.split('\\n')[0] + '</small></div>';
+      }
+    }
   }
 })();
 
