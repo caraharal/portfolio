@@ -841,6 +841,8 @@
 
   function handleFiles(files) {
     var MAX_WIDTH = 800;
+    var MAX_SIZE_KB = 500;
+
     for (var i = 0; i < files.length; i++) {
       (function (file) {
         if (!file.type.match(/image\//)) return;
@@ -851,25 +853,40 @@
         reader.onload = function (e) {
           var img = new Image();
           img.onload = function () {
+            // Step 1: 缩小尺寸到 800px
             var w = img.width, h = img.height;
             if (w > MAX_WIDTH) { h = Math.round(h * MAX_WIDTH / w); w = MAX_WIDTH; }
+
+            // Step 2: 循环降低质量直到 < 500KB
+            var quality = 0.85;
+            var compressed = null;
             var canvas = document.createElement('canvas');
             canvas.width = w; canvas.height = h;
             var ctx = canvas.getContext('2d');
-            ctx.drawImage(img, 0, 0, w, h);
-            var compressed = canvas.toDataURL('image/jpeg', 0.75);
-            imageDataUrls.push(compressed);
-            renderImagePreviews();
-            imagesPending--;
-            if (imagesPending === 0) {
-              showToast('✅ 图片处理完成，可以保存了', 2000);
+
+            function tryCompress() {
+              ctx.drawImage(img, 0, 0, w, h);
+              compressed = canvas.toDataURL('image/webp', quality);
+              var sizeKb = Math.round(compressed.length / 1024);
+              if (sizeKb > MAX_SIZE_KB && quality > 0.15) {
+                quality -= 0.1;
+                tryCompress(); // 递归降低质量重试
+              } else {
+                // 完成：只存压缩后的文件
+                imageDataUrls.push(compressed);
+                renderImagePreviews();
+                imagesPending--;
+                showToast('✅ 压缩完成：' + sizeKb + 'KB' + (quality < 0.85 ? '（质量' + Math.round(quality*100) + '%）' : ''), 2000);
+                if (imagesPending === 0) { showToast('✅ 全部图片处理完成，可以保存了', 2000); }
+              }
             }
+            tryCompress();
           };
           img.onerror = function () { imagesPending--; };
-          img.src = e.target.result;
+          img.src = e.target.result; // ← 这里传给 Image 的是 FileReader 的 base64 结果，用于 canvas 压缩
         };
         reader.onerror = function () { imagesPending--; };
-        reader.readAsDataURL(file);
+        reader.readAsDataURL(file); // ← 读取原始 file，后续通过 canvas 压缩
       })(files[i]);
     }
   }
