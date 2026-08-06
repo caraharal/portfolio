@@ -479,6 +479,14 @@
         <input type="text" id="cfg-subtitle" placeholder="film camera market">
       </div>
 
+      <div class="form-group">
+        <label>🔑 GitHub Token <span class="hint">（用于手机端直接上传图片到仓库）</span></label>
+        <input type="password" id="cfg-gh-token" placeholder="ghp_xxxxxxxxxxxx">
+        <span style="font-size:0.75rem;color:var(--accent-tag);">
+          需要 <code>public_repo</code> 权限。<a href="https://github.com/settings/tokens/new?scopes=public_repo&description=film-camera-admin" target="_blank" style="color:var(--text-title);">点此创建 Token →</a>
+        </span>
+      </div>
+
       <div class="form-actions">
         <button class="btn btn-wechat" id="btn-save-config">💾 保存设置</button>
       </div>
