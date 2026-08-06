@@ -403,15 +403,19 @@
         </div>
       </div>
 
-      <!-- 图片上传 -->
+      <!-- 图片管理 -->
       <div class="form-group">
-        <label>📸 相机图片 <span class="hint">（可多选，直接上传）</span></label>
-        <div class="image-upload-area" id="image-upload-area">
-          <div class="upload-icon">🖼️</div>
-          <p>点击或拖拽上传图片</p>
-          <input type="file" id="image-input" accept="image/*" multiple>
+        <label>📸 相机图片 <span class="hint">（把图片放进 images/ 文件夹，这里填文件名，一行一个）</span></label>
+        <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px;">
+          <input type="file" id="image-picker" accept="image/*" multiple style="display:none;">
+          <button type="button" class="btn btn-cancel btn--sm" id="btn-pick-images">📁 选择文件（获取文件名）</button>
+          <span style="font-size:0.75rem;color:var(--accent-tag);">选完把文件复制到 images/ 文件夹</span>
         </div>
+        <textarea id="cam-images-names" placeholder="contax-t2-front.webp&#10;contax-t2-back.webp&#10;contax-t2-lens.webp" style="min-height:80px;"></textarea>
         <div class="image-previews" id="image-previews"></div>
+        <p style="font-size:0.75rem;color:var(--accent-tag);margin-top:4px;">
+          ⚠️ 图片文件需手动放入项目 <code>film-camera-shop/images/</code> 文件夹，然后 git push。localStorage 只存文件名，不存图片本身。
+        </p>
       </div>
 
       <!-- 视频上传 -->
@@ -511,9 +515,9 @@
 
   // ---- 当前编辑状态 ----
   var editingId = null;        // null = 添加模式，string = 编辑模式
-  var imageDataUrls = [];      // 当前表单中的图片（base64）
-  var videoDataUrl = '';       // 当前表单中的视频（base64）
-  var imagesPending = 0;       // 正在压缩中的图片数量
+  var imageFilenames = [];     // 当前表单中的图片文件名（存 localStorage 用）
+  var videoDataUrl = '';       // 当前表单中的视频（base64，视频小可接受）
+  var imagesPending = 0;
 
   /* ================================================================
      数据读写
@@ -645,7 +649,7 @@
   // 显示表单（添加模式）
   document.getElementById('btn-add-camera').addEventListener('click', function () {
     editingId = null;
-    imageDataUrls = [];
+    imageFilenames = [];
     document.getElementById('form-title').textContent = '➕ 添加新相机';
     clearForm();
     document.getElementById('camera-form').style.display = 'block';
@@ -657,7 +661,7 @@
   document.getElementById('btn-cancel-form').addEventListener('click', function () {
     document.getElementById('camera-form').style.display = 'none';
     editingId = null;
-    imageDataUrls = [];
+    imageFilenames = [];
   });
 
   // 编辑相机
@@ -670,7 +674,8 @@
     if (!cam) return;
 
     editingId = id;
-    imageDataUrls = (cam.images && cam.images.slice()) || [];
+    imageFilenames = (cam.images && cam.images.slice()) || [];
+    document.getElementById('cam-images-names').value = (cam.images || []).join('\n');
 
     document.getElementById('form-title').textContent = '✏️ 编辑：' + cam.name;
     document.getElementById('cam-id').value = cam.id;
@@ -713,7 +718,8 @@
     document.getElementById('cam-accessories').value = '';
     document.getElementById('cam-description').value = '';
     document.getElementById('image-previews').innerHTML = '';
-    imageDataUrls = [];
+    document.getElementById('cam-images-names').value = '';
+    imageFilenames = [];
     imagesPending = 0;
     videoDataUrl = '';
     hideVideoPreview();
@@ -755,7 +761,7 @@
       price: price,
       condition: document.getElementById('cam-condition').value,
       status: document.getElementById('cam-status').value,
-      images: imageDataUrls.slice(),
+      images: imageFilenames.slice(),
       video: videoDataUrl || document.getElementById('cam-video').value.trim(),
       accessories: document.getElementById('cam-accessories').value
         .split('\n')
@@ -781,7 +787,7 @@
 
     if (!saveCameras(cameras)) return;
     editingId = null;
-    imageDataUrls = [];
+    imageFilenames = [];
     imagesPending = 0;
     document.getElementById('camera-form').style.display = 'none';
     renderCameraList();
@@ -893,23 +899,22 @@
 
   function renderImagePreviews() {
     var container = document.getElementById('image-previews');
+    if (imageFilenames.length === 0) { container.innerHTML = ''; return; }
     var html = '';
-    for (var i = 0; i < imageDataUrls.length; i++) {
+    for (var i = 0; i < imageFilenames.length; i++) {
+      var src = 'images/' + imageFilenames[i];
       html +=
         '<div class="image-preview-item">' +
-          '<img src="' + imageDataUrls[i] + '" alt="">' +
+          '<img src="' + src + '" alt="" onerror="this.style.opacity=\'0.3\'">' +
           '<button class="remove-img" data-remove="' + i + '">×</button>' +
         '</div>';
     }
     container.innerHTML = html;
-
-    // 绑定删除按钮
     var removeBtns = container.querySelectorAll('[data-remove]');
     for (var r = 0; r < removeBtns.length; r++) {
       removeBtns[r].addEventListener('click', function (e) {
         e.stopPropagation();
-        var idx = parseInt(this.getAttribute('data-remove'), 10);
-        imageDataUrls.splice(idx, 1);
+        imageFilenames.splice(parseInt(this.getAttribute('data-remove'), 10), 1);
         renderImagePreviews();
       });
     }
