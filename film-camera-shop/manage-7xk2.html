@@ -688,8 +688,9 @@
     if (!cam) return;
 
     editingId = id;
-    imageFilenames = (cam.images && cam.images.slice()) || [];
-    document.getElementById('cam-images-names').value = (cam.images || []).join('\n');
+    // 去掉 images/ 前缀显示在文本框里
+    imageFilenames = (cam.images || []).map(function(f) { return f.replace(/^images\//, ''); });
+    document.getElementById('cam-images-names').value = imageFilenames.join('\n');
 
     document.getElementById('form-title').textContent = '✏️ 编辑：' + cam.name;
     document.getElementById('cam-id').value = cam.id;
@@ -775,7 +776,7 @@
       price: price,
       condition: document.getElementById('cam-condition').value,
       status: document.getElementById('cam-status').value,
-      images: imageFilenames.slice(),
+      images: imageFilenames.map(function(f) { return f.startsWith('images/') ? f : 'images/' + f; }),
       video: videoDataUrl || document.getElementById('cam-video').value.trim(),
       accessories: document.getElementById('cam-accessories').value
         .split('\n')
@@ -940,7 +941,8 @@
     if (imageFilenames.length === 0) { container.innerHTML = ''; return; }
     var html = '';
     for (var i = 0; i < imageFilenames.length; i++) {
-      var src = 'images/' + imageFilenames[i];
+      var fn = imageFilenames[i];
+      var src = fn.startsWith('images/') ? fn : 'images/' + fn;
       html +=
         '<div class="image-preview-item">' +
           '<img src="' + src + '" alt="" onerror="this.style.opacity=\'0.3\'">' +

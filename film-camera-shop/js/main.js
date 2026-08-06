@@ -8,6 +8,9 @@
  * ============================================================
  */
 
+
+// 确保图片路径包含 images/ 前缀（兼容新旧数据）
+function imgPath(p) { return p && p.startsWith('images/') ? p : 'images/' + (p || ''); }
 var SITE_CONFIG = {
   // 📍 你的微信号（点击微信咨询按钮会复制这个）
   wechatId: 'caraharal0213',
@@ -131,7 +134,7 @@ function renderCameraList(filterBrand) {
   for (var i = 0; i < filtered.length; i++) {
     var cam = filtered[i];
     var cover = (cam.images && cam.images.length > 0)
-      ? cam.images[0]
+      ? imgPath(cam.images[0])
       : 'images/placeholder.svg';
 
       var statusLabel = '';
@@ -249,7 +252,7 @@ function renderCarousel(cam) {
 
   // 没有图片时显示占位
   var images = (cam.images && cam.images.length > 0)
-    ? cam.images
+    ? cam.images.map(imgPath)
     : ['images/placeholder.svg'];
 
   // 构建轮播 HTML
@@ -466,7 +469,7 @@ function renderVideo(cam) {
   section.innerHTML =
     '<h3>📹 实拍视频</h3>' +
     '<video src="' + cam.video + '" controls preload="metadata" ' +
-      'poster="' + (cam.images && cam.images[0] ? cam.images[0] : '') + '">' +
+      'poster="' + (cam.images && cam.images[0] ? imgPath(cam.images[0]) : '') + '">' +
       '您的浏览器不支持视频播放' +
     '</video>';
 }
