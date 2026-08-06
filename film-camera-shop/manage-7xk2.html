@@ -569,12 +569,17 @@
       wechatId: 'caraharal0213',
       xianyuLink: 'https://m.tb.cn/h.R9xYB8c?tk=kRw7gdBVeTV',
       siteName: '慢帧时光',
-      siteSubtitle: 'film camera market'
+      siteSubtitle: 'film camera market',
+      ghToken: ''
     };
   }
 
   function saveConfig(config) {
     localStorage.setItem(STORAGE_KEY_CONFIG, JSON.stringify(config));
+  }
+
+  function getGhToken() {
+    return getConfig().ghToken || '';
   }
 
   /* ================================================================
@@ -737,7 +742,7 @@
   document.getElementById('btn-save-camera').addEventListener('click', function () {
     // 检查是否有图片还在压缩中
     if (imagesPending > 0) {
-      showToast('⏳ 图片还在压缩中，请稍候再点保存...', 2000);
+      showToast('⏳ 图片还在上传中，请稍候...', 2000);
       return;
     }
     var id = document.getElementById('cam-id').value.trim();
@@ -822,46 +827,41 @@
   }
 
   /* ================================================================
-     图片上传处理
+     图片上传 — 直接推送到 GitHub（手机端全流程，不用电脑）
      ================================================================ */
 
-  var imageInput = document.getElementById('image-input');
-  var uploadArea = document.getElementById('image-upload-area');
+  var imagePicker = document.getElementById('image-picker');
+  var btnPick = document.getElementById('btn-pick-images');
 
-  // 点击上传区域
-  uploadArea.addEventListener('click', function () {
-    imageInput.click();
-  });
+  if (btnPick && imagePicker) {
+    btnPick.addEventListener('click', function () { imagePicker.click(); });
+    imagePicker.addEventListener('change', function () {
+      uploadImagesToGitHub(this.files);
+      this.value = '';
+    });
+  }
 
-  // 文件选择
-  imageInput.addEventListener('change', function () {
-    handleFiles(this.files);
-    this.value = ''; // 清空以便重新选择相同文件
-  });
+  // 手动输入文件名时同步
+  var imagesNamesInput = document.getElementById('cam-images-names');
+  if (imagesNamesInput) {
+    imagesNamesInput.addEventListener('input', function () {
+      imageFilenames = this.value.split('\n').map(function(s) { return s.trim(); }).filter(Boolean);
+      renderImagePreviews();
+    });
+  }
 
-  // 拖拽支持
-  uploadArea.addEventListener('dragover', function (e) {
-    e.preventDefault();
-    this.style.borderColor = 'var(--text-title)';
-  });
-  uploadArea.addEventListener('dragleave', function () {
-    this.style.borderColor = 'var(--border-line)';
-  });
-  uploadArea.addEventListener('drop', function (e) {
-    e.preventDefault();
-    this.style.borderColor = 'var(--border-line)';
-    handleFiles(e.dataTransfer.files);
-  });
-
-  function handleFiles(files) {
-    var MAX_WIDTH = 600;       // 更小尺寸 — 手机屏幕看足够了
-    var MAX_SIZE_KB = 200;     // 目标 200KB 以内
-
+  function uploadImagesToGitHub(files) {
+    var token = getGhToken();
+    if (!token) {
+      showToast('⚠ 请先在「网站设置」填写 GitHub Token（需 public_repo 权限）', 4000);
+      return;
+    }
+    var MAX_WIDTH = 800;
     for (var i = 0; i < files.length; i++) {
       (function (file) {
         if (!file.type.match(/image\//)) return;
         imagesPending++;
-        showToast('🔄 正在压缩...', 1000);
+        showToast('🔄 压缩+上传中...', 2000);
 
         var reader = new FileReader();
         reader.onload = function (e) {
@@ -869,37 +869,41 @@
           img.onload = function () {
             var w = img.width, h = img.height;
             if (w > MAX_WIDTH) { h = Math.round(h * MAX_WIDTH / w); w = MAX_WIDTH; }
-
-            var quality = 0.6;
-            var compressed = null;
             var canvas = document.createElement('canvas');
             canvas.width = w; canvas.height = h;
-            var ctx = canvas.getContext('2d');
+            canvas.getContext('2d').drawImage(img, 0, 0, w, h);
 
-            function tryCompress() {
-              ctx.drawImage(img, 0, 0, w, h);
-              compressed = canvas.toDataURL('image/webp', quality);
-              var sizeKb = Math.round(compressed.length / 1024);
-              if (sizeKb > MAX_SIZE_KB && quality > 0.05) {
-                quality = Math.round((quality - 0.1) * 10) / 10;
-                tryCompress();
-              } else {
-                imageDataUrls.push(compressed);
+            var dataUrl = canvas.toDataURL('image/webp', 0.7);
+            var base64 = dataUrl.split(',')[1];
+            var cleanName = file.name.replace(/[^a-zA-Z0-9._-]/g, '-').replace(/\.[^.]+$/, '.webp');
+            var apiUrl = 'https://api.github.com/repos/caraharal/portfolio/contents/film-camera-shop/images/' + cleanName;
+
+            fetch(apiUrl, {
+              method: 'PUT',
+              headers: { 'Authorization': 'token ' + token, 'Content-Type': 'application/json' },
+              body: JSON.stringify({ message: '📷 上传 ' + cleanName + '（管理后台）', content: base64, branch: 'main' })
+            }).then(function (res) { return res.json().then(function (d) { return { ok: res.ok, data: d }; }); })
+            .then(function (r) {
+              imagesPending--;
+              if (r.ok) {
+                imageFilenames.push(cleanName);
+                // 同步到文本框
+                var ta = document.getElementById('cam-images-names');
+                if (ta) { ta.value = imageFilenames.join('\n'); }
                 renderImagePreviews();
-                imagesPending--;
-                var msg = '✅ ' + sizeKb + 'KB';
-                if (quality < 0.6) { msg += '（已压缩）'; }
-                if (sizeKb > 400) { msg += ' ⚠️ 仍偏大，建议先用手机截屏再上传'; }
-                showToast(msg, 2500);
-                if (imagesPending === 0) { showToast('✅ 全部处理完成，可以保存了', 2000); }
+                showToast('✅ 已上传：' + cleanName, 2000);
+              } else {
+                var msg = (r.data && r.data.message) || '失败';
+                if (msg.indexOf('sha') !== -1) showToast('⚠ 文件已存在，换个文件名', 3000);
+                else if (msg.indexOf('credentials') !== -1) showToast('❌ Token 无效，请检查设置', 3000);
+                else showToast('❌ ' + msg, 3000);
               }
-            }
-            tryCompress();
+              if (imagesPending === 0) showToast('✅ 全部上传完成，可以保存了', 2000);
+            }).catch(function () { imagesPending--; showToast('❌ 网络错误，请重试', 3000); });
           };
           img.onerror = function () { imagesPending--; };
           img.src = e.target.result;
         };
-        reader.onerror = function () { imagesPending--; };
         reader.readAsDataURL(file);
       })(files[i]);
     }
@@ -1063,6 +1067,7 @@
     document.getElementById('cfg-xianyu').value = cfg.xianyuLink || '';
     document.getElementById('cfg-sitename').value = cfg.siteName || '';
     document.getElementById('cfg-subtitle').value = cfg.siteSubtitle || '';
+    document.getElementById('cfg-gh-token').value = cfg.ghToken || '';
   }
 
   document.getElementById('btn-save-config').addEventListener('click', function () {
@@ -1070,7 +1075,8 @@
       wechatId: document.getElementById('cfg-wechat').value.trim(),
       xianyuLink: document.getElementById('cfg-xianyu').value.trim(),
       siteName: document.getElementById('cfg-sitename').value.trim(),
-      siteSubtitle: document.getElementById('cfg-subtitle').value.trim()
+      siteSubtitle: document.getElementById('cfg-subtitle').value.trim(),
+      ghToken: document.getElementById('cfg-gh-token').value.trim()
     };
     saveConfig(config);
     showToast('✅ 设置已保存');
