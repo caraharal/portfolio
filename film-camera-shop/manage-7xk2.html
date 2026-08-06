@@ -403,19 +403,20 @@
         </div>
       </div>
 
-      <!-- 图片管理 -->
+      <!-- 图片上传（手机相册直接上传到GitHub） -->
       <div class="form-group">
-        <label>📸 相机图片 <span class="hint">（把图片放进 images/ 文件夹，这里填文件名，一行一个）</span></label>
-        <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px;">
+        <label>📸 相机图片 <span class="hint">（从手机相册选择，自动压缩上传）</span></label>
+        <div class="image-upload-area" id="image-upload-area" style="border:2px dashed var(--border-line);border-radius:var(--radius-sm);padding:var(--space-lg);text-align:center;cursor:pointer;background:var(--bg-card);">
+          <div class="upload-icon" style="font-size:2rem;">📷</div>
+          <p style="font-size:0.9rem;color:var(--text-body);">点击从相册选择图片</p>
+          <p style="font-size:0.75rem;color:var(--accent-tag);">自动压缩到合适大小，直接上传</p>
           <input type="file" id="image-picker" accept="image/*" multiple style="display:none;">
-          <button type="button" class="btn btn-cancel btn--sm" id="btn-pick-images">📁 选择文件（获取文件名）</button>
-          <span style="font-size:0.75rem;color:var(--accent-tag);">选完把文件复制到 images/ 文件夹</span>
         </div>
-        <textarea id="cam-images-names" placeholder="contax-t2-front.webp&#10;contax-t2-back.webp&#10;contax-t2-lens.webp" style="min-height:80px;"></textarea>
         <div class="image-previews" id="image-previews"></div>
         <p style="font-size:0.75rem;color:var(--accent-tag);margin-top:4px;">
-          ⚠️ 图片文件需手动放入项目 <code>film-camera-shop/images/</code> 文件夹，然后 git push。localStorage 只存文件名，不存图片本身。
+          💡 图片会自动压缩后上传到 GitHub，无需电脑操作。也可以手动填写文件名（一行一个）。
         </p>
+        <textarea id="cam-images-names" placeholder="已有图片的话，这里填文件名&#10;contax-t2-front.webp&#10;contax-t2-back.webp" style="min-height:60px;margin-top:8px;"></textarea>
       </div>
 
       <!-- 视频上传 -->
@@ -831,17 +832,17 @@
      ================================================================ */
 
   var imagePicker = document.getElementById('image-picker');
-  var btnPick = document.getElementById('btn-pick-images');
+  var uploadArea = document.getElementById('image-upload-area');
 
-  if (btnPick && imagePicker) {
-    btnPick.addEventListener('click', function () { imagePicker.click(); });
+  if (uploadArea && imagePicker) {
+    uploadArea.addEventListener('click', function () { imagePicker.click(); });
     imagePicker.addEventListener('change', function () {
       uploadImagesToGitHub(this.files);
       this.value = '';
     });
   }
 
-  // 手动输入文件名时同步
+  // 手动输入文件名同步
   var imagesNamesInput = document.getElementById('cam-images-names');
   if (imagesNamesInput) {
     imagesNamesInput.addEventListener('input', function () {
@@ -856,54 +857,79 @@
       showToast('⚠ 请先在「网站设置」填写 GitHub Token（需 public_repo 权限）', 4000);
       return;
     }
-    var MAX_WIDTH = 800;
+    var MAX_BASE64 = 750000; // GitHub API 限制约 1MB，base64 控制在 750KB 以内安全
+
     for (var i = 0; i < files.length; i++) {
       (function (file) {
         if (!file.type.match(/image\//)) return;
         imagesPending++;
-        showToast('🔄 压缩+上传中...', 2000);
+        var kb = Math.round(file.size / 1024);
+        showToast('🔄 压缩上传中（原图 ' + (kb > 999 ? (kb/1024).toFixed(1)+'MB' : kb+'KB') + '）...', 3000);
 
         var reader = new FileReader();
         reader.onload = function (e) {
           var img = new Image();
           img.onload = function () {
-            var w = img.width, h = img.height;
-            if (w > MAX_WIDTH) { h = Math.round(h * MAX_WIDTH / w); w = MAX_WIDTH; }
-            var canvas = document.createElement('canvas');
-            canvas.width = w; canvas.height = h;
-            canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+            // 尺寸策略：先 800px，如果压缩后仍太大就缩小到 600px
+            function trySize(maxW, callback) {
+              var w = img.width, h = img.height;
+              if (w > maxW) { h = Math.round(h * maxW / w); w = maxW; }
+              var canvas = document.createElement('canvas');
+              canvas.width = w; canvas.height = h;
+              canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+              tryQuality(canvas, 0.8, callback);
+            }
 
-            var dataUrl = canvas.toDataURL('image/webp', 0.7);
-            var base64 = dataUrl.split(',')[1];
-            var cleanName = file.name.replace(/[^a-zA-Z0-9._-]/g, '-').replace(/\.[^.]+$/, '.webp');
-            var apiUrl = 'https://api.github.com/repos/caraharal/portfolio/contents/film-camera-shop/images/' + cleanName;
-
-            fetch(apiUrl, {
-              method: 'PUT',
-              headers: { 'Authorization': 'token ' + token, 'Content-Type': 'application/json' },
-              body: JSON.stringify({ message: '📷 上传 ' + cleanName + '（管理后台）', content: base64, branch: 'main' })
-            }).then(function (res) { return res.json().then(function (d) { return { ok: res.ok, data: d }; }); })
-            .then(function (r) {
-              imagesPending--;
-              if (r.ok) {
-                imageFilenames.push(cleanName);
-                // 同步到文本框
-                var ta = document.getElementById('cam-images-names');
-                if (ta) { ta.value = imageFilenames.join('\n'); }
-                renderImagePreviews();
-                showToast('✅ 已上传：' + cleanName, 2000);
+            function tryQuality(canvas, quality, callback) {
+              var dataUrl = canvas.toDataURL('image/webp', quality);
+              var base64 = dataUrl.split(',')[1];
+              if (base64.length > MAX_BASE64 && quality > 0.1) {
+                // 降低质量重试
+                tryQuality(canvas, Math.round((quality - 0.15) * 100) / 100, callback);
+              } else if (base64.length > MAX_BASE64 && canvas.width > 600) {
+                // 质量降到 10% 还不够 → 缩小尺寸到 600px 重试
+                var w2 = 600, h2 = Math.round(img.height * 600 / img.width);
+                var c2 = document.createElement('canvas');
+                c2.width = w2; c2.height = h2;
+                c2.getContext('2d').drawImage(img, 0, 0, w2, h2);
+                tryQuality(c2, 0.6, callback);
               } else {
-                var msg = (r.data && r.data.message) || '失败';
-                if (msg.indexOf('sha') !== -1) showToast('⚠ 文件已存在，换个文件名', 3000);
-                else if (msg.indexOf('credentials') !== -1) showToast('❌ Token 无效，请检查设置', 3000);
-                else showToast('❌ ' + msg, 3000);
+                callback(base64, dataUrl);
               }
-              if (imagesPending === 0) showToast('✅ 全部上传完成，可以保存了', 2000);
-            }).catch(function () { imagesPending--; showToast('❌ 网络错误，请重试', 3000); });
+            }
+
+            trySize(800, function (base64, dataUrl) {
+              var cleanName = file.name.replace(/[^a-zA-Z0-9._-]/g, '-').replace(/\.[^.]+$/, '.webp');
+              var finalKb = Math.round(base64.length * 0.75 / 1024);
+              var apiUrl = 'https://api.github.com/repos/caraharal/portfolio/contents/film-camera-shop/images/' + cleanName;
+
+              fetch(apiUrl, {
+                method: 'PUT',
+                headers: { 'Authorization': 'token ' + token, 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message: '📷 上传 ' + cleanName + '（管理后台）', content: base64, branch: 'main' })
+              }).then(function (res) { return res.json().then(function (d) { return { ok: res.ok, data: d }; }); })
+              .then(function (r) {
+                imagesPending--;
+                if (r.ok) {
+                  imageFilenames.push(cleanName);
+                  var ta = document.getElementById('cam-images-names');
+                  if (ta) { ta.value = imageFilenames.join('\n'); }
+                  renderImagePreviews();
+                  showToast('✅ 上传成功：' + cleanName + ' (' + finalKb + 'KB)', 2000);
+                } else {
+                  var msg = (r.data && r.data.message) || '失败';
+                  if (msg.indexOf('sha') !== -1) showToast('⚠ 文件已存在，换个文件名', 3000);
+                  else if (msg.indexOf('credentials') !== -1) showToast('❌ Token 无效，请检查网站设置', 3000);
+                  else showToast('❌ ' + msg, 3000);
+                }
+                if (imagesPending === 0) showToast('✅ 全部上传完成，可以保存了', 2000);
+              }).catch(function () { imagesPending--; showToast('❌ 网络错误，请重试', 3000); });
+            });
           };
-          img.onerror = function () { imagesPending--; };
+          img.onerror = function () { imagesPending--; showToast('❌ 图片读取失败', 2000); };
           img.src = e.target.result;
         };
+        reader.onerror = function () { imagesPending--; };
         reader.readAsDataURL(file);
       })(files[i]);
     }
