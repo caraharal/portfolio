@@ -9,7 +9,6 @@
 | 项目名称 | 个人作品集网站（单页滚动） |
 | 线上地址 | https://caraharal.github.io/portfolio/ |
 | 仓库 | `git@github.com:caraharal/portfolio.git` |
-| 本地路径 | `/Users/caraharal/personal-website/` |
 | 技术栈 | 纯静态 HTML5 + CSS3 + Vanilla JS，零依赖、零构建 |
 | 部署 | GitHub Pages（push 即部署，无需手动构建） |
 | 核心文件 | `index.html` / `css/style.css` / `js/main.js` |
@@ -101,7 +100,7 @@ personal-website/
 ## 七、常用 Git 命令
 
 ```bash
-cd /Users/caraharal/personal-website
+# 在项目根目录下执行
 git add -A
 git commit -m "描述改动"
 git push
@@ -110,6 +109,6 @@ git push
 ## 八、其他关联项目
 
 - **AI 营销内容生成器**（本次新增到作品集的项目）：
-  - 代码位置：`/Users/caraharal/Desktop/ai-marketing-generator`
+  - 代码位置：桌面 `ai-marketing-generator` 目录（独立于本仓库）
   - 线上：https://ai-marketing-generator-one.vercel.app
   - 技术栈：Next.js 16 + TypeScript + Tailwind + Claude API + Vercel
