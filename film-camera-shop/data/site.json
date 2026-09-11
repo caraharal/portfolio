@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-11T07:14:17.938Z",
+  "updatedAt": "2026-09-11T07:17:22.839Z",
   "config": {
     "wechatId": "caraharal0213",
     "xianyuLink": "https://m.tb.cn/h.R9xYB8c?tk=kRw7gdBVeTV",
@@ -9,67 +9,102 @@
   },
   "cameras": [
     {
-      "id": "contax-t2",
-      "name": "Contax T2",
-      "brand": "Contax",
-      "model": "T2",
-      "price": 3800,
+      "id": "Pentax ESPIO AF ZOOM",
+      "name": "宾得Pentax ESPIO AF ZOOM",
+      "brand": "Pentax",
+      "model": "ESPIO AF ZOOM",
+      "price": 580,
+      "condition": "99成新",
+      "status": "available",
+      "images": [
+        "images/pentax-espio-af-zoom-1.webp",
+        "images/pentax-espio-af-zoom-2.webp",
+        "images/pentax-espio-af-zoom-3.webp",
+        "images/pentax-espio-af-zoom-4.webp"
+      ],
+      "video": "",
+      "accessories": [],
+      "description": "个人闲置 宾得Pentax ESPIO AF ZOOM胶卷相机 成色很新\n35-70mm变焦镜头 自动对焦 微距模式 闪光灯 电子计数 日期打印 延时自拍都有\n功能正常 按键灵敏 取景器清晰 过片顺畅 保养过状态无敌\n机身有点使用痕迹 成色还行 具体看图\n需要自备CR123A电池和135胶卷\n适合新手和胶片爱好者 玩胶片很友好\n非偏远包邮 不退不换"
+    },
+    {
+      "id": "PENTAX PC-330",
+      "name": "宾得PENTAX PC-330",
+      "brand": "Pentax",
+      "model": "PC-330",
+      "price": 180,
       "condition": "9成新",
       "status": "available",
       "images": [
-        "images/placeholder.svg",
-        "images/placeholder.svg",
-        "images/placeholder.svg"
+        "images/pentax-pc-330-1.webp",
+        "images/pentax-pc-330-2.webp",
+        "images/pentax-pc-330-3.webp",
+        "images/pentax-pc-330-4.webp"
       ],
       "video": "",
-      "accessories": [
-        "原装镜头盖",
-        "原装皮套",
-        "原装肩带",
-        "说明书"
-      ],
-      "description": "Contax T2 是康泰时于1990年推出的经典高端口袋胶片机，搭载蔡司 Sonnar 38mm f/2.8 镜头，成像锐利色彩浓郁，被誉为\"口袋里的徕卡\"。全钛金属机身，自动对焦，光圈优先模式，是胶片摄影爱好者的梦中情机。"
+      "accessories": [],
+      "description": "个人闲置 宾得PENTAX PC-330胶卷相机\n26mm定焦镜头 \n功能正常 闪光灯都正常 取景器清晰 镜头干净\n机身有点使用痕迹 具体看图\n两节5号电池供电 135胶卷自备\n适合新手练手 直接按就行 广角26mm很适合手持自拍 复古扫街都很有感觉\n非偏远包邮 不退不换"
     },
     {
-      "id": "minolta-x700",
-      "name": "Minolta X-700",
-      "brand": "Minolta",
-      "model": "X-700",
-      "price": 680,
-      "condition": "8成新",
+      "id": "RICOH XF-30",
+      "name": "理光RICOH XF-30",
+      "brand": "Ricon",
+      "model": "XF-30",
+      "price": 280,
+      "condition": "99成新",
       "status": "available",
       "images": [
-        "images/placeholder.svg",
-        "images/placeholder.svg"
+        "images/ricoh-xf-30-1.webp",
+        "images/ricoh-xf-30-2.webp"
       ],
       "video": "",
-      "accessories": [
-        "MD 50mm f/1.7 镜头",
-        "原装机身盖",
-        "背带"
-      ],
-      "description": "美能达 X-700 是美能达最经典的入门级单反相机，发布于1982年。配备 A 档光圈优先和 P 档程序自动曝光，对新手非常友好。机身轻便，MD 卡口镜头群丰富且价格实惠，是入门胶片摄影的性价比之王。"
+      "accessories": [],
+      "description": "理光RICOH XF-30 胶片相机\n黑色机身 35mm定焦RIKENON镜头\n自动对焦 自动闪光 ISO可调\n快门、闪光灯、走卷都正常 操作简单 新手练手/收藏都ok\n成色很新 状态无敌 具体看图\n需自备5号电池和135胶卷\n非偏远包邮 不退不换"
     },
     {
-      "id": "olympus-mju-ii",
-      "name": "Olympus µ[mju:]-II",
-      "brand": "Olympus",
-      "model": "µ[mju:]-II",
-      "price": 1200,
+      "id": "尼康zoom60s",
+      "name": "尼康zoom60s",
+      "brand": "尼康",
+      "model": "",
+      "price": 299,
+      "condition": "99成新",
+      "status": "available",
+      "images": [
+        "images/2124.webp",
+        "images/2125.webp"
+      ],
+      "video": "",
+      "accessories": [],
+      "description": "个人闲置 尼康zoom60s胶片机\n35-60mm变焦镜头 带闪光灯 \n快门、闪光灯都正常 保养过状态无敌\n非偏远包邮 不退不换"
+    },
+    {
+      "id": "理光RICOH RZ-900P胶卷相机",
+      "name": "理光RICOH RZ-900P DATE",
+      "brand": "",
+      "model": "",
+      "price": 580,
+      "condition": "99成新",
+      "status": "available",
+      "images": [
+        "images/IMG_4187.webp"
+      ],
+      "video": "",
+      "accessories": [],
+      "description": "个人闲置 理光RICOH RZ-900P胶卷相机\n成色超级无敌新 38-90mm变焦镜头 带微距 自动对焦 DATE日期功能 日期功能正常\n镜头干净 取景器清晰 闪光灯正常 自动回卷 过片正常\n需要自备CR-P2电池和135胶卷\n小白上手都很轻松 很有质感的一台机子\n非偏远包邮 不退不换"
+    },
+    {
+      "id": "理光RICOH RZ-900P DATE",
+      "name": "理光RICOH RZ-900P DATE",
+      "brand": "",
+      "model": "",
+      "price": 540,
       "condition": "95成新",
       "status": "available",
       "images": [
-        "images/placeholder.svg",
-        "images/placeholder.svg",
-        "images/placeholder.svg"
+        "images/IMG_4856.webp"
       ],
       "video": "",
-      "accessories": [
-        "原装镜头盖",
-        "手绳",
-        "原装包装盒"
-      ],
-      "description": "奥林巴斯 µ-II 是经典的口袋胶片机，发布于1997年。搭载 35mm f/2.8 镜头，成像优秀，机身小巧到可以塞进口袋。生活防水设计，滑盖开机即拍，是街头摄影和日常记录的完美搭档。"
+      "accessories": [],
+      "description": "个人闲置 理光RICOH RZ-900P DATE胶卷相机 成色很新38-90mm变焦镜头 自动对焦 带微距 自动闪光灯\n闪光灯盖子有点微微开 已经用透明胶粘住 不影响正常使用 具体看图\n过电过卷正常 自备CR-P2电池和135胶卷\n新手小白轻松上手 出片效果很不错 功能很多\n非偏远包邮 不退不换"
     }
   ]
 }
