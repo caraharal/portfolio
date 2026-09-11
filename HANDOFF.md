@@ -66,6 +66,7 @@ personal-website/
 - 卡姿兰：`assets/videos/info-flow/carslan/`，7 条作品，其中 2 条标注为 AI 整条成片
 - 麦和：`assets/videos/info-flow/maihe/`，7 条作品，其中 3 条标注为 AI 整条成片
 - 页面中分别使用 `player-carslan` / `strip-carslan` 与 `player-maihe` / `strip-maihe`
+- 11 条大视频已统一优化为 720×1280、H.264/AAC 并启用 faststart；14 条视频总体积由约 509MB 降至约 96MB
 - 新增视频时使用英文文件名，并同步增加对应缩略图、连续更新 `data-idx` 与作品数量
 
 ### 2. Vibe Coding 项目预览图（已完成，2026-09-11）
