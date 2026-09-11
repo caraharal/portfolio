@@ -247,7 +247,7 @@
                 <h3 class="timeline__company">天猫校园</h3>
                 <span class="timeline__date">2024.07 - 2026.07</span>
               </div>
-              <p class="timeline__role">内容运营、活动策划（校园大使）</p>
+              <p class="timeline__role">内容运营、活动策划</p>
               <ul class="timeline__details">
                 <li><strong>活动运营：</strong>独立策划并落地 15+ 场校园品牌活动，覆盖方案策划、商家合作、物料筹备、现场执行及活动复盘，累计对接 15+ 家商户。</li>
                 <li><strong>用户运营：</strong>持续发掘并沉淀校园核心用户，整合社群、校园渠道及内容资源，推动线上线下联动传播，并通过用户反馈优化活动与内容方向。</li>
@@ -682,6 +682,20 @@
         var newIdx = (curIdx + dir + thumbs.length) % thumbs.length;
         thumbs[newIdx].click();
       }
+
+      // Keep the custom play overlay in sync with native video controls.
+      document.querySelectorAll('.video-card__main > video').forEach(function(video) {
+        var main = video.parentElement;
+        video.addEventListener('play', function() {
+          main.classList.add('is-playing');
+        });
+        video.addEventListener('pause', function() {
+          main.classList.remove('is-playing');
+        });
+        video.addEventListener('ended', function() {
+          main.classList.remove('is-playing');
+        });
+      });
     </script>
 
 

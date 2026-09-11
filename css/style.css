@@ -906,7 +906,7 @@ ul { list-style: none; }
   position: absolute;
   inset: 0;
   display: flex; align-items: center; justify-content: center;
-  cursor: pointer;
+  pointer-events: none;
   z-index: 3;
 }
 
@@ -920,7 +920,8 @@ ul { list-style: none; }
   backdrop-filter: blur(8px);
   box-shadow: 0 4px 24px rgba(0,0,0,0.2);
   transition: all 0.35s var(--ease-spring);
-  pointer-events: none;
+  pointer-events: auto;
+  cursor: pointer;
 }
 
 .video-card__main:hover .video-card__play-btn {
@@ -931,11 +932,6 @@ ul { list-style: none; }
 .video-card__main.is-playing .video-card__overlay {
   opacity: 0;
   pointer-events: none;
-}
-
-.video-card__main.is-playing:hover .video-card__overlay {
-  opacity: 1;
-  pointer-events: all;
 }
 
 /* === Prev / Next Arrows === */
