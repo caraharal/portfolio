@@ -32,6 +32,11 @@
   outline-offset: 2px;
 }
 
+.case-back-link--forward:hover,
+.case-back-link--forward:focus-visible {
+  transform: translateX(2px);
+}
+
 .case-eyebrow {
   color: var(--text-muted);
   font-size: var(--fs-xs);
