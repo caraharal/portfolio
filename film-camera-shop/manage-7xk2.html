@@ -220,6 +220,10 @@
       border-radius: var(--radius-sm);
       overflow: hidden;
       background: var(--border-line);
+      border: 3px solid transparent;
+    }
+    .image-preview-item.is-cover {
+      border-color: var(--text-title);
     }
     .image-preview-item img {
       width: 100%;
@@ -241,6 +245,25 @@
       text-align: center;
       cursor: pointer;
       padding: 0;
+    }
+    .image-preview-item .cover-choice {
+      position: absolute;
+      left: 4px;
+      bottom: 4px;
+      max-width: calc(100% - 8px);
+      padding: 4px 7px;
+      border: 0;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.9);
+      color: var(--text-title);
+      font-size: 0.7rem;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .image-preview-item.is-cover .cover-choice {
+      background: var(--text-title);
+      color: #fff;
     }
 
     /* 表单按钮行 */
@@ -418,7 +441,7 @@
         </div>
         <div class="image-previews" id="image-previews"></div>
         <p style="font-size:0.75rem;color:var(--accent-tag);margin-top:4px;">
-          💡 图片会自动压缩后上传到 GitHub，无需电脑操作。也可以手动填写文件名（一行一个）。
+          💡 点击图片下方的「设为封面」即可切换首页封面。图片会自动压缩上传，也可以手动填写文件名（一行一个）。
         </p>
         <textarea id="cam-images-names" placeholder="已有图片的话，这里填文件名&#10;contax-t2-front.webp&#10;contax-t2-back.webp" style="min-height:60px;margin-top:8px;"></textarea>
       </div>
@@ -1079,17 +1102,35 @@
       var fn = imageFilenames[i];
       var src = fn.startsWith('images/') ? fn : 'images/' + fn;
       html +=
-        '<div class="image-preview-item">' +
+        '<div class="image-preview-item' + (i === 0 ? ' is-cover' : '') + '">' +
           '<img src="' + src + '" alt="" onerror="this.style.opacity=\'0.3\'">' +
+          '<button type="button" class="cover-choice" data-cover="' + i + '" aria-pressed="' + (i === 0 ? 'true' : 'false') + '">' +
+            (i === 0 ? '✓ 当前封面' : '设为封面') +
+          '</button>' +
           '<button class="remove-img" data-remove="' + i + '">×</button>' +
         '</div>';
     }
     container.innerHTML = html;
+
+    var coverBtns = container.querySelectorAll('[data-cover]');
+    for (var c = 0; c < coverBtns.length; c++) {
+      coverBtns[c].addEventListener('click', function () {
+        var selectedIndex = parseInt(this.getAttribute('data-cover'), 10);
+        if (selectedIndex === 0) return;
+        var selectedImage = imageFilenames.splice(selectedIndex, 1)[0];
+        imageFilenames.unshift(selectedImage);
+        document.getElementById('cam-images-names').value = imageFilenames.join('\n');
+        renderImagePreviews();
+        showToast('✅ 已设为封面，保存相机后生效', 2500);
+      });
+    }
+
     var removeBtns = container.querySelectorAll('[data-remove]');
     for (var r = 0; r < removeBtns.length; r++) {
       removeBtns[r].addEventListener('click', function (e) {
         e.stopPropagation();
         imageFilenames.splice(parseInt(this.getAttribute('data-remove'), 10), 1);
+        document.getElementById('cam-images-names').value = imageFilenames.join('\n');
         renderImagePreviews();
       });
     }
