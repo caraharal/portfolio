@@ -723,6 +723,130 @@ function matchAiRule(answers) {
   return AI_RULES[0];
 }
 
+/*
+ * AI 导购新版推荐逻辑
+ *
+ * 现货推荐直接读取后台发布的 CAMERAS，不再依赖写死的商品 id。
+ * 理想型号只作为第二层参考；店里没有时明确标记“补货中”。
+ */
+var AI_IDEAL_MODELS = {
+  ps: {
+    '100以下': { prime: 'Kodak KB10', zoom: 'Kodak KB Zoom', any: 'Kodak KB10' },
+    '100-300': { prime: 'Konica C35 EF', zoom: 'Canon Autoboy Luna', any: 'Konica C35 EF' },
+    '300-600': { prime: 'Olympus AF-1', zoom: 'Pentax Espio 115', any: 'Olympus AF-1' },
+    '600-1000': { prime: 'Olympus µ[mju:]-II', zoom: 'Olympus µ[mju:] Zoom 80', any: 'Olympus µ[mju:]-II' }
+  },
+  slr: {
+    '100以下': { prime: 'Minolta X-300 + MD 50mm f/1.7', zoom: 'Minolta X-300 + MD 35–70mm', any: 'Minolta X-300' },
+    '100-300': { prime: 'Minolta X-300 + MD 50mm f/1.7', zoom: 'Minolta X-300 + MD 35–70mm', any: 'Minolta X-300' },
+    '300-600': { prime: 'Minolta X-700 + MD 50mm f/1.7', zoom: 'Minolta X-700 + MD 35–70mm', any: 'Minolta X-700' },
+    '600-1000': { prime: 'Canon AE-1 Program + 50mm f/1.8', zoom: 'Canon EOS 50 + EF 28–80mm', any: 'Canon AE-1 Program' }
+  }
+};
+
+function aiBudgetRange(value) {
+  var ranges = {
+    '100以下': [0, 99],
+    '100-300': [100, 300],
+    '300-600': [300, 600],
+    '600-1000': [600, 1000]
+  };
+  return ranges[value] || [0, Number.MAX_SAFE_INTEGER];
+}
+
+function aiCameraText(camera) {
+  return [camera.name, camera.description, camera.category, camera.tags && camera.tags.join(' ')]
+    .filter(Boolean).join(' ').toLowerCase();
+}
+
+function aiCameraTraits(camera) {
+  var text = aiCameraText(camera);
+  var isSlr = /\bslr\b|单反|x-?300|x-?700|ae-?1|fm2|eos\s*\d/i.test(text);
+  var isZoom = /变焦|zoom|\d+\s*[-–—]\s*\d+\s*mm/i.test(text);
+  var isPrime = /定焦|\b\d{2}\s*mm\b/i.test(text) && !isZoom;
+  return { type: isSlr ? 'slr' : 'ps', lens: isZoom ? 'zoom' : (isPrime ? 'prime' : 'any'), text: text };
+}
+
+function aiInventoryScore(camera, answers) {
+  var price = Number(camera.price) || 0;
+  var range = aiBudgetRange(answers.q1);
+  var distance = price < range[0] ? range[0] - price : (price > range[1] ? price - range[1] : 0);
+  var traits = aiCameraTraits(camera);
+  var score = distance === 0 ? 60 : Math.max(0, 45 - distance / 12);
+
+  if (traits.type === answers.q2) score += 35;
+  if (answers.q3 === 'any' || traits.lens === answers.q3) score += 25;
+
+  var topicPatterns = {
+    portrait: /人像|自拍|50mm|85mm/,
+    street: /街拍|扫街|日常|轻便|口袋|35mm|26mm/,
+    landscape: /风光|旅行|广角|26mm|28mm|变焦|zoom/,
+    beginner: /新手|小白|入门|自动|简单|轻松|直接按/
+  };
+  if (topicPatterns[answers.q4] && topicPatterns[answers.q4].test(traits.text)) score += 18;
+  return score;
+}
+
+function aiInventoryReason(camera, answers) {
+  var traits = aiCameraTraits(camera);
+  var price = Number(camera.price) || 0;
+  var range = aiBudgetRange(answers.q1);
+  var parts = [];
+  if (price >= range[0] && price <= range[1]) parts.push('¥' + price + '，在你的预算内');
+  else parts.push('¥' + price + '，是当前库存里最接近需求的选择');
+
+  if (traits.type === answers.q2) parts.push(answers.q2 === 'slr' ? '符合你想要的胶片单反类型' : '符合你想要的易上手傻瓜机类型');
+  else if (answers.q2 === 'slr') parts.push('目前没有单反现货，先提供最接近的可购买替代');
+  else parts.push('目前没有傻瓜机现货，先提供最接近的可购买替代');
+  if (answers.q3 !== 'any' && traits.lens === answers.q3) parts.push(answers.q3 === 'zoom' ? '变焦构图更灵活' : '定焦镜头轻便直接');
+  else if (answers.q3 !== 'any') parts.push('焦段偏好可参考下方补货型号');
+
+  var topicReasons = {
+    portrait: '适合用来拍人像和生活记录',
+    street: '适合随身街拍和日常记录',
+    landscape: '适合旅行时灵活取景',
+    beginner: '自动功能对新手更友好'
+  };
+  parts.push(topicReasons[answers.q4] || '整体最贴近你的选择');
+  return parts.join('；') + '。';
+}
+
+function aiNormalizeModel(value) {
+  return String(value || '').toLowerCase().replace(/[^a-z0-9\u4e00-\u9fff]+/g, '');
+}
+
+function aiIdealRecommendation(answers) {
+  var typeGroup = AI_IDEAL_MODELS[answers.q2] || AI_IDEAL_MODELS.ps;
+  var budgetGroup = typeGroup[answers.q1] || typeGroup['300-600'];
+  var model = budgetGroup[answers.q3] || budgetGroup.any;
+  var topicReasons = {
+    portrait: '更偏向人像表现，适合继续关注后续补货',
+    street: '体积和焦段更适合街拍与日常随身携带',
+    landscape: '焦段选择更适合旅行和风光取景',
+    beginner: '操作逻辑相对直观，适合作为入门目标机型'
+  };
+  return { model: model, reason: topicReasons[answers.q4] || '与这组需求更接近' };
+}
+
+function matchAiRecommendations(answers) {
+  var available = (Array.isArray(CAMERAS) ? CAMERAS : []).filter(function (camera) {
+    return (camera.status || 'available') === 'available';
+  }).sort(function (a, b) {
+    return aiInventoryScore(b, answers) - aiInventoryScore(a, answers);
+  });
+  var ideal = aiIdealRecommendation(answers);
+  var idealKey = aiNormalizeModel(ideal.model.split('+')[0]);
+  var idealIsAvailable = available.some(function (camera) {
+    return aiNormalizeModel(camera.name).indexOf(idealKey) !== -1;
+  });
+
+  return {
+    availableCamera: available[0] || null,
+    availableReason: available[0] ? aiInventoryReason(available[0], answers) : '',
+    ideal: idealIsAvailable ? null : ideal
+  };
+}
+
 var AI_QUESTIONS = [
   { id: 'q1', text: '嗨！想找一台合适的胶片相机？<br><br>先告诉我你的<span style="color:#5C3D2E;font-weight:700;">预算范围</span>吧～', options: [
     { label: '💰 100 元以下',      value: '100以下' },
@@ -787,26 +911,65 @@ function _aiShowQuestion(chat, stepIndex) {
   chat.scrollTop = chat.scrollHeight;
 }
 
-function _aiShowResult(chat) {
-  var rule = matchAiRule(_aiState.answers);
-  var cam = window.getCameraById ? window.getCameraById(rule.recommend) : null;
-  if (!cam) {
-    var eb = document.createElement('div');
-    eb.className = 'ai-bubble ai-bubble--ai';
-    eb.textContent = '抱歉，暂时没有完全匹配的机型，请重新试试～';
-    chat.appendChild(eb); return;
+function aiCreateResultCard(title, reason, href, restocking) {
+  var card = document.createElement('div');
+  card.className = 'ai-result' + (restocking ? ' ai-result--restocking' : '');
+  var heading = document.createElement('div');
+  heading.className = 'ai-result-heading';
+  var titleEl = document.createElement('div');
+  titleEl.className = 'ai-result-title';
+  titleEl.textContent = title;
+  heading.appendChild(titleEl);
+  if (restocking) {
+    var badge = document.createElement('span');
+    badge.className = 'ai-restocking-badge';
+    badge.textContent = '补货中';
+    heading.appendChild(badge);
   }
-  var am = document.createElement('div');
-  am.className = 'ai-bubble ai-bubble--ai';
-  am.innerHTML = '根据你的需求，我推荐这台 👇';
-  chat.appendChild(am);
+  card.appendChild(heading);
+  var reasonEl = document.createElement('div');
+  reasonEl.className = 'ai-result-reason';
+  reasonEl.textContent = reason;
+  card.appendChild(reasonEl);
+  if (href) {
+    var link = document.createElement('a');
+    link.className = 'ai-result-link';
+    link.href = href;
+    link.textContent = '查看现货详情 →';
+    card.appendChild(link);
+  }
+  return card;
+}
 
-  var rc = document.createElement('div');
-  rc.className = 'ai-result';
-  rc.innerHTML = '<div class="ai-result-title">' + cam.name + '</div>' +
-    '<div class="ai-result-reason">' + rule.reason + '</div>' +
-    '<a class="ai-result-link" href="detail.html?id=' + encodeURIComponent(cam.id) + '">查看详情 →</a>';
-  chat.appendChild(rc);
+function _aiShowResult(chat) {
+  var recommendation = matchAiRecommendations(_aiState.answers);
+  if (recommendation.availableCamera) {
+    var availableBubble = document.createElement('div');
+    availableBubble.className = 'ai-bubble ai-bubble--ai';
+    availableBubble.textContent = '先从现在有货的机子里，推荐这台 👇';
+    chat.appendChild(availableBubble);
+    chat.appendChild(aiCreateResultCard(
+      recommendation.availableCamera.name,
+      recommendation.availableReason,
+      'detail.html?id=' + encodeURIComponent(recommendation.availableCamera.id),
+      false
+    ));
+  }
+
+  if (recommendation.ideal) {
+    var idealBubble = document.createElement('div');
+    idealBubble.className = 'ai-bubble ai-bubble--ai';
+    idealBubble.textContent = recommendation.availableCamera
+      ? '如果更看重完全匹配，这个型号值得等：'
+      : '根据你的需求，建议关注这个型号：';
+    chat.appendChild(idealBubble);
+    chat.appendChild(aiCreateResultCard(
+      recommendation.ideal.model,
+      recommendation.ideal.reason,
+      '',
+      true
+    ));
+  }
 
   var rb = document.createElement('button');
   rb.className = 'ai-restart';
