@@ -1064,9 +1064,18 @@
 
               fetch(apiUrl, {
                 method: 'PUT',
-                headers: { 'Authorization': 'token ' + token, 'Content-Type': 'application/json' },
+                headers: {
+                  'Authorization': 'Bearer ' + token,
+                  'Accept': 'application/vnd.github+json',
+                  'X-GitHub-Api-Version': '2022-11-28',
+                  'Content-Type': 'application/json'
+                },
                 body: JSON.stringify({ message: '📷 上传 ' + cleanName + '（管理后台）', content: base64, branch: 'main' })
-              }).then(function (res) { return res.json().then(function (d) { return { ok: res.ok, data: d }; }); })
+              }).then(function (res) {
+                return res.json().then(function (d) {
+                  return { ok: res.ok, status: res.status, data: d };
+                });
+              })
               .then(function (r) {
                 imagesPending--;
                 if (r.ok) {
@@ -1078,7 +1087,8 @@
                 } else {
                   var msg = (r.data && r.data.message) || '失败';
                   if (msg.indexOf('sha') !== -1) showToast('⚠ 文件已存在，换个文件名', 3000);
-                  else if (msg.indexOf('credentials') !== -1) showToast('❌ Token 无效，请检查网站设置', 3000);
+                  else if (r.status === 401 || msg.toLowerCase().indexOf('credentials') !== -1) showToast('❌ Token 无效或已过期，请检查网站设置', 4000);
+                  else if (r.status === 403) showToast('❌ Token 缺少 Contents: Read and write 权限', 4500);
                   else showToast('❌ ' + msg, 3000);
                 }
                 if (imagesPending === 0) showToast('✅ 全部上传完成，可以保存了', 2000);
