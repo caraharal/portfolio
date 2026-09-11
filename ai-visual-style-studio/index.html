@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="AI Visual Style Studio 产品 Case Study：将参考图灵感转化为可控、可复用的商业产品视觉工作流。">
+  <meta name="author" content="陈会凌">
+  <meta property="og:title" content="AI Visual Style Studio｜产品 Case Study">
+  <meta property="og:description" content="从真实失败样本出发，设计主体安全、Provider 适配与成本可控的 AI 商业视觉工作流。">
+  <meta property="og:type" content="article">
+  <title>AI Visual Style Studio｜产品 Case Study</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/case-study.css">
+</head>
+<body class="case-page">
+  <header class="header" id="header">
+    <nav class="nav container">
+      <a href="https://caraharal.github.io/portfolio/" class="nav__logo" aria-label="返回线上作品集首页">CHL</a>
+      <ul class="nav__links case-nav__links" id="nav-links">
+        <li><a href="#origin" class="nav__link">起点</a></li>
+        <li><a href="#evidence" class="nav__link">证据</a></li>
+        <li><a href="#positioning" class="nav__link">差异</a></li>
+        <li><a href="#validation" class="nav__link">验证</a></li>
+        <li><a href="https://caraharal.github.io/portfolio/" class="nav__link">← 返回首页</a></li>
+      </ul>
+      <div class="nav__actions">
+        <button class="theme-toggle" id="theme-toggle" aria-label="切换暗色模式" title="切换主题">
+          <span class="theme-toggle__icon theme-toggle__icon--sun">☀️</span>
+          <span class="theme-toggle__icon theme-toggle__icon--moon">🌙</span>
+        </button>
+        <button class="nav__hamburger" id="hamburger" aria-label="菜单" aria-expanded="false">
+          <span class="nav__hamburger-bar"></span>
+          <span class="nav__hamburger-bar"></span>
+          <span class="nav__hamburger-bar"></span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <section class="case-hero" id="overview">
+      <div class="container case-hero__grid">
+        <div class="case-hero__copy">
+          <p class="case-eyebrow">AI PRODUCT CASE STUDY · P0 MVP</p>
+          <h1>从一张参考图，到一套可复用的产品视觉工作流</h1>
+          <p class="case-hero__lead">我从真实摄影生产中反复出现的沟通与返工出发，把视觉理解、主体约束、Prompt 生成和实验资产整合成一个面向美妆与产品广告的工作流。</p>
+          <div class="case-hero__actions">
+            <a class="btn btn--primary" href="#evidence">先看真实结果</a>
+            <a class="btn btn--outline" href="#origin">看产品怎么长出来</a>
+          </div>
+        </div>
+        <aside class="case-meta" aria-label="项目概览">
+          <div><span>需求来源</span><strong>摄影生产工作流</strong></div>
+          <div><span>阶段</span><strong>P0 MVP</strong></div>
+          <div><span>核心用户</span><strong>美妆、产品广告与摄影创作者</strong></div>
+          <div><span>当前状态</span><strong>真实分析与主体安全链路已有代表性验证</strong></div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="case-section" id="origin">
+      <div class="container origin-layout">
+        <div class="case-heading case-heading--left">
+          <p class="case-eyebrow">FROM PRODUCTION TO PRODUCT</p>
+          <h2>这个需求不是从“还能做一个 AI 工具吗”开始的</h2>
+          <p>作为摄影生产者，我的工作经常从找参考、拆解视觉方向、对齐拍摄方案开始。真正耗时的不是缺少灵感，而是把一句“想要这张图的感觉”翻译成摄影、灯光、置景和后期都能执行的语言。</p>
+          <blockquote>我需要的不是一个更会聊天的模型，而是一个记得产品限制、理解参考图角色、并能保存每次实验依据的工作台。</blockquote>
+        </div>
+        <ol class="origin-path" aria-label="从摄影生产问题到产品方案的决策路径">
+          <li><span>01 · 现场观察</span><h3>参考图很容易找，共识却很难建立</h3><p>“高级、干净、有质感”对摄影师、客户和模型都不是可执行指令，沟通反复发生。</p></li>
+          <li><span>02 · 问题重构</span><h3>瓶颈不是生成，而是翻译与控制</h3><p>需要把感性判断拆成色彩、灯光、构图、镜头、材质和情绪，同时锁定产品身份。</p></li>
+          <li><span>03 · MVP 取舍</span><h3>先打通一条闭环，不先堆功能</h3><p>优先完成 Original + Reference → 分析 → Prompt → 生成 → Experiment，把可控性和可追溯性放在首位。</p></li>
+          <li><span>04 · 失败推动迭代</span><h3>参考产品抢占主体后，重写底层机制</h3><p>从“双图一起生成”降级为“先分析 Reference，生成阶段只编辑 Original”的主体安全模式。</p></li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="case-section case-section--paper" id="evidence">
+      <div class="container">
+        <div class="case-heading">
+          <p class="case-eyebrow">CORE EVIDENCE</p>
+          <h2>Original 决定产品是谁，Reference 决定如何拍摄</h2>
+          <p>目标不是复制参考图，而是让同一摄影团队依据参考图的艺术方向，重新拍摄用户自己的产品。</p>
+        </div>
+        <div class="triptych" aria-label="ENCRE NOIRE 风格迁移三联对比">
+          <figure class="triptych__item">
+            <div class="triptych__image"><img src="../assets/images/case-study/encre-original.jpg" alt="Original：黑色方形 ENCRE NOIRE 香水瓶原始产品图"></div>
+            <figcaption><b>01 · Original</b><span>唯一产品主体：瓶型、比例、木纹瓶盖、品牌文字</span></figcaption>
+          </figure>
+          <div class="triptych__arrow" aria-hidden="true">→</div>
+          <figure class="triptych__item">
+            <div class="triptych__image"><img src="../assets/images/case-study/encre-reference.jpg" alt="Reference：透明香水瓶与干叶组成的植物标本式参考图"></div>
+            <figcaption><b>02 · Reference</b><span>仅提取：纤维纸、干叶、低饱和色调、平铺构图</span></figcaption>
+          </figure>
+          <div class="triptych__arrow" aria-hidden="true">→</div>
+          <figure class="triptych__item triptych__item--result">
+            <div class="triptych__image"><img src="../assets/images/case-study/encre-result.jpg" alt="Result：保留 ENCRE NOIRE 产品身份的植物标本风格结果"></div>
+            <figcaption><b>03 · Result</b><span>保留产品身份，迁移植物标本式视觉语言</span></figcaption>
+          </figure>
+        </div>
+        <p class="evidence-caption">结果保留黑色方形瓶身、木纹瓶盖与可辨识的 ENCRE NOIRE 文字；参考图中的透明香水瓶没有进入结果。</p>
+      </div>
+    </section>
+
+    <section class="case-section" id="problem">
+      <div class="container case-two-col">
+        <div class="case-heading case-heading--left">
+          <p class="case-eyebrow">THE USER PROBLEM</p>
+          <h2>工具很多，工作流仍然是碎的</h2>
+          <p>商业视觉创作散落在灵感网站、聊天式 AI、生图工具和本地文件夹之间。每次生成都要重新解释产品限制，结果也难以复用和追溯。</p>
+        </div>
+        <div class="problem-list">
+          <article><span>01</span><div><h3>主体容易失真</h3><p>包装、瓶型、Logo 与文字在风格迁移中被改变，产品身份丢失。</p></div></article>
+          <article><span>02</span><div><h3>审美难以复用</h3><p>“这张参考图好看”无法自然转成颜色、光线、构图、材质和镜头语言。</p></div></article>
+          <article><span>03</span><div><h3>实验无法沉淀</h3><p>Prompt、输入图、结果与参数留在不同工具里，下一轮又从零开始。</p></div></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="case-section case-section--paper" id="positioning">
+      <div class="container">
+        <div class="case-heading">
+          <p class="case-eyebrow">WHY NOT JUST GPT?</p>
+          <h2>不是替代 GPT，而是把通用能力变成摄影生产机制</h2>
+          <p>ChatGPT 已能理解图片、生成与编辑视觉，也能在 Projects 中保留文件和上下文。差异不在“模型会不会”，而在产品是否默认理解这项工作的角色、约束、资产和成本。</p>
+        </div>
+        <div class="compare-table" role="table" aria-label="通用 GPT 与 AI Visual Style Studio 的工作流差异">
+          <div class="compare-row compare-row--head" role="row"><span>生产任务</span><span>通用 GPT 对话</span><span>AI Visual Style Studio</span></div>
+          <div class="compare-row" role="row"><strong>输入角色</strong><span>每轮用自然语言解释两张图各自作用</span><b>Original 与 Reference 在界面和请求中固定分工</b></div>
+          <div class="compare-row" role="row"><strong>视觉翻译</strong><span>回答形式随提问变化，需要人工整理</span><b>固定输出色板、灯光、构图、镜头、材质、情绪</b></div>
+          <div class="compare-row" role="row"><strong>生成控制</strong><span>约束散落在聊天指令中</span><b>主体、Logo、画幅、取景与备注成为真实参数</b></div>
+          <div class="compare-row" role="row"><strong>跨工具交付</strong><span>通常围绕当前对话继续修改</span><b>一次生成 OpenAI、SD、Midjourney、ComfyUI Prompt</b></div>
+          <div class="compare-row" role="row"><strong>实验追溯</strong><span>项目可保留聊天、文件和上下文</span><b>按 Experiment 绑定输入、参数、Provider、Prompt 与结果</b></div>
+          <div class="compare-row" role="row"><strong>费用治理</strong><span>由通用产品账户与套餐承接</span><b>调用前校验、Provider 状态、私有能力与公开 Demo 分层</b></div>
+        </div>
+        <p class="compare-note">定位判断：通用 GPT 更适合开放式探索；Studio 更适合需要主体保真、重复试验和过程追溯的产品视觉生产。关于 ChatGPT 当前的图像与 Projects 能力，参考 <a href="https://help.openai.com/en/articles/9260256" target="_blank" rel="noopener noreferrer">官方能力说明</a>与 <a href="https://help.openai.com/en/articles/10169521-projects-in-chatgpt" target="_blank" rel="noopener noreferrer">Projects 说明</a>。</p>
+      </div>
+    </section>
+
+    <section class="case-section case-section--dark" id="workflow">
+      <div class="container">
+        <div class="case-heading case-heading--light">
+          <p class="case-eyebrow">CORE WORKFLOW</p>
+          <h2>把一次生成，变成可控的创作闭环</h2>
+        </div>
+        <ol class="workflow" aria-label="核心产品工作流">
+          <li><span>01</span><h3>双角色输入</h3><p>Original 锁定主体；Reference 只提供艺术方向。</p></li>
+          <li><span>02</span><h3>结构化分析</h3><p>拆解色板、光线、构图、镜头、材质与情绪。</p></li>
+          <li><span>03</span><h3>Prompt 资产</h3><p>输出 OpenAI、SD、Midjourney 与 ComfyUI 版本。</p></li>
+          <li><span>04</span><h3>安全生成</h3><p>主体锁、反向约束、画幅与保真参数进入真实请求。</p></li>
+          <li><span>05</span><h3>项目沉淀</h3><p>输入、参数、Prompt、结果和备注回到 Library / Experiment。</p></li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="case-section" id="capabilities">
+      <div class="container">
+        <div class="case-heading">
+          <p class="case-eyebrow">WHAT THE PRODUCT DOES</p>
+          <h2>现有功能围绕一条生产闭环，而不是一组 AI 按钮</h2>
+        </div>
+        <div class="capability-grid">
+          <article><span>01</span><h3>双图语义输入</h3><p>并列上传 Original 与 Reference，从入口消除“谁是主体、谁是风格”的歧义。</p></article>
+          <article><span>02</span><h3>结构化风格分析</h3><p>把参考图拆成可编辑的视觉规则、关键词、色板和四类平台 Prompt。</p></article>
+          <article><span>03</span><h3>主体安全生成</h3><p>将参考产品从最终请求中剥离，以角色锁、反向提示和可选取景控制保护 Original。</p></article>
+          <article><span>04</span><h3>场景化输出控制</h3><p>支持 4:5、1:1、9:16、16:9；主体保真、Logo 和创作备注会真正进入请求。</p></article>
+          <article><span>05</span><h3>异步状态与错误前置</h3><p>显示准备、生成、保存三阶段；尺寸、配置与 Schema 在付费调用前校验。</p></article>
+          <article><span>06</span><h3>创意资产沉淀</h3><p>Project、Creative Library 与 Experiment 保存输入、分析、参数、结果和备注。</p></article>
+        </div>
+        <div class="switch-logic">
+          <div><span>继续用 GPT 就够了</span><p>一次性灵感讨论、开放式审美探索、快速生成一张不要求追溯的图片。</p></div>
+          <div class="switch-logic__focus"><span>值得切换到 Studio</span><p>产品身份不能错、同一方向要反复试、Prompt 要跨平台交付、结果需要回到项目资产。</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="case-section" id="decisions">
+      <div class="container">
+        <div class="case-heading">
+          <p class="case-eyebrow">PRODUCT DECISIONS</p>
+          <h2>不是多加几个控件，而是治理 AI 的不确定性</h2>
+        </div>
+        <div class="decision-grid">
+          <article><span class="decision-number">01</span><h3>先定义输入角色</h3><p>“保留产品”和“学习参考构图”并不冲突：锁定的是产品身份，不是原拍摄背景。</p></article>
+          <article><span class="decision-number">02</span><h3>控制必须真实生效</h3><p>主体保真、Logo、画幅、构图与创作备注会进入生成 Prompt，并随 Experiment 保存。</p></article>
+          <article><span class="decision-number">03</span><h3>错误要在付费前发生</h3><p>输入尺寸、Provider 配置与返回 Schema 在服务端前置校验，降低失败与重复付费风险。</p></article>
+          <article><span class="decision-number">04</span><h3>Prompt 是产品资产</h3><p>参考图分析沉淀为可编辑、跨平台、可追溯的视觉规则，而不是一次性聊天记录。</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="case-section case-section--paper" id="iteration">
+      <div class="container">
+        <div class="case-heading">
+          <p class="case-eyebrow">FAILURE → ITERATION</p>
+          <h2>当结果很像参考图，却完全不是用户的产品</h2>
+          <p>早期双图输入中，模型让参考产品抢占了主体。画面可以“好看”，但核心价值已经失败。</p>
+        </div>
+        <div class="failure-layout">
+          <div class="failure-visuals">
+            <figure><img src="../assets/images/case-study/failure-original.jpg" alt="失败案例的 Original：爱马仕香水原图"><figcaption>Original · 应被保留的产品</figcaption></figure>
+            <figure><img src="../assets/images/case-study/failure-reference.jpg" alt="失败案例的 Reference：绿色香水与花卉参考图"><figcaption>Reference · 只应提供风格</figcaption></figure>
+            <figure class="failure-result"><img src="../assets/images/case-study/failure-result.jpg" alt="失败结果：模型直接复制了参考图中的绿色香水"><figcaption>失败结果 · 参考产品被直接复制</figcaption></figure>
+          </div>
+          <ol class="iteration-log">
+            <li><span>发现</span><p>两张图都含同类产品，参考图的视觉信号压过文字说明。</p></li>
+            <li><span>判断</span><p>继续堆叠 Prompt 不能稳定解决角色竞争；主体保真应优先于逐像素复刻参考图。</p></li>
+            <li><span>决策</span><p>启用主体安全模式：先把 Reference 转成结构化艺术指导，最终编辑只发送 Original。</p></li>
+            <li><span>验证</span><p>ENCRE NOIRE 样本中，原产品身份被保留，参考产品未被复制，风格语言仍成功迁移。</p></li>
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <section class="case-section" id="safety">
+      <div class="container case-two-col case-two-col--balanced">
+        <div>
+          <p class="case-eyebrow">SUBJECT-SAFE MODE</p>
+          <h2 class="case-inline-title">主体安全模式</h2>
+          <p class="case-copy">系统先读取 Reference 的可迁移视觉规则，再在最终生成阶段只提交 Original 与结构化艺术指导。中英双语角色锁和反向提示明确禁止替代产品。</p>
+          <div class="safety-principle"><span>优先级</span><strong>产品身份完整性 ＞ 参考图逐像素相似度</strong></div>
+        </div>
+        <div class="safe-flow" aria-label="主体安全模式流程">
+          <div><small>REFERENCE</small><strong>视觉分析</strong><p>色彩 · 光线 · 构图 · 材质 · 情绪</p></div>
+          <span>→</span>
+          <div><small>ART DIRECTION</small><strong>剥离参考产品</strong><p>只保留可迁移规则</p></div>
+          <span>＋</span>
+          <div><small>ORIGINAL</small><strong>唯一主体</strong><p>形状 · 包装 · Logo · 文字</p></div>
+          <span>↓</span>
+          <div class="safe-flow__result"><small>RESULT</small><strong>受控生成</strong><p>主体锁定，风格迁移</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="case-section case-section--dark" id="prototype">
+      <div class="container">
+        <div class="case-heading case-heading--light">
+          <p class="case-eyebrow">PRODUCT INTERFACE</p>
+          <h2>真实界面与关键工作状态</h2>
+          <p>界面把双角色输入、风格理解、生成参数、进度反馈和结果沉淀放在同一工作区。以下截图来自本地私有 Studio；公开页面只展示截图与案例。</p>
+        </div>
+        <div class="interface-gallery">
+          <figure class="interface-shot interface-shot--wide">
+            <img src="../assets/images/case-study/interface/studio-workspace-input.jpg" alt="AI Visual Style Studio 样式工作区：ENCRE NOIRE 原图、参考图、风格分析和生成参数">
+            <figcaption><b>输入与理解</b><span>Original / Reference 并列输入；系统将参考图拆解为风格、灯光、构图、镜头、质地、情绪与色板。</span></figcaption>
+          </figure>
+          <figure class="interface-shot">
+            <img src="../assets/images/case-study/interface/studio-generation-progress.jpg" alt="AI Visual Style Studio 三阶段生成进度界面">
+            <figcaption><b>异步进度</b><span>准备图片 → 模型生成 → 保存到工作室，避免黑盒等待和重复点击。</span></figcaption>
+          </figure>
+          <figure class="interface-shot">
+            <img src="../assets/images/case-study/interface/studio-workspace-result.jpg" alt="AI Visual Style Studio ENCRE NOIRE 生成结果与参数界面">
+            <figcaption><b>结果与追溯</b><span>结果与 Provider、主体保真状态、参数和 Prompt 保持在同一实验上下文中。</span></figcaption>
+          </figure>
+        </div>
+        <div class="interface-boundary"><strong>公开展示边界</strong><span>只读截图与 Mock 流程 · 不包含 API Key · 不提供真实生成按钮 · 不产生模型费用</span></div>
+      </div>
+    </section>
+
+    <section class="case-section" id="providers">
+      <div class="container">
+        <div class="case-heading">
+          <p class="case-eyebrow">PROVIDER & COST BOUNDARY</p>
+          <h2>能力可以替换，费用边界必须明确</h2>
+        </div>
+        <div class="provider-table" role="table" aria-label="Provider 架构与公开边界">
+          <div class="provider-row provider-row--head" role="row"><span>Provider</span><span>产品角色</span><span>公开状态</span></div>
+          <div class="provider-row" role="row"><strong>Mock</strong><span>无费用演示、流程验证</span><b class="status status--public">公开可用</b></div>
+          <div class="provider-row" role="row"><strong>OpenAI-compatible</strong><span>多模态分析适配层</span><b class="status">私有配置</b></div>
+          <div class="provider-row" role="row"><strong>Bailian / Qwen</strong><span>真实风格分析与图片编辑</span><b class="status">私有受控</b></div>
+        </div>
+        <div class="boundary-note"><span>公开边界</span><p>API Key 只保留在服务端私有环境。公开作品集不开放真实 Provider；未来若开放试用，必须先加入登录、白名单、次数限制、后端限流与预算告警。</p></div>
+      </div>
+    </section>
+
+    <section class="case-section case-section--paper" id="validation">
+      <div class="container">
+        <div class="case-heading">
+          <p class="case-eyebrow">VALIDATION</p>
+          <h2>把“做出来”与“验证有效”分开</h2>
+        </div>
+        <div class="pilot-audit">
+          <div class="pilot-audit__intro">
+            <span>历史样本回溯 · N=10</span>
+            <h3>主体安全模式出现了明确的正向信号</h3>
+            <p>我按同一规则重新检查了项目中已有的 10 次真实实验。它不是随机、同条件或多人盲评，因此只能作为方向性证据，不能替代正式 A/B 测试。</p>
+          </div>
+          <div class="pilot-audit__metrics">
+            <article><span>Baseline · 直接双图</span><strong>1 / 7</strong><p>产品身份可接受</p><small>其中 6 / 7 出现参考产品抢占主体</small></article>
+            <article><span>Subject-safe</span><strong>2 / 3</strong><p>产品身份可接受</p><small>0 / 3 直接复制参考产品</small></article>
+          </div>
+          <div class="pilot-audit__rule"><b>判定标准</b><span>瓶型/产品轮廓、包装材质与颜色、可辨识文字或品牌、是否出现参考产品替代。<a href="../AI_VISUAL_STYLE_TEST_AUDIT.md">查看 10 个样本的完整审计记录 →</a></span></div>
+        </div>
+        <div class="validation-grid">
+          <article class="validation-card validation-card--yes"><span>已验证</span><ul><li>项目构建、代码检查与核心页面渲染</li><li>Mock 风格分析与 Provider 安全状态</li><li>真实参考图结构化分析</li><li>ENCRE NOIRE 主体安全生成代表性案例</li><li>历史实验回溯出现正向信号</li><li>图片更换状态清理、尺寸与 Schema 校验</li></ul></article>
+          <article class="validation-card validation-card--next"><span>下一轮验证</span><ul><li>更多产品品类与复杂包装文字</li><li>不同参考构图下的稳定成功率</li><li>从参考图到首版 Prompt 的耗时</li><li>单张可接受结果成本</li><li>Preset、Prompt 与实验资产复用率</li></ul></article>
+          <article class="validation-card validation-card--no"><span>不对外宣称</span><ul><li>尚无受控实验支撑的稳定主体保真率</li><li>尚未量化的节省时间</li><li>尚未量化的生成成功率</li><li>单个成功案例不等于稳定能力</li></ul></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="case-section case-reflection">
+      <div class="container case-reflection__inner">
+        <p class="case-eyebrow">REFLECTION</p>
+        <h2>模型能力，不等于产品能力</h2>
+        <p>真正让 AI 进入工作流的，不是一次漂亮输出，而是清晰的输入角色、可解释的控制、错误前置、成本边界和可追溯的验证机制。下一步我会用跨品类样本集建立主体保真评估标准，而不是先扩大功能范围。</p>
+        <a class="btn btn--outline" href="https://caraharal.github.io/portfolio/">← 返回个人作品集</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer__content"><p class="footer__copy">&copy; 2026 陈会凌 · AI Visual Style Studio Product Case Study</p></div>
+  </footer>
+  <script src="../js/case-study.js"></script>
+</body>
+</html>
