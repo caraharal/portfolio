@@ -525,6 +525,8 @@
 
   var STORAGE_KEY_CAMERAS = 'film_cameras';
   var STORAGE_KEY_CONFIG  = 'film_config';
+  var STORAGE_KEY_CAMERAS_UPDATED_AT = 'film_cameras_updated_at';
+  var STORAGE_KEY_LEGACY_BACKUP = 'film_cameras_legacy_backup';
   var SITE_DATA_URL = 'data/site.json';
   var GITHUB_DATA_API = 'https://api.github.com/repos/caraharal/portfolio/contents/film-camera-shop/data/site.json';
   var publishedSiteData = null;
@@ -554,10 +556,11 @@
     return CAMERAS.slice();
   }
 
-  function saveCameras(cameras) {
+  function saveCameras(cameras, updatedAt) {
     try {
       var json = JSON.stringify(cameras);
       localStorage.setItem(STORAGE_KEY_CAMERAS, json);
+      localStorage.setItem(STORAGE_KEY_CAMERAS_UPDATED_AT, updatedAt || new Date().toISOString());
       var kb = (json.length / 1024).toFixed(0);
       if (kb > 4000) {
         showToast('⚠ 数据已保存（' + kb + 'KB），接近存储上限，建议压缩图片', 3000);
@@ -571,6 +574,11 @@
       }
       return false;
     }
+  }
+
+  function cachePublishedCameras(data) {
+    if (!data || !Array.isArray(data.cameras)) return false;
+    return saveCameras(data.cameras, data.updatedAt || new Date(0).toISOString());
   }
 
   function getConfig() {
@@ -692,6 +700,7 @@
       if (!result.ok) throw new Error(resultData.message || ('发布失败（' + result.status + '）'));
 
       publishedSiteData = payload;
+      saveCameras(payload.cameras, payload.updatedAt);
       setSyncStatus('✅ 已提交线上更新，GitHub Pages 通常会在约 1 分钟内生效。');
       showToast('✅ 已发布到网站', 3000);
       return true;
@@ -1250,6 +1259,7 @@
     if (!confirm('再次确认：真的要清除吗？')) return;
 
     localStorage.removeItem(STORAGE_KEY_CAMERAS);
+    localStorage.removeItem(STORAGE_KEY_CAMERAS_UPDATED_AT);
     localStorage.removeItem(STORAGE_KEY_CONFIG);
     showToast('🗑 所有数据已清除');
     renderCameraList();
@@ -1282,18 +1292,34 @@
      ================================================================ */
 
   (async function init() {
-    var hasLocalCameras = false;
+    var localCameras = null;
+    var localUpdatedAt = '';
     try {
       var localData = localStorage.getItem(STORAGE_KEY_CAMERAS);
-      hasLocalCameras = !!localData && Array.isArray(JSON.parse(localData));
+      var parsedLocalData = localData ? JSON.parse(localData) : null;
+      if (Array.isArray(parsedLocalData)) localCameras = parsedLocalData;
+      localUpdatedAt = localStorage.getItem(STORAGE_KEY_CAMERAS_UPDATED_AT) || '';
     } catch (e) {}
 
     try {
-      await loadPublishedSiteData();
-      if (hasLocalCameras) {
-        setSyncStatus('检测到这台设备保存的数据；确认无误后点击「发布到网站」。');
+      var remoteData = await loadPublishedSiteData();
+      var localTime = Date.parse(localUpdatedAt) || 0;
+      var remoteTime = Date.parse(remoteData.updatedAt) || 0;
+      var hasNewerLocalDraft = !!localCameras && localTime > remoteTime;
+
+      if (hasNewerLocalDraft) {
+        setSyncStatus('检测到比线上更新的本机草稿；确认无误后点击「发布到网站」。');
       } else {
-        setSyncStatus('✅ 已载入线上数据。');
+        if (localCameras && JSON.stringify(localCameras) !== JSON.stringify(remoteData.cameras)) {
+          try {
+            localStorage.setItem(STORAGE_KEY_LEGACY_BACKUP, JSON.stringify({
+              savedAt: new Date().toISOString(),
+              cameras: localCameras
+            }));
+          } catch (backupError) {}
+        }
+        cachePublishedCameras(remoteData);
+        setSyncStatus('✅ 已载入线上 ' + remoteData.cameras.length + ' 台相机。');
       }
     } catch (e) {
       setSyncStatus('线上数据读取失败，当前显示内置或本机备份：' + e.message, true);
