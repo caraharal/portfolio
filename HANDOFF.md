@@ -62,30 +62,11 @@ personal-website/
 
 ## 五、当前待办事项
 
-### 1. 更新「信息流剪辑」视频（用户正在做，优先级最高）
-- 视频存放路径：`assets/videos/info-flow/`
-- 当前有 9 个视频，共 238MB，文件清单：
-
-| # | 文件 | 大小 |
-|---|------|------|
-| 1 | infoflow-01.mp4 | 50M |
-| 2 | infoflow-02.mp4 | 26M |
-| 3 | infoflow-03.mp4 | 48M |
-| 4 | infoflow-04.mp4 | 41M |
-| 5 | infoflow-05.mp4 | 36M |
-| 6 | infoflow-06.mp4 | 31M |
-| 7 | infoflow-ai-01.mp4 | 2.0M |
-| 8 | infoflow-ai-02.mp4 | 2.1M |
-| 9 | infoflow-ai-03.mp4 | 3.1M |
-
-- 用户计划：删除部分旧视频 + 拖入新视频
-- 更新后需要同步修改 `index.html` 两处：
-  1. 缩略图 strip 区（`#strip-info-flow`，约 L484-492）— 每删一个视频删一行 `div.video-card__thumb`，每加一个视频加一行
-  2. 作品数量 `<p class="video-card__count">9 个作品</p>`（约 L496）
-- 缩略图行格式（注意 data-idx 和 thumb-index 从 0 开始递增）：
-  ```html
-  <div class="video-card__thumb" data-idx="9" data-src="assets/videos/info-flow/infoflow-07.mp4" onclick="changeVideo('info-flow',9,this)"><video src="assets/videos/info-flow/infoflow-07.mp4" muted preload="metadata"></video><span class="video-card__thumb-index">10</span></div>
-  ```
+### 1. 信息流视频（已按品牌整理，2026-09-11）
+- 卡姿兰：`assets/videos/info-flow/carslan/`，7 条作品，其中 2 条标注为 AI 整条成片
+- 麦和：`assets/videos/info-flow/maihe/`，7 条作品，其中 3 条标注为 AI 整条成片
+- 页面中分别使用 `player-carslan` / `strip-carslan` 与 `player-maihe` / `strip-maihe`
+- 新增视频时使用英文文件名，并同步增加对应缩略图、连续更新 `data-idx` 与作品数量
 
 ### 2. Vibe Coding 项目预览图（已完成，2026-09-11）
 - 胶片相机网站封面：`assets/images/vibe-coding/film-camera-shop.png`

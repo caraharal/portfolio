@@ -17,7 +17,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="css/style.css?v=20260911-1">
+  <link rel="stylesheet" href="css/style.css?v=20260911-2">
 </head>
 <body>
 
@@ -522,32 +522,57 @@
 
         <div class="video__grid">
 
-          <!-- ====== 信息流剪辑 ====== -->
+          <!-- ====== 卡姿兰商业信息流 ====== -->
           <div class="video-card">
-            <div class="video-card__main" id="player-info-flow">
-              <video src="assets/videos/info-flow/infoflow-01.mp4" muted loop playsinline controls
+            <div class="video-card__main" id="player-carslan">
+              <video src="assets/videos/info-flow/carslan/carslan-01.mp4" muted loop playsinline controls
                      preload="metadata" class="video-card__video"></video>
               <div class="video-card__overlay" onclick="toggleVideo(this)">
                 <div class="video-card__play-btn">▶</div>
               </div>
-              <button class="video-card__arrow video-card__arrow--prev" onclick="switchVideo('info-flow',-1,event)">◀</button>
-              <button class="video-card__arrow video-card__arrow--next" onclick="switchVideo('info-flow',1,event)">▶</button>
+              <button class="video-card__arrow video-card__arrow--prev" onclick="switchVideo('carslan',-1,event)" aria-label="上一条卡姿兰作品">◀</button>
+              <button class="video-card__arrow video-card__arrow--next" onclick="switchVideo('carslan',1,event)" aria-label="下一条卡姿兰作品">▶</button>
             </div>
-            <div class="video-card__strip" id="strip-info-flow">
-              <div class="video-card__thumb video-card__thumb--active" data-idx="0" data-src="assets/videos/info-flow/infoflow-01.mp4" onclick="changeVideo('info-flow',0,this)"><video src="assets/videos/info-flow/infoflow-01.mp4" muted preload="metadata"></video><span class="video-card__thumb-index">1</span></div>
-              <div class="video-card__thumb" data-idx="1" data-src="assets/videos/info-flow/infoflow-02.mp4" onclick="changeVideo('info-flow',1,this)"><video src="assets/videos/info-flow/infoflow-02.mp4" muted preload="metadata"></video><span class="video-card__thumb-index">2</span></div>
-              <div class="video-card__thumb" data-idx="2" data-src="assets/videos/info-flow/infoflow-03.mp4" onclick="changeVideo('info-flow',2,this)"><video src="assets/videos/info-flow/infoflow-03.mp4" muted preload="metadata"></video><span class="video-card__thumb-index">3</span></div>
-              <div class="video-card__thumb" data-idx="3" data-src="assets/videos/info-flow/infoflow-04.mp4" onclick="changeVideo('info-flow',3,this)"><video src="assets/videos/info-flow/infoflow-04.mp4" muted preload="metadata"></video><span class="video-card__thumb-index">4</span></div>
-              <div class="video-card__thumb" data-idx="4" data-src="assets/videos/info-flow/infoflow-05.mp4" onclick="changeVideo('info-flow',4,this)"><video src="assets/videos/info-flow/infoflow-05.mp4" muted preload="metadata"></video><span class="video-card__thumb-index">5</span></div>
-              <div class="video-card__thumb" data-idx="5" data-src="assets/videos/info-flow/infoflow-06.mp4" onclick="changeVideo('info-flow',5,this)"><video src="assets/videos/info-flow/infoflow-06.mp4" muted preload="metadata"></video><span class="video-card__thumb-index">6</span></div>
-              <div class="video-card__thumb" data-idx="6" data-src="assets/videos/info-flow/infoflow-ai-01.mp4" onclick="changeVideo('info-flow',6,this)"><video src="assets/videos/info-flow/infoflow-ai-01.mp4" muted preload="metadata"></video><span class="video-card__thumb-index">7</span></div>
-              <div class="video-card__thumb" data-idx="7" data-src="assets/videos/info-flow/infoflow-ai-02.mp4" onclick="changeVideo('info-flow',7,this)"><video src="assets/videos/info-flow/infoflow-ai-02.mp4" muted preload="metadata"></video><span class="video-card__thumb-index">8</span></div>
-              <div class="video-card__thumb" data-idx="8" data-src="assets/videos/info-flow/infoflow-ai-03.mp4" onclick="changeVideo('info-flow',8,this)"><video src="assets/videos/info-flow/infoflow-ai-03.mp4" muted preload="metadata"></video><span class="video-card__thumb-index">9</span></div>
+            <div class="video-card__strip" id="strip-carslan">
+              <div class="video-card__thumb video-card__thumb--active" data-idx="0" data-src="assets/videos/info-flow/carslan/carslan-01.mp4" onclick="changeVideo('carslan',0,this)"><video src="assets/videos/info-flow/carslan/carslan-01.mp4" muted preload="metadata"></video><span class="video-card__thumb-index">1</span></div>
+              <div class="video-card__thumb" data-idx="1" data-src="assets/videos/info-flow/carslan/carslan-02.mp4" onclick="changeVideo('carslan',1,this)"><video src="assets/videos/info-flow/carslan/carslan-02.mp4" muted preload="metadata"></video><span class="video-card__thumb-index">2</span></div>
+              <div class="video-card__thumb" data-idx="2" data-src="assets/videos/info-flow/carslan/carslan-03.mp4" onclick="changeVideo('carslan',2,this)"><video src="assets/videos/info-flow/carslan/carslan-03.mp4" muted preload="metadata"></video><span class="video-card__thumb-index">3</span></div>
+              <div class="video-card__thumb" data-idx="3" data-src="assets/videos/info-flow/carslan/carslan-04.mp4" onclick="changeVideo('carslan',3,this)"><video src="assets/videos/info-flow/carslan/carslan-04.mp4" muted preload="metadata"></video><span class="video-card__thumb-index">4</span></div>
+              <div class="video-card__thumb" data-idx="4" data-src="assets/videos/info-flow/carslan/carslan-05.mp4" onclick="changeVideo('carslan',4,this)"><video src="assets/videos/info-flow/carslan/carslan-05.mp4" muted preload="metadata"></video><span class="video-card__thumb-index">5</span></div>
+              <div class="video-card__thumb" data-idx="5" data-src="assets/videos/info-flow/carslan/carslan-ai-01.mp4" onclick="changeVideo('carslan',5,this)"><video src="assets/videos/info-flow/carslan/carslan-ai-01.mp4" muted preload="metadata"></video><span class="video-card__thumb-badge">AI成片</span><span class="video-card__thumb-index">6</span></div>
+              <div class="video-card__thumb" data-idx="6" data-src="assets/videos/info-flow/carslan/carslan-ai-02.mp4" onclick="changeVideo('carslan',6,this)"><video src="assets/videos/info-flow/carslan/carslan-ai-02.mp4" muted preload="metadata"></video><span class="video-card__thumb-badge">AI成片</span><span class="video-card__thumb-index">7</span></div>
             </div>
             <div class="video-card__body">
-              <h3 class="video-card__title">信息流剪辑</h3>
-              <p class="video-card__count">9 个作品</p>
-              <p class="video-card__desc">高转化信息流广告素材，ROI稳定1.8+，多次获优质标记持续追投</p>
+              <h3 class="video-card__title">卡姿兰｜商业信息流</h3>
+              <p class="video-card__count">7 个作品 · 含 2 条 AI 整条成片</p>
+              <p class="video-card__desc">卡姿兰实习期间产出的护肤信息流素材，覆盖内容策划、拍摄协作、剪辑包装与 AIGC 商业应用。</p>
+            </div>
+          </div>
+
+          <!-- ====== 麦和香氛信息流 ====== -->
+          <div class="video-card">
+            <div class="video-card__main" id="player-maihe">
+              <video src="assets/videos/info-flow/maihe/maihe-01.mp4" muted loop playsinline controls
+                     preload="metadata" class="video-card__video"></video>
+              <div class="video-card__overlay" onclick="toggleVideo(this)">
+                <div class="video-card__play-btn">▶</div>
+              </div>
+              <button class="video-card__arrow video-card__arrow--prev" onclick="switchVideo('maihe',-1,event)" aria-label="上一条麦和作品">◀</button>
+              <button class="video-card__arrow video-card__arrow--next" onclick="switchVideo('maihe',1,event)" aria-label="下一条麦和作品">▶</button>
+            </div>
+            <div class="video-card__strip" id="strip-maihe">
+              <div class="video-card__thumb video-card__thumb--active" data-idx="0" data-src="assets/videos/info-flow/maihe/maihe-01.mp4" onclick="changeVideo('maihe',0,this)"><video src="assets/videos/info-flow/maihe/maihe-01.mp4" muted preload="metadata"></video><span class="video-card__thumb-index">1</span></div>
+              <div class="video-card__thumb" data-idx="1" data-src="assets/videos/info-flow/maihe/maihe-02.mp4" onclick="changeVideo('maihe',1,this)"><video src="assets/videos/info-flow/maihe/maihe-02.mp4" muted preload="metadata"></video><span class="video-card__thumb-index">2</span></div>
+              <div class="video-card__thumb" data-idx="2" data-src="assets/videos/info-flow/maihe/maihe-03.mp4" onclick="changeVideo('maihe',2,this)"><video src="assets/videos/info-flow/maihe/maihe-03.mp4" muted preload="metadata"></video><span class="video-card__thumb-index">3</span></div>
+              <div class="video-card__thumb" data-idx="3" data-src="assets/videos/info-flow/maihe/maihe-04.mp4" onclick="changeVideo('maihe',3,this)"><video src="assets/videos/info-flow/maihe/maihe-04.mp4" muted preload="metadata"></video><span class="video-card__thumb-index">4</span></div>
+              <div class="video-card__thumb" data-idx="4" data-src="assets/videos/info-flow/maihe/maihe-ai-01.mp4" onclick="changeVideo('maihe',4,this)"><video src="assets/videos/info-flow/maihe/maihe-ai-01.mp4" muted preload="metadata"></video><span class="video-card__thumb-badge">AI成片</span><span class="video-card__thumb-index">5</span></div>
+              <div class="video-card__thumb" data-idx="5" data-src="assets/videos/info-flow/maihe/maihe-ai-02.mp4" onclick="changeVideo('maihe',5,this)"><video src="assets/videos/info-flow/maihe/maihe-ai-02.mp4" muted preload="metadata"></video><span class="video-card__thumb-badge">AI成片</span><span class="video-card__thumb-index">6</span></div>
+              <div class="video-card__thumb" data-idx="6" data-src="assets/videos/info-flow/maihe/maihe-ai-03.mp4" onclick="changeVideo('maihe',6,this)"><video src="assets/videos/info-flow/maihe/maihe-ai-03.mp4" muted preload="metadata"></video><span class="video-card__thumb-badge">AI成片</span><span class="video-card__thumb-index">7</span></div>
+            </div>
+            <div class="video-card__body">
+              <h3 class="video-card__title">麦和｜香氛信息流</h3>
+              <p class="video-card__count">7 个作品 · 含 3 条 AI 整条成片</p>
+              <p class="video-card__desc">麦和实习期间产出的香氛信息流素材，覆盖产品场景、氛围感表达、投放剪辑与 AIGC 整条成片。</p>
             </div>
           </div>
 
