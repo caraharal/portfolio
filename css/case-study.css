@@ -211,6 +211,7 @@
 .case-reflection { text-align: center; }
 .case-reflection__inner { max-width: 800px; }
 .case-reflection p:not(.case-eyebrow) { margin: 0 auto 2rem; color: var(--text-secondary); font-size: var(--fs-md); line-height: 1.9; }
+.case-reflection__actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.75rem; }
 
 .project-card--featured { border-color: var(--text-muted); }
 .project-card__link { align-self: flex-start; margin-top: 0.6rem; padding-bottom: 0.15rem; border-bottom: 1px solid var(--text-primary); font-size: var(--fs-sm); font-weight: var(--fw-semibold); }
@@ -267,6 +268,7 @@
   .workflow li:last-child { grid-column: auto; }
   .workflow h3 { margin-top: 2rem; }
   .case-hero__actions .btn { width: 100%; }
+  .case-reflection__actions .btn { width: 100%; }
 }
 
 @media (prefers-reduced-motion: reduce) {

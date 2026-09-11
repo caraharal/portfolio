@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="AI Visual Style Studio 公开版 PRD：从摄影生产问题、P0 功能与验收标准，到验证结果和下一阶段规划。">
+  <meta name="author" content="陈会凌">
+  <meta property="og:title" content="AI Visual Style Studio｜公开版 PRD">
+  <meta property="og:description" content="一份面向产品评审与招聘方的 3 分钟精简 PRD。">
+  <meta property="og:type" content="article">
+  <title>AI Visual Style Studio｜公开版 PRD</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../css/style.css">
+  <link rel="stylesheet" href="../../css/case-study.css">
+  <link rel="stylesheet" href="../../css/prd.css">
+</head>
+<body class="case-page prd-page">
+  <header class="header" id="header">
+    <nav class="nav container">
+      <a href="../" class="nav__logo" aria-label="返回 AI Visual Style Studio Case Study">AVSS</a>
+      <ul class="nav__links case-nav__links" id="nav-links">
+        <li><a href="#problem" class="nav__link">问题</a></li>
+        <li><a href="#scope" class="nav__link">范围</a></li>
+        <li><a href="#decisions" class="nav__link">决策</a></li>
+        <li><a href="#validation" class="nav__link">验证</a></li>
+        <li><a href="../" class="nav__link">← Case Study</a></li>
+      </ul>
+      <div class="nav__actions">
+        <button class="theme-toggle" id="theme-toggle" aria-label="切换暗色模式" title="切换主题">
+          <span class="theme-toggle__icon theme-toggle__icon--sun">☀️</span>
+          <span class="theme-toggle__icon theme-toggle__icon--moon">🌙</span>
+        </button>
+        <button class="nav__hamburger" id="hamburger" aria-label="菜单" aria-expanded="false">
+          <span class="nav__hamburger-bar"></span>
+          <span class="nav__hamburger-bar"></span>
+          <span class="nav__hamburger-bar"></span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <section class="prd-hero">
+      <div class="container prd-hero__grid">
+        <div>
+          <p class="case-eyebrow">PUBLIC PRD · P0 MVP</p>
+          <h1>把参考图灵感，变成可执行的产品视觉工作流</h1>
+          <p class="prd-hero__lead">这份公开版 PRD 聚焦用户问题、P0 取舍、验收标准与验证边界。阅读时间约 3 分钟。</p>
+          <div class="prd-hero__actions">
+            <a class="btn btn--primary" href="#scope">查看 P0 范围</a>
+            <a class="btn btn--outline" href="../">返回完整 Case Study</a>
+          </div>
+        </div>
+        <dl class="prd-facts">
+          <div><dt>产品阶段</dt><dd>P0 MVP</dd></div>
+          <div><dt>需求来源</dt><dd>摄影生产工作流</dd></div>
+          <div><dt>核心用户</dt><dd>产品摄影师、美妆视觉创作者</dd></div>
+          <div><dt>核心判断</dt><dd>Original 决定产品是谁；Reference 决定如何拍摄</dd></div>
+        </dl>
+      </div>
+    </section>
+
+    <section class="case-section" id="problem">
+      <div class="container prd-two-col">
+        <div class="prd-sticky-heading">
+          <p class="case-eyebrow">01 · PROBLEM</p>
+          <h2>需求来自摄影生产，而不是“再做一个生图工具”</h2>
+          <p>工作中很容易找到一张“感觉对”的参考图，却很难把这种感性判断翻译成摄影、灯光、置景、后期与模型都能执行的语言。</p>
+        </div>
+        <div>
+          <div class="prd-problems">
+            <article><span>01</span><h3>输入角色反复解释</h3><p>每轮都要重新说明哪张图是产品，哪张图只提供风格。</p></article>
+            <article><span>02</span><h3>产品身份容易丢失</h3><p>瓶型、包装、Logo 和文字可能改变，参考产品甚至会抢占主体。</p></article>
+            <article><span>03</span><h3>创作过程无法沉淀</h3><p>图片、分析、Prompt、参数与结果散落在聊天和文件夹中。</p></article>
+          </div>
+          <blockquote class="prd-jtbd">当我有一张产品图和一张喜欢的参考图时，我希望系统帮我拆解参考图、保护原产品，并生成可复用的视觉方案，以便更快决定如何拍摄或继续生成。</blockquote>
+        </div>
+      </div>
+    </section>
+
+    <section class="case-section case-section--paper" id="goal">
+      <div class="container">
+        <div class="case-heading">
+          <p class="case-eyebrow">02 · GOAL</p>
+          <h2>先让核心生产闭环成立</h2>
+        </div>
+        <div class="prd-goals">
+          <article class="prd-goals__yes">
+            <span>产品目标</span>
+            <ul>
+              <li>把感性审美拆解为结构化视觉规则</li>
+              <li>在风格迁移中优先保护产品身份</li>
+              <li>减少重复解释参考图和产品限制</li>
+              <li>让 Prompt、参数、输入和结果成为可复用资产</li>
+              <li>在付费调用前识别输入错误与成本风险</li>
+            </ul>
+          </article>
+          <article class="prd-goals__no">
+            <span>当前不做</span>
+            <ul>
+              <li>不训练自有基础模型</li>
+              <li>不承诺 Logo 与包装文字像素级还原</li>
+              <li>不在没有登录、限流和预算控制时开放公共真实生图</li>
+              <li>不在 P0 扩展团队协作、订阅、视频与批量 SKU</li>
+              <li>不把单个成功案例描述为稳定成功率</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="case-section case-section--dark" id="workflow">
+      <div class="container">
+        <div class="case-heading case-heading--light">
+          <p class="case-eyebrow">03 · CORE FLOW</p>
+          <h2>一条从灵感到资产的闭环</h2>
+        </div>
+        <ol class="prd-flow" aria-label="P0 核心流程">
+          <li><span>01</span><strong>双图输入</strong><p>Original 锁定产品；Reference 提供视觉语言。</p></li>
+          <li><span>02</span><strong>风格分析</strong><p>拆解色彩、灯光、构图、镜头、材质和情绪。</p></li>
+          <li><span>03</span><strong>生成控制</strong><p>确认主体、Logo、取景、画幅与创作备注。</p></li>
+          <li><span>04</span><strong>安全生成</strong><p>Reference 转成艺术指导，最终只编辑 Original。</p></li>
+          <li><span>05</span><strong>资产沉淀</strong><p>输入、Prompt、参数与结果回到 Experiment。</p></li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="case-section" id="scope">
+      <div class="container">
+        <div class="case-heading">
+          <p class="case-eyebrow">04 · P0 SCOPE</p>
+          <h2>功能围绕工作流组织，而不是堆叠 AI 按钮</h2>
+        </div>
+        <div class="prd-scope" role="table" aria-label="P0 功能范围">
+          <div class="prd-scope__row prd-scope__head" role="row"><span>能力</span><span>用户价值</span><span>状态</span></div>
+          <div class="prd-scope__row" role="row"><strong>双角色输入</strong><span>从入口明确产品与风格分工</span><b>已实现</b></div>
+          <div class="prd-scope__row" role="row"><strong>结构化风格分析</strong><span>把感性参考转成可执行艺术指导</span><b>已实现</b></div>
+          <div class="prd-scope__row" role="row"><strong>四平台 Prompt</strong><span>同一方向可跨 OpenAI、SD、Midjourney、ComfyUI 使用</span><b>已实现</b></div>
+          <div class="prd-scope__row" role="row"><strong>主体安全生成</strong><span>降低参考产品替换 Original 的风险</span><b>已实现</b></div>
+          <div class="prd-scope__row" role="row"><strong>画幅与主体控制</strong><span>让操作真实进入生成请求</span><b>已实现</b></div>
+          <div class="prd-scope__row" role="row"><strong>三阶段进度</strong><span>减少黑盒等待与重复点击</span><b>已实现</b></div>
+          <div class="prd-scope__row" role="row"><strong>Project / Library / Experiment</strong><span>保存输入、参数、Prompt、结果与备注</span><b>已实现</b></div>
+          <div class="prd-scope__row" role="row"><strong>Provider 分层</strong><span>无费用 Mock 演示；真实能力私有受控</span><b>已实现</b></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="case-section case-section--paper" id="decisions">
+      <div class="container">
+        <div class="case-heading">
+          <p class="case-eyebrow">05 · KEY DECISIONS</p>
+          <h2>四个决定产品边界的取舍</h2>
+        </div>
+        <div class="prd-decisions">
+          <article><span>01</span><h3>产品身份与艺术指导分工</h3><p>Original 负责轮廓、比例、包装和品牌；Reference 只负责色彩、光线、构图、材质和氛围。</p></article>
+          <article><span>02</span><h3>主体保真优先于参考相似度</h3><p>结果再好看，只要产品被替换就是核心失败。主体安全模式先分析 Reference，最终只编辑 Original。</p></article>
+          <article><span>03</span><h3>界面控制必须真实生效</h3><p>主体、Logo、画幅、取景和备注必须进入请求，并随 Experiment 保存，避免虚假控制感。</p></article>
+          <article><span>04</span><h3>公开展示与付费能力分离</h3><p>公开页面只展示案例和 Mock 流程；真实 Provider 保持私有，避免密钥与费用风险。</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="case-section" id="acceptance">
+      <div class="container prd-two-col">
+        <div class="prd-sticky-heading">
+          <p class="case-eyebrow">06 · ACCEPTANCE</p>
+          <h2>核心验收标准</h2>
+          <p>验收关注产品承诺是否成立，而不只判断页面是否能运行。</p>
+        </div>
+        <div class="prd-checks">
+          <article><span>输入与状态</span><ul><li>用户能清楚区分 Original 与 Reference</li><li>输入不完整时不能发起真实生成</li><li>更换 Reference 后旧分析与结果立即失效</li><li>生成期间按钮锁定并展示三阶段状态</li></ul></article>
+          <article><span>分析与生成</span><ul><li>分析返回完整结构化字段</li><li>用户参数真实进入生成请求</li><li>主体安全模式最终只编辑 Original</li><li>输入、Provider、Prompt、参数和结果可追溯</li></ul></article>
+          <article><span>公开边界</span><ul><li>公开页面不包含 API Key</li><li>不提供会产生真实模型费用的按钮</li><li>Mock 测试不调用付费模型</li><li>未经受控测试的数据不写成正式成功率</li></ul></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="case-section case-section--paper" id="validation">
+      <div class="container">
+        <div class="case-heading">
+          <p class="case-eyebrow">07 · VALIDATION</p>
+          <h2>已有方向性证据，但不提前宣布胜利</h2>
+          <p>ENCRE NOIRE 案例保留了黑色方瓶、木纹瓶盖和可辨识文字，同时迁移了植物标本式构图、纸张质感和低饱和自然色。</p>
+        </div>
+        <div class="prd-metrics">
+          <article><span>Baseline · 直接双图</span><strong>1 / 7</strong><p>产品身份可接受</p><small>6 / 7 出现参考产品抢占</small></article>
+          <article class="prd-metrics__focus"><span>Subject-safe</span><strong>2 / 3</strong><p>产品身份可接受</p><small>0 / 3 直接复制参考产品</small></article>
+        </div>
+        <p class="prd-caveat">以上为 10 个历史实验的单人回溯，分组不均，也不是随机或盲评，只能作为方向性证据。下一阶段需要至少 12 组固定配对和 3 名独立评审完成受控 A/B。</p>
+      </div>
+    </section>
+
+    <section class="case-section prd-next">
+      <div class="container prd-next__grid">
+        <div>
+          <p class="case-eyebrow">NEXT</p>
+          <h2>下一阶段：先验证稳定性，再扩大功能</h2>
+        </div>
+        <ol>
+          <li><span>01</span><p>建立跨品类固定测试集与盲评评分表。</p></li>
+          <li><span>02</span><p>为 Experiment 增加评分、失败标签、耗时与成本。</p></li>
+          <li><span>03</span><p>探索从风格分析进一步输出 Shot List、Lighting Plan 与置景建议。</p></li>
+        </ol>
+      </div>
+      <div class="container prd-footer-actions">
+        <a class="btn btn--primary" href="../">返回完整 Case Study</a>
+        <a class="btn btn--outline" href="https://caraharal.github.io/portfolio/">返回个人作品集</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer__content"><p class="footer__copy">&copy; 2026 陈会凌 · AI Visual Style Studio Public PRD</p></div>
+  </footer>
+  <script src="../../js/case-study.js"></script>
+</body>
+</html>
