@@ -1172,6 +1172,15 @@ ul { list-style: none; }
   font-weight: var(--fw-semibold);
 }
 .vc-project-preview { aspect-ratio: 16/10; overflow: hidden; background: var(--bg-tertiary); }
+.vc-project-preview__image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
+  transition: transform 0.5s var(--ease-out);
+}
+.vc-project-card:hover .vc-project-preview__image { transform: scale(1.02); }
 .vc-preview-placeholder {
   width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center;
   gap: 8px; background: linear-gradient(135deg, #2d1b0e 0%, #5c3a1e 50%, #3d2415 100%);

@@ -84,10 +84,10 @@ personal-website/
   <div class="video-card__thumb" data-idx="9" data-src="assets/videos/info-flow/infoflow-07.mp4" onclick="changeVideo('info-flow',9,this)"><video src="assets/videos/info-flow/infoflow-07.mp4" muted preload="metadata"></video><span class="video-card__thumb-index">10</span></div>
   ```
 
-### 2. Vibe Coding 预览图占位（低优先级）
-- AI 营销内容生成器卡片（约 L693-696）预览区目前是占位背景 +「截图准备中」提示
-- 胶片相机网站卡片（约 L646-649）预览区同样是占位
-- 需等用户提供实际网站截图后替换
+### 2. Vibe Coding 项目预览图（已完成，2026-09-11）
+- 胶片相机网站封面：`assets/images/vibe-coding/film-camera-shop.png`
+- AI 营销内容生成器封面：`assets/images/vibe-coding/ai-marketing-generator.png`
+- 两张图片均为 1200×750（16:10），已替换原有「截图准备中」占位内容
 
 ## 六、重要注意事项
 
