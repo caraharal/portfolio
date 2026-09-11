@@ -339,8 +339,12 @@
     <div class="admin-toolbar">
       <button class="btn-sm btn-outline" id="btn-export">📥 导出数据备份</button>
       <button class="btn-sm btn-outline" id="btn-import">📤 导入数据</button>
+      <button class="btn-sm btn-outline" id="btn-publish">☁️ 发布到网站</button>
       <input type="file" id="import-file" accept=".json" style="display:none;">
     </div>
+    <p id="sync-status" style="font-size:0.78rem;color:var(--accent-tag);margin:0 0 var(--space-md);">
+      正在读取线上数据…
+    </p>
 
     <!-- 相机列表 -->
     <div id="admin-camera-list">
@@ -521,6 +525,10 @@
 
   var STORAGE_KEY_CAMERAS = 'film_cameras';
   var STORAGE_KEY_CONFIG  = 'film_config';
+  var SITE_DATA_URL = 'data/site.json';
+  var GITHUB_DATA_API = 'https://api.github.com/repos/caraharal/portfolio/contents/film-camera-shop/data/site.json';
+  var publishedSiteData = null;
+  var publishInProgress = false;
 
   // ---- 当前编辑状态 ----
   var editingId = null;        // null = 添加模式，string = 编辑模式
@@ -535,10 +543,14 @@
   function getCameras() {
     var data = localStorage.getItem(STORAGE_KEY_CAMERAS);
     if (data) {
-      try { return JSON.parse(data); } catch(e) {}
+      try {
+        var localCameras = JSON.parse(data);
+        if (Array.isArray(localCameras)) return localCameras;
+      } catch(e) {}
     }
-    // 首次使用：把 cameras.js 的默认数据存入 localStorage
-    saveCameras(CAMERAS);
+    if (publishedSiteData && Array.isArray(publishedSiteData.cameras)) {
+      return publishedSiteData.cameras.slice();
+    }
     return CAMERAS.slice();
   }
 
@@ -562,17 +574,21 @@
   }
 
   function getConfig() {
-    var data = localStorage.getItem(STORAGE_KEY_CONFIG);
-    if (data) {
-      try { return JSON.parse(data); } catch(e) {}
-    }
-    return {
+    var defaultConfig = {
       wechatId: 'caraharal0213',
       xianyuLink: 'https://m.tb.cn/h.R9xYB8c?tk=kRw7gdBVeTV',
       siteName: '慢帧时光',
       siteSubtitle: 'film camera market',
       ghToken: ''
     };
+    if (publishedSiteData && publishedSiteData.config) {
+      defaultConfig = Object.assign(defaultConfig, publishedSiteData.config);
+    }
+    var data = localStorage.getItem(STORAGE_KEY_CONFIG);
+    if (data) {
+      try { return Object.assign(defaultConfig, JSON.parse(data)); } catch(e) {}
+    }
+    return defaultConfig;
   }
 
   function saveConfig(config) {
@@ -581,6 +597,112 @@
 
   function getGhToken() {
     return getConfig().ghToken || '';
+  }
+
+  function setSyncStatus(message, isError) {
+    var status = document.getElementById('sync-status');
+    if (!status) return;
+    status.textContent = message;
+    status.style.color = isError ? 'var(--accent-price)' : 'var(--accent-tag)';
+  }
+
+  function publicConfig(config) {
+    return {
+      wechatId: config.wechatId || '',
+      xianyuLink: config.xianyuLink || '',
+      siteName: config.siteName || '',
+      siteSubtitle: config.siteSubtitle || ''
+    };
+  }
+
+  function utf8ToBase64(text) {
+    var bytes = new TextEncoder().encode(text);
+    var binary = '';
+    for (var i = 0; i < bytes.length; i++) binary += String.fromCharCode(bytes[i]);
+    return btoa(binary);
+  }
+
+  async function loadPublishedSiteData() {
+    var response = await fetch(SITE_DATA_URL + '?v=' + Date.now(), { cache: 'no-store' });
+    if (!response.ok) throw new Error('HTTP ' + response.status);
+    var data = await response.json();
+    if (!data || !Array.isArray(data.cameras)) throw new Error('线上数据格式不正确');
+    publishedSiteData = data;
+    return data;
+  }
+
+  async function publishSiteData() {
+    if (publishInProgress) return false;
+    var token = getGhToken();
+    if (!token) {
+      setSyncStatus('尚未发布：请先在「网站设置」填写 GitHub Token。', true);
+      showToast('⚠ 请先填写 GitHub Token，才能发布到网站', 3500);
+      return false;
+    }
+
+    var payload = {
+      version: 1,
+      updatedAt: new Date().toISOString(),
+      config: publicConfig(getConfig()),
+      cameras: getCameras()
+    };
+    var json = JSON.stringify(payload, null, 2) + '\n';
+    if (new TextEncoder().encode(json).length > 900000) {
+      setSyncStatus('发布失败：数据超过 900KB，请把视频改成文件路径。', true);
+      showToast('❌ 数据过大：请不要把视频直接存进商品数据', 4500);
+      return false;
+    }
+
+    publishInProgress = true;
+    var publishButton = document.getElementById('btn-publish');
+    if (publishButton) publishButton.disabled = true;
+    setSyncStatus('正在发布到 GitHub…');
+
+    try {
+      var headers = {
+        'Authorization': 'Bearer ' + token,
+        'Accept': 'application/vnd.github+json',
+        'X-GitHub-Api-Version': '2022-11-28'
+      };
+      var current = await fetch(GITHUB_DATA_API + '?ref=main&t=' + Date.now(), {
+        headers: headers,
+        cache: 'no-store'
+      });
+      var sha = '';
+      if (current.ok) {
+        sha = (await current.json()).sha || '';
+      } else if (current.status !== 404) {
+        var currentError = await current.json().catch(function () { return {}; });
+        throw new Error(currentError.message || ('读取线上版本失败（' + current.status + '）'));
+      }
+
+      var body = {
+        message: '📷 更新胶片相机网站数据',
+        content: utf8ToBase64(json),
+        branch: 'main'
+      };
+      if (sha) body.sha = sha;
+
+      var result = await fetch(GITHUB_DATA_API, {
+        method: 'PUT',
+        headers: Object.assign({ 'Content-Type': 'application/json' }, headers),
+        body: JSON.stringify(body)
+      });
+      var resultData = await result.json().catch(function () { return {}; });
+      if (!result.ok) throw new Error(resultData.message || ('发布失败（' + result.status + '）'));
+
+      publishedSiteData = payload;
+      setSyncStatus('✅ 已提交线上更新，GitHub Pages 通常会在约 1 分钟内生效。');
+      showToast('✅ 已发布到网站', 3000);
+      return true;
+    } catch (error) {
+      setSyncStatus('发布失败：' + error.message, true);
+      showToast('❌ 发布失败：' + error.message, 4500);
+      return false;
+    } finally {
+      publishInProgress = false;
+      if (publishButton) publishButton.disabled = false;
+    }
   }
 
   /* ================================================================
@@ -741,7 +863,7 @@
   }
 
   // 保存相机
-  document.getElementById('btn-save-camera').addEventListener('click', function () {
+  document.getElementById('btn-save-camera').addEventListener('click', async function () {
     // 检查是否有图片还在压缩中
     if (imagesPending > 0) {
       showToast('⏳ 图片还在上传中，请稍候...', 2000);
@@ -806,10 +928,12 @@
     imagesPending = 0;
     document.getElementById('camera-form').style.display = 'none';
     renderCameraList();
+    setSyncStatus('本机已保存，正在同步到网站…');
+    await publishSiteData();
   });
 
   // 删除相机
-  function deleteCamera(id) {
+  async function deleteCamera(id) {
     var cameras = getCameras();
     var cam = null;
     for (var i = 0; i < cameras.length; i++) {
@@ -826,6 +950,8 @@
     saveCameras(filtered);
     showToast('🗑 已删除：「' + cam.name + '」');
     renderCameraList();
+    setSyncStatus('本机已删除，正在同步到网站…');
+    await publishSiteData();
   }
 
   /* ================================================================
@@ -1054,13 +1180,17 @@
     document.getElementById('import-file').click();
   });
 
+  document.getElementById('btn-publish').addEventListener('click', function () {
+    publishSiteData();
+  });
+
   document.getElementById('import-file').addEventListener('change', function () {
     var file = this.files[0];
     if (!file) return;
     this.value = '';
 
     var reader = new FileReader();
-    reader.onload = function (e) {
+    reader.onload = async function (e) {
       try {
         var data = JSON.parse(e.target.result);
         if (!data.cameras || !Array.isArray(data.cameras)) {
@@ -1078,6 +1208,8 @@
         showToast('✅ 导入成功！');
         renderCameraList();
         loadConfigToForm();
+        setSyncStatus('备份已导入本机，正在同步到网站…');
+        await publishSiteData();
       } catch (err) {
         showToast('⚠ 文件解析失败，请检查文件格式');
       }
@@ -1098,7 +1230,7 @@
     document.getElementById('cfg-gh-token').value = cfg.ghToken || '';
   }
 
-  document.getElementById('btn-save-config').addEventListener('click', function () {
+  document.getElementById('btn-save-config').addEventListener('click', async function () {
     var config = {
       wechatId: document.getElementById('cfg-wechat').value.trim(),
       xianyuLink: document.getElementById('cfg-xianyu').value.trim(),
@@ -1107,7 +1239,9 @@
       ghToken: document.getElementById('cfg-gh-token').value.trim()
     };
     saveConfig(config);
-    showToast('✅ 设置已保存');
+    showToast('✅ 设置已保存，正在同步');
+    setSyncStatus('本机设置已保存，正在同步到网站…');
+    await publishSiteData();
   });
 
   // 清除所有数据
@@ -1147,7 +1281,23 @@
      初始化
      ================================================================ */
 
-  (function init() {
+  (async function init() {
+    var hasLocalCameras = false;
+    try {
+      var localData = localStorage.getItem(STORAGE_KEY_CAMERAS);
+      hasLocalCameras = !!localData && Array.isArray(JSON.parse(localData));
+    } catch (e) {}
+
+    try {
+      await loadPublishedSiteData();
+      if (hasLocalCameras) {
+        setSyncStatus('检测到这台设备保存的数据；确认无误后点击「发布到网站」。');
+      } else {
+        setSyncStatus('✅ 已载入线上数据。');
+      }
+    } catch (e) {
+      setSyncStatus('线上数据读取失败，当前显示内置或本机备份：' + e.message, true);
+    }
     renderCameraList();
     loadConfigToForm();
   })();

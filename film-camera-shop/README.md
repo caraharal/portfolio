@@ -6,6 +6,13 @@
 
 直接在浏览器打开 `index.html` 即可预览。
 
+## 数据与发布
+
+- 对外网站从 `data/site.json` 读取相机和网站设置；`js/cameras.js` 只在数据文件无法读取时兜底。
+- 管理页会先保留本机草稿，再使用 GitHub Contents API 把数据发布到 `main` 分支。
+- 换电脑或从本地地址迁移到 GitHub Pages 时，先在旧管理页“导出数据备份”，再在线上管理页导入并点击“发布到网站”。
+- GitHub Token 只保存在当前浏览器，不会写入 `data/site.json`。Token 需要允许修改本仓库 Contents 的权限。
+
 ---
 
 ## 文件结构
@@ -14,6 +21,8 @@
 film-camera-shop/
 ├── index.html          # 首页 — 相机卡片列表
 ├── detail.html         # 详情页 — 图片轮播/视频/信息/操作按钮
+├── data/
+│   └── site.json       # 线上商品和网站设置（首页实际读取的数据源）
 ├── css/
 │   └── style.css       # 全局样式（一般不需要改）
 ├── js/

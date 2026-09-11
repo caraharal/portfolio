@@ -578,35 +578,30 @@ function bindActions(cam) {
    页面初始化
    ================================================================ */
 
-(function init() {
-  // 🔄 从 localStorage 加载数据（管理后台写入的），没有则用默认数据
-  try {
-    var storedCameras = localStorage.getItem('film_cameras');
-    if (storedCameras) {
-      try {
-        var parsed = JSON.parse(storedCameras);
-        if (Array.isArray(parsed) && parsed.length > 0) {
-          CAMERAS = parsed;
-        }
-      } catch(e) {
-        console.warn('读取相机缓存失败，使用默认数据', e);
-      }
-    }
+function applyPublishedConfig(cfg) {
+  if (!cfg || typeof cfg !== 'object') return;
+  SITE_CONFIG.wechatId = cfg.wechatId || SITE_CONFIG.wechatId;
+  SITE_CONFIG.xianyuLink = cfg.xianyuLink || SITE_CONFIG.xianyuLink;
+  SITE_CONFIG.siteName = cfg.siteName || SITE_CONFIG.siteName;
+  SITE_CONFIG.siteSubtitle = cfg.siteSubtitle || SITE_CONFIG.siteSubtitle;
+}
 
-    var storedConfig = localStorage.getItem('film_config');
-    if (storedConfig) {
-      try {
-        var cfg = JSON.parse(storedConfig);
-        SITE_CONFIG.wechatId = cfg.wechatId || SITE_CONFIG.wechatId;
-        SITE_CONFIG.xianyuLink = cfg.xianyuLink || SITE_CONFIG.xianyuLink;
-        SITE_CONFIG.siteName = cfg.siteName || SITE_CONFIG.siteName;
-        SITE_CONFIG.siteSubtitle = cfg.siteSubtitle || SITE_CONFIG.siteSubtitle;
-      } catch(e) {
-        console.warn('读取配置缓存失败，使用默认配置', e);
-      }
-    }
-  } catch(e) {
-    console.error('localStorage读取失败', e);
+async function loadPublishedSiteData() {
+  var response = await fetch('data/site.json?v=' + Date.now(), { cache: 'no-store' });
+  if (!response.ok) throw new Error('HTTP ' + response.status);
+  var data = await response.json();
+  if (!data || !Array.isArray(data.cameras)) throw new Error('数据格式不正确');
+  CAMERAS = data.cameras;
+  applyPublishedConfig(data.config);
+}
+
+(async function init() {
+  // 商品和网站设置以线上 JSON 为准，换设备或换网址也能得到同一份数据。
+  // cameras.js 只在网络或 JSON 异常时作为安全兜底。
+  try {
+    await loadPublishedSiteData();
+  } catch (e) {
+    console.warn('线上数据加载失败，使用内置数据', e);
   }
 
   // 判断当前页面
