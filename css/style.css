@@ -683,17 +683,32 @@ ul { list-style: none; }
   font-weight: var(--fw-semibold);
 }
 
-/* Featured exhibition card */
-.project-card--exhibition { overflow: hidden; }
-.project-card--exhibition::before { display: none; }
-.project-card--exhibition { display: grid; grid-template-columns: minmax(220px, .68fr) minmax(0, 1fr); }
-.project-card__image { min-height: 300px; background: var(--bg-tertiary); }
-.project-card__image img { width: 100%; height: 100%; object-fit: cover; object-position: center; }
-.project-card--exhibition .project-card__body { justify-content: center; padding: clamp(1.5rem, 4vw, 2.5rem); }
+/* Exhibition card: keep the same rhythm as the other project cards. */
+.project-card__header--with-thumb {
+  align-items: flex-start;
+  flex-wrap: nowrap;
+}
+.project-card__header-copy { min-width: 0; }
+.project-card__header--with-thumb .project-card__date {
+  display: inline-block;
+  margin-top: 0.35rem;
+}
+.project-card__thumb {
+  flex: 0 0 104px;
+  width: 104px;
+  height: 132px;
+  object-fit: cover;
+  object-position: center;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+}
 
 @media (max-width: 640px) {
-  .project-card--exhibition { grid-template-columns: 1fr; }
-  .project-card__image { min-height: 360px; }
+  .project-card__thumb {
+    flex-basis: 82px;
+    width: 82px;
+    height: 104px;
+  }
 }
 
 .tag {
