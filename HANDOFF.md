@@ -74,6 +74,13 @@ personal-website/
 - AI 营销内容生成器封面：`assets/images/vibe-coding/ai-marketing-generator.png`
 - 两张图片均为 1200×750（16:10），已替换原有「截图准备中」占位内容
 
+### 3. 金鹰美术馆摄影展《栖·逸》（新增，2026-09-13）
+- 详情页：`exhibition-xiyi/index.html`
+- 样式与轻量导航脚本：`css/exhibition.css` / `js/exhibition.js`
+- 网页图片：`assets/images/exhibition-xiyi/`（14 张 WebP，约 5MB）
+- 首页「项目经历」加入带展陈图的入口卡片；「关于我」教育背景下新增“展览经历”条目
+- 已确认信息：共作界面｜影像策展实验计划、南京市金鹰美术馆、2026.06.10–06.17、作品《栖·逸》、2026、彩色数码摄影 / 胶片、可变尺寸
+
 ## 六、重要注意事项
 
 1. **视频文件大小**：GitHub 对单文件有 100MB 硬限制。建议每个视频 ≤50MB，否则 push 会失败。历史经验是视频压缩到 22MB 以内再传。
