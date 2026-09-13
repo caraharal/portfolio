@@ -1091,6 +1091,46 @@ ul { list-style: none; }
   line-height: 1.7;
 }
 
+/* Per-video results: intentionally quiet, shown only for user-verified data. */
+.video-card__performance {
+  margin-top: var(--spacing-sm);
+  padding-top: var(--spacing-sm);
+  border-top: 1px solid var(--border);
+}
+.video-card__performance-title {
+  margin-bottom: 0.55rem;
+  font-size: var(--fs-xs);
+  color: var(--text-secondary);
+  font-weight: var(--fw-semibold);
+}
+.video-card__performance-title span {
+  margin-left: 0.35rem;
+  color: var(--text-muted);
+  font-weight: var(--fw-light);
+}
+.video-card__performance-metrics {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--spacing-sm);
+}
+.video-card__performance-metrics > div + div {
+  padding-left: var(--spacing-sm);
+  border-left: 1px solid var(--border);
+}
+.video-card__performance-metrics dd {
+  margin: 0;
+  font-size: var(--fs-md);
+  color: var(--text-primary);
+  font-weight: var(--fw-semibold);
+  letter-spacing: -0.25px;
+}
+.video-card__performance-metrics dt {
+  margin-top: 0.18rem;
+  font-size: var(--fs-xs);
+  color: var(--text-muted);
+  font-weight: var(--fw-light);
+}
+
 /* Hide strip for single-video cards */
 .video-card__strip--hidden { display: none; }
 
