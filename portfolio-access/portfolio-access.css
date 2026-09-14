@@ -1,0 +1,203 @@
+@page { size: A4 portrait; margin: 0; }
+
+:root {
+  --ink: #0d0d10;
+  --paper: #f4f3ef;
+  --muted: #9c9aa2;
+  --rule: #34343b;
+  --type: "Inter", "Noto Sans SC", "PingFang SC", sans-serif;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  min-height: 100%;
+  background: #18181d;
+  color: var(--paper);
+  font-family: var(--type);
+}
+
+.access-page {
+  width: 210mm;
+  min-height: 297mm;
+  margin: 24px auto;
+  padding: 16mm 16mm 13mm;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  background: var(--ink);
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.32);
+}
+
+.masthead {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding-bottom: 5mm;
+  border-bottom: 1px solid var(--rule);
+}
+
+.name, .folio-mark, .discipline, .access-intro, .portfolio-url,
+.credentials p, .qr-access p, .email { margin: 0; }
+
+.name {
+  font-size: 10pt;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+.name span { color: var(--muted); margin: 0 0.25em; }
+
+.folio-mark {
+  font-size: 7.5pt;
+  color: var(--muted);
+  letter-spacing: 0.04em;
+}
+
+.access-main {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 14mm 0 13mm;
+}
+
+.title-block { margin-bottom: 10mm; }
+
+h1 {
+  margin: 0;
+  max-width: 100%;
+  font-size: 54pt;
+  font-weight: 600;
+  line-height: 0.86;
+  letter-spacing: -0.085em;
+}
+
+.title-cn {
+  margin: 4mm 0 0;
+  font-size: 15pt;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+}
+
+.discipline {
+  max-width: 110mm;
+  color: #c5c3ca;
+  font-size: 10pt;
+  line-height: 1.65;
+}
+
+.access-panel {
+  width: min(100%, 118mm);
+  margin-top: 18mm;
+  padding-top: 6mm;
+  border-top: 1px solid var(--rule);
+}
+
+.access-intro {
+  margin-bottom: 5mm;
+  color: var(--muted);
+  font-size: 8.5pt;
+  letter-spacing: 0.01em;
+}
+
+.portfolio-link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8mm;
+  padding: 4.5mm 5mm;
+  color: var(--ink);
+  background: var(--paper);
+  border: 1px solid var(--paper);
+  text-decoration: none;
+  font-size: 10pt;
+  font-weight: 600;
+}
+
+.portfolio-link span:last-child {
+  font-size: 7.5pt;
+  font-weight: 500;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+}
+
+.portfolio-url {
+  display: inline-block;
+  margin-top: 3.4mm;
+  color: var(--muted);
+  font-size: 8pt;
+  text-decoration: none;
+}
+
+.access-footer {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  column-gap: 8mm;
+  align-items: end;
+  padding-top: 5mm;
+  border-top: 1px solid var(--rule);
+}
+
+.credentials p {
+  color: var(--muted);
+  font-size: 7.5pt;
+  line-height: 1.65;
+}
+
+.qr-access {
+  display: flex;
+  align-items: end;
+  gap: 3.2mm;
+}
+
+.qr-access img {
+  display: block;
+  width: 25mm;
+  height: 25mm;
+  padding: 1.3mm;
+  background: var(--paper);
+}
+
+.qr-access p {
+  color: #d0ced4;
+  font-size: 7pt;
+  line-height: 1.45;
+  white-space: nowrap;
+}
+
+.qr-access p span { color: var(--muted); }
+
+.email {
+  grid-column: 1 / -1;
+  margin-top: 3mm;
+  color: var(--muted);
+  font-size: 7.5pt;
+  text-decoration: none;
+}
+
+@media (hover: hover) {
+  .portfolio-link:hover { background: transparent; color: var(--paper); }
+  .portfolio-url:hover, .email:hover { color: var(--paper); }
+}
+
+@media screen and (max-width: 760px) {
+  .access-page {
+    width: 100%;
+    min-height: 100svh;
+    margin: 0;
+    padding: 8vw 7vw;
+    box-shadow: none;
+  }
+  h1 { font-size: clamp(2.8rem, 15vw, 4.5rem); }
+  .access-main { padding: 12vw 0; }
+  .portfolio-link { align-items: flex-start; flex-direction: column; gap: 2mm; }
+  .access-footer { column-gap: 3mm; }
+  .qr-access img { width: 21vw; height: 21vw; }
+  .folio-mark { display: none; }
+}
+
+@media print {
+  html, body { width: 210mm; height: 297mm; background: var(--ink); }
+  .access-page { margin: 0; box-shadow: none; }
+  * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}
