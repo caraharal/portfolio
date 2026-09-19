@@ -110,6 +110,28 @@ window.getCameraById = getCameraById;
 /**
  * 渲染相机卡片列表
  */
+var catalogState = { brand: 'all', query: '', stock: 'all', sort: 'default' };
+
+function catalogBrand(camera) {
+  var text = [camera.brand, camera.name].join(' ');
+  var aliases = [['Pentax', /pentax|宾得/i], ['Ricoh', /ricoh|ricon|理光/i], ['Nikon', /nikon|尼康/i], ['Canon', /canon|佳能/i], ['Olympus', /olympus|奥林巴斯/i], ['Minolta', /minolta|美能达/i], ['Contax', /contax|康泰时/i], ['Fujifilm', /fuji|富士/i]];
+  for (var i = 0; i < aliases.length; i++) if (aliases[i][1].test(text)) return aliases[i][0];
+  return camera.brand || '其他';
+}
+
+function selectCatalogCameras(cameras, state) {
+  var query = state.query.trim().toLowerCase();
+  return cameras.filter(function (camera) {
+    return (state.brand === 'all' || catalogBrand(camera) === state.brand) &&
+      (state.stock === 'all' || (camera.status || 'available') === state.stock) &&
+      (!query || [camera.name, camera.brand, camera.model, camera.description].join(' ').toLowerCase().indexOf(query) !== -1);
+  }).sort(function (a, b) {
+    if (state.sort === 'price-asc') return Number(a.price) - Number(b.price);
+    if (state.sort === 'price-desc') return Number(b.price) - Number(a.price);
+    return Number((a.status || 'available') !== 'available') - Number((b.status || 'available') !== 'available');
+  });
+}
+
 function renderCameraList(filterBrand) {
   var container = document.getElementById('camera-list');
   if (!container) return;
@@ -117,16 +139,18 @@ function renderCameraList(filterBrand) {
   // 无相机时的空状态
   if (!CAMERAS || CAMERAS.length === 0) {
     container.innerHTML = '<div class="empty-state">📷<br>暂无在售相机，请稍后再来</div>';
+    var emptyCount = document.getElementById('camera-count');
+    if (emptyCount) emptyCount.textContent = '共 0 台相机';
     return;
   }
 
-  var filtered = CAMERAS;
-  if (filterBrand && filterBrand !== 'all') {
-    filtered = CAMERAS.filter(function (c) { return c.brand === filterBrand; });
-  }
+  if (filterBrand) catalogState.brand = filterBrand;
+  var filtered = selectCatalogCameras(CAMERAS, catalogState);
+  var count = document.getElementById('camera-count');
+  if (count) count.textContent = '找到 ' + filtered.length + ' 台相机 · 共 ' + CAMERAS.length + ' 台';
 
   if (filtered.length === 0) {
-    container.innerHTML = '<div class="empty-state">📷<br>该品牌暂无在售相机</div>';
+    container.innerHTML = '<div class="empty-state">📷<br>暂无符合这些条件的相机，试试其他关键词或清除筛选。</div>';
     return;
   }
 
@@ -179,13 +203,38 @@ function initBrandFilter() {
   var bar = document.getElementById('brand-filter-bar');
   if (!bar) return;
 
+  var brands = Array.from(new Set(CAMERAS.map(catalogBrand)));
+  bar.replaceChildren();
+  ['all'].concat(brands).forEach(function (brand) {
+    var button = document.createElement('button');
+    button.className = 'brand-filter-btn' + (brand === 'all' ? ' active' : '');
+    button.setAttribute('data-brand', brand);
+    button.setAttribute('aria-pressed', String(brand === 'all'));
+    button.textContent = brand === 'all' ? '全部' : brand;
+    bar.appendChild(button);
+  });
+  [['camera-search', 'query', 'input'], ['camera-stock', 'stock', 'change'], ['camera-sort', 'sort', 'change']].forEach(function (binding) {
+    document.getElementById(binding[0]).addEventListener(binding[2], function (event) {
+      catalogState[binding[1]] = event.target.value;
+      renderCameraList();
+    });
+  });
+  document.getElementById('camera-reset').addEventListener('click', function () {
+    catalogState = { brand: 'all', query: '', stock: 'all', sort: 'default' };
+    document.getElementById('camera-search').value = '';
+    document.getElementById('camera-stock').value = 'all';
+    document.getElementById('camera-sort').value = 'default';
+    bar.querySelector('[data-brand="all"]').click();
+  });
+
   bar.addEventListener('click', function (e) {
     var btn = e.target.closest('.brand-filter-btn');
     if (!btn) return;
 
     // 切换 active 状态
-    bar.querySelectorAll('.brand-filter-btn').forEach(function (b) { b.classList.remove('active'); });
+    bar.querySelectorAll('.brand-filter-btn').forEach(function (b) { b.classList.remove('active'); b.setAttribute('aria-pressed', 'false'); });
     btn.classList.add('active');
+    btn.setAttribute('aria-pressed', 'true');
 
     // 按品牌筛选
     renderCameraList(btn.getAttribute('data-brand'));
@@ -223,6 +272,10 @@ function renderDetail() {
   renderCarousel(cam);
   renderVideo(cam);
   renderInfo(cam);
+  var stock = document.createElement('p');
+  stock.className = 'detail-stock';
+  stock.textContent = cam.status === 'sold' ? '已售出 · 可咨询同型号补货' : cam.status === 'restocking' ? '补货中 · 到货时间请咨询' : '现货 · 下单前请确认库存';
+  document.getElementById('info-section').appendChild(stock);
   renderAccessories(cam);
   renderDescription(cam);
   renderPrice(cam);
@@ -553,6 +606,17 @@ function renderPrice(cam) {
  * 绑定操作按钮
  */
 function bindActions(cam) {
+  var shareButton = document.getElementById('btn-share');
+  if (shareButton) shareButton.addEventListener('click', async function () {
+    var url = new URL('detail.html', window.location.href);
+    url.searchParams.set('id', cam.id);
+    try {
+      if (navigator.share) await navigator.share({ title: cam.name, url: url.href });
+      else { await copyToClipboard(url.href); showToast('相机链接已复制，可以发给朋友'); }
+    } catch (error) {
+      if (error.name !== 'AbortError') showToast('分享失败，请复制浏览器地址栏中的链接');
+    }
+  });
   // 「微信咨询」按钮
   var wechatBtn = document.getElementById('btn-wechat');
   if (wechatBtn) {
@@ -569,7 +633,7 @@ function bindActions(cam) {
   var xianyuBtn = document.getElementById('btn-xianyu');
   if (xianyuBtn) {
     xianyuBtn.addEventListener('click', function () {
-      window.open(SITE_CONFIG.xianyuLink, '_blank');
+      window.open(SITE_CONFIG.xianyuLink, '_blank', 'noopener,noreferrer');
     });
   }
 }
@@ -587,21 +651,39 @@ function applyPublishedConfig(cfg) {
 }
 
 async function loadPublishedSiteData() {
-  var response = await fetch('data/site.json?v=' + Date.now(), { cache: 'no-store' });
-  if (!response.ok) throw new Error('HTTP ' + response.status);
-  var data = await response.json();
-  if (!data || !Array.isArray(data.cameras)) throw new Error('数据格式不正确');
-  CAMERAS = data.cameras;
-  applyPublishedConfig(data.config);
+  var controller = new AbortController();
+  var timeout = setTimeout(function () { controller.abort(); }, 15000);
+  try {
+    var response = await fetch('data/site.json?v=' + Date.now(), { cache: 'no-store', signal: controller.signal });
+    if (!response.ok) throw new Error('HTTP ' + response.status);
+    var data = await response.json();
+    if (!data || !Array.isArray(data.cameras)) throw new Error('数据格式不正确');
+    CAMERAS = data.cameras;
+    applyPublishedConfig(data.config);
+  } finally { clearTimeout(timeout); }
 }
 
 (async function init() {
   // 商品和网站设置以线上 JSON 为准，换设备或换网址也能得到同一份数据。
-  // cameras.js 只在网络或 JSON 异常时作为安全兜底。
+  // 网络异常时提示重试，不展示内置演示商品。
   try {
     await loadPublishedSiteData();
   } catch (e) {
-    console.warn('线上数据加载失败，使用内置数据', e);
+    CAMERAS = [];
+    var errorBox = document.createElement('div');
+    errorBox.className = 'empty-state';
+    errorBox.setAttribute('role', 'alert');
+    errorBox.textContent = '暂时无法读取最新库存，请检查网络后重试。';
+    var retry = document.createElement('button');
+    retry.className = 'brand-filter-btn';
+    retry.textContent = '重新加载';
+    retry.addEventListener('click', function () { window.location.reload(); });
+    errorBox.appendChild(retry);
+    var target = document.getElementById('camera-list') || document.getElementById('info-section');
+    if (target) target.replaceChildren(errorBox);
+    var actions = document.querySelector('.action-section');
+    if (actions) actions.hidden = true;
+    return;
   }
 
   // 判断当前页面

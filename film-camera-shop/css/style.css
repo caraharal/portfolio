@@ -999,6 +999,17 @@ img::before {
 }
 .ai-result-link:hover { opacity: 0.9; }
 
+.catalog-controls { display: flex; flex-wrap: wrap; align-items: end; gap: 12px; margin: 16px 12px 24px; }
+.catalog-controls label { display: grid; gap: 6px; font-size: .85rem; color: var(--text-body); }
+.catalog-controls label:first-child { flex: 1 1 180px; }
+.catalog-controls input, .catalog-controls select { box-sizing: border-box; width: 100%; min-height: 44px; border: 1px solid var(--border-line); border-radius: 8px; padding: 8px 10px; background: #fff; color: var(--text-title); font: inherit; font-size: 16px; }
+.catalog-controls button { min-height: 44px; }
+#camera-count { flex-basis: 100%; margin: 0; font-size: .85rem; color: var(--text-body); }
+.detail-stock { color: var(--text-body); margin-top: 12px; }
+#btn-share { border: 1px solid var(--border-line); background: #fff; color: var(--text-title); }
+.description-section p { white-space: pre-line; }
+:focus-visible { outline: 2px solid #5c3d2e; outline-offset: 3px; }
+
 /* 重新开始按钮 */
 .ai-restart {
   align-self: center;
