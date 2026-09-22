@@ -1287,6 +1287,33 @@ ul { list-style: none; }
   font-weight: var(--fw-semibold);
 }
 .vc-project-preview { aspect-ratio: 16/10; overflow: hidden; background: var(--bg-tertiary); }
+.vc-project-preview--skillmate {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 1.25rem;
+  color: #f4f2ff;
+  background: #151419;
+}
+.skillmate-preview__topline { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+.skillmate-preview__brand { font-size: 1.1rem; font-weight: var(--fw-bold); letter-spacing: -0.4px; }
+.skillmate-preview__tag { color: #b9b1ff; font-size: 0.58rem; font-weight: var(--fw-semibold); letter-spacing: 0.09em; }
+.skillmate-preview__message { max-width: 16rem; font-size: clamp(1.25rem, 3vw, 1.75rem); font-weight: var(--fw-bold); letter-spacing: -0.05em; line-height: 1.15; }
+.skillmate-preview__swap {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.72rem;
+  border: 1px solid rgba(190, 181, 255, 0.3);
+  border-radius: 0.8rem;
+  background: #201e28;
+}
+.skillmate-preview__skill { padding: 0.45rem 0.3rem; border-radius: 0.45rem; background: rgba(139, 125, 255, 0.16); color: #e6e2ff; font-size: var(--fs-xs); font-weight: var(--fw-semibold); text-align: center; }
+.skillmate-preview__exchange { color: #b9b1ff; font-size: 1.1rem; }
+.skillmate-preview__paths { display: flex; flex-wrap: wrap; gap: 0.38rem; }
+.skillmate-preview__paths span { padding: 0.24rem 0.48rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 999px; color: rgba(244,242,255,0.65); font-size: 0.6rem; }
+.vc-deploy-status--live { color: #059669; }
 .vc-project-preview__image {
   display: block;
   width: 100%;
